@@ -3,15 +3,7 @@
   "title": "Pilot foundation configuration v1",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schemaVersion",
-    "phase",
-    "network",
-    "languages",
-    "models",
-    "actions",
-    "limits"
-  ],
+  "required": ["schemaVersion", "phase", "network", "languages", "models", "actions", "limits"],
   "properties": {
     "schemaVersion": {
       "const": 1

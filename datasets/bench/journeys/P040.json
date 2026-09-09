@@ -2,11 +2,7 @@
   "version": 1,
   "id": "P040",
   "request": "« Prépare le squelette du personnage et configure ses mains. »",
-  "requires": [
-    "isolated-vm",
-    "local-character-mesh-fixture",
-    "character-workbench-ready"
-  ],
+  "requires": ["isolated-vm", "local-character-mesh-fixture", "character-workbench-ready"],
   "steps": [
     {
       "id": "createProject",

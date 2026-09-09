@@ -2,11 +2,7 @@
   "version": 1,
   "id": "P041",
   "request": "« Ajoute une cible de main puis retire la contrainte. »",
-  "requires": [
-    "isolated-vm",
-    "local-rigged-character-fixture",
-    "character-workbench-ready"
-  ],
+  "requires": ["isolated-vm", "local-rigged-character-fixture", "character-workbench-ready"],
   "steps": [
     {
       "id": "createProject",

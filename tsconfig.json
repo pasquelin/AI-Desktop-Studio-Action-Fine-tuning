@@ -14,12 +14,8 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    "jsx": "react-jsx"
   },
-  "include": [
-    "src/**/*.ts",
-    "tools/**/*.ts",
-    "tests/**/*.ts",
-    "vitest.config.ts"
-  ]
+  "include": ["src/**/*.ts", "tools/**/*.ts", "tests/**/*.ts", "vitest.config.ts", "src/**/*.tsx"]
 }

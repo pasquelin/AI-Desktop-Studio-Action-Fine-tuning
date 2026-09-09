@@ -2,11 +2,7 @@
   "version": 1,
   "id": "P017",
   "request": "« Trouve des références publiques similaires à ce média. »",
-  "requires": [
-    "isolated-vm",
-    "published-asset-fixture",
-    "cloud-network-authorized"
-  ],
+  "requires": ["isolated-vm", "published-asset-fixture", "cloud-network-authorized"],
   "steps": [
     {
       "id": "project",

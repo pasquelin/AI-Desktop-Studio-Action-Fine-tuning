@@ -23,3 +23,8 @@ datasets/private/
 *.tsbuildinfo
 
 .studio-source.json
+
+/rapports/
+
+# Généré par tools/build-admin-validators.ts depuis le schéma partagé.
+src/admin/json-validators.js

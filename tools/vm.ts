@@ -1,21 +1,16 @@
-import { type ChildProcess, spawn } from "node:child_process";
-import { randomUUID } from "node:crypto";
-import { once } from "node:events";
-import { createWriteStream } from "node:fs";
-import {
-  mkdir,
-  readdir,
-  readFile,
-  rm,
-  statfs,
-  writeFile,
-} from "node:fs/promises";
-import { join, resolve } from "node:path";
-import { setTimeout as delay } from "node:timers/promises";
-import { parseArgs } from "node:util";
-import { sha256 } from "../src/catalogue/catalogue.ts";
-import { benchReadiness } from "../src/scenarios/capabilities.ts";
-import { cycle } from "../src/vm/lifecycle.ts";
+import { type ChildProcess, spawn } from 'node:child_process'
+import { randomUUID } from 'node:crypto'
+import { once } from 'node:events'
+import { createWriteStream } from 'node:fs'
+import { mkdir, readdir, readFile, rm, statfs, writeFile } from 'node:fs/promises'
+import { join, resolve } from 'node:path'
+import { setTimeout as delay } from 'node:timers/promises'
+import { parseArgs } from 'node:util'
+import { assertScenarioEnabled } from '../src/admin/scenario-activation.ts'
+import { sha256 } from '../src/catalogue/catalogue.ts'
+import { benchReadiness } from '../src/scenarios/capabilities.ts'
+import { journeySource } from '../src/scenarios/identity.ts'
+import { cycle } from '../src/vm/lifecycle.ts'
 import {
   isManagedName,
   isPreparedReference,
@@ -23,298 +18,270 @@ import {
   stateDir,
   VM_PREFIX,
   type VmRecord,
-} from "../src/vm/ownership.ts";
-import {
-  cancelActiveCommands,
-  command,
-  quote,
-  sshConfigValue,
-} from "../src/vm/process.ts";
-import { beginSnapshots, SNAPSHOT, saveSnapshot } from "../src/vm/snapshots.ts";
-import { listLocalVmNames } from "../src/vm/tart.ts";
+} from '../src/vm/ownership.ts'
+import { cancelActiveCommands, command, quote, sshConfigValue } from '../src/vm/process.ts'
+import { exportRunFolder } from '../src/vm/report-folder.ts'
+import { beginSnapshots, SNAPSHOT, saveSnapshot } from '../src/vm/snapshots.ts'
+import { listLocalVmNames } from '../src/vm/tart.ts'
 
-const root = resolve(import.meta.dirname, "..");
-const state = stateDir(root);
+const root = resolve(import.meta.dirname, '..')
+const state = stateDir(root)
 const { positionals, values } = parseArgs({
   allowPositionals: true,
   options: {
-    source: { type: "string" },
-    base: { type: "string" },
-    name: { type: "string" },
-    scenario: { type: "boolean", default: false },
-    journey: { type: "string" },
+    source: { type: 'string' },
+    base: { type: 'string' },
+    name: { type: 'string' },
+    scenario: { type: 'boolean', default: false },
+    journey: { type: 'string' },
   },
-});
-const mode = positionals[0];
-const owned = (name: string) => readRecord(name, root, state);
+})
+const mode = positionals[0]
+const owned = (name: string) => readRecord(name, root, state)
 /** Guest executables, kept with the report; no `guest` means delivery over ssh stdin. */
 const guestScripts = [
   {
-    source: "tools/vm/scenarios/client.mjs",
-    local: "client.mjs",
-    guest: "source/client.mjs",
-    scenarioOnly: true,
-  },
-  { source: "tools/vm/build.sh", local: "build.sh" },
-  {
-    source: "src/scenarios/runner.ts",
-    local: "runner.ts",
-    guest: "source/runner.ts",
-    scenarioOnly: true,
+    source: 'tools/vm/window-view.ts',
+    local: 'window-view.ts',
+    guest: 'source/window-view.ts',
   },
   {
-    source: "src/vm/scenario-consent.ts",
-    local: "scenario-consent.ts",
-    guest: "source/scenario-consent.ts",
+    source: 'tools/vm/startup.mjs',
+    local: 'startup.mjs',
+    guest: 'source/.ft-startup.mjs',
+  },
+  {
+    source: 'tools/vm/scenarios/client.mjs',
+    local: 'client.mjs',
+    guest: 'source/client.mjs',
+    scenarioOnly: true,
+  },
+  { source: 'tools/vm/build.sh', local: 'build.sh' },
+  {
+    source: 'src/scenarios/runner.ts',
+    local: 'runner.ts',
+    guest: 'source/runner.ts',
+    scenarioOnly: true,
+  },
+  {
+    source: 'src/vm/scenario-consent.ts',
+    local: 'scenario-consent.ts',
+    guest: 'source/scenario-consent.ts',
     scenarioOnly: true,
   },
   {
     source: values.journey
-      ? "tools/vm/scenarios/declarative.mjs"
-      : "tools/vm/scenarios/project.mjs",
-    local: "project.mjs",
-    guest: "source/.ft-project.mjs",
+      ? 'tools/vm/scenarios/declarative.mjs'
+      : 'tools/vm/scenarios/project.mjs',
+    local: 'project.mjs',
+    guest: 'source/.ft-project.mjs',
     scenarioOnly: true,
   },
-];
+]
 async function main() {
   // Freeze guest executables before the asynchronous VM preparation starts.
-  const frozen = new Map<string, string>();
+  const frozen = new Map<string, string>()
   if (values.journey) {
     if (!values.scenario || !/^P[0-9]{3}$/.test(values.journey))
-      throw new Error("Journey requires --scenario and a valid journey id");
-    const { parseScenario } = await import("../src/scenarios/declarative.ts");
-    const spec = await readFile(
-      join(root, "datasets/bench/journeys", `${values.journey}.json`),
-      "utf8",
-    );
-    const { ready, missing, unbound, blockers } = benchReadiness(
-      parseScenario(JSON.parse(spec)),
-    );
+      throw new Error('Journey requires --scenario and a valid journey id')
+    await assertScenarioEnabled(root, values.journey)
+    const { parseScenario } = await import('../src/scenarios/declarative.ts')
+    const spec = await readFile(join(root, journeySource(values.journey)), 'utf8')
+    const { ready, missing, unbound, blockers } = benchReadiness(parseScenario(JSON.parse(spec)))
     if (!ready)
-      throw new Error(
-        `Journey not ready: ${[...missing, ...unbound, ...blockers].join("; ")}`,
-      );
-    frozen.set("scenario-spec.json", spec);
-    const { buildMediaFixtures } = await import("./prepare-media-fixtures.ts");
+      throw new Error(`Journey not ready: ${[...missing, ...unbound, ...blockers].join('; ')}`)
+    frozen.set('scenario-spec.json', spec)
+    const { buildMediaFixtures } = await import('./prepare-media-fixtures.ts')
     frozen.set(
-      "seed-media.json",
+      'seed-media.json',
       JSON.stringify(
         Object.fromEntries(
           Object.entries(buildMediaFixtures()).map(([name, bytes]) => [
             name,
-            bytes.toString("base64"),
+            bytes.toString('base64'),
           ]),
         ),
       ),
-    );
-    const { build } = await import("vite");
+    )
+    const { build } = await import('vite')
     const bundled = await build({
       configFile: false,
-      logLevel: "error",
+      logLevel: 'error',
       build: {
         write: false,
         minify: false,
         lib: {
-          entry: join(root, "src/scenarios/declarative.ts"),
-          formats: ["es"],
+          entry: join(root, 'src/scenarios/declarative.ts'),
+          formats: ['es'],
         },
-        rollupOptions: { external: (id) => id.startsWith("node:") },
+        rollupOptions: { external: id => id.startsWith('node:') },
       },
-    });
-    const outputs = Array.isArray(bundled) ? bundled : [bundled];
+    })
+    const outputs = Array.isArray(bundled) ? bundled : [bundled]
     const chunks = outputs
-      .flatMap((output) => ("output" in output ? output.output : []))
-      .filter((output) => output.type === "chunk");
-    if (chunks.length !== 1 || !chunks[0])
-      throw new Error("Expected one guest engine bundle");
-    frozen.set("bench.mjs", chunks[0].code);
+      .flatMap(output => ('output' in output ? output.output : []))
+      .filter(output => output.type === 'chunk')
+    if (chunks.length !== 1 || !chunks[0]) throw new Error('Expected one guest engine bundle')
+    frozen.set('bench.mjs', chunks[0].code)
   }
-  if (mode === "build")
+  if (mode === 'build')
     for (const script of guestScripts)
       if (values.scenario || !script.scenarioOnly)
-        frozen.set(
-          script.local,
-          await readFile(join(root, script.source), "utf8"),
-        );
-  const buildScript = frozen.get("build.sh") ?? "";
-  if (!["prepare", "build", "cleanup", "check"].includes(mode ?? ""))
+        frozen.set(script.local, await readFile(join(root, script.source), 'utf8'))
+  const buildScript = frozen.get('build.sh') ?? ''
+  if (!['prepare', 'build', 'cleanup', 'check'].includes(mode ?? ''))
     throw new Error(
-      "Usage: vm check | prepare --source LOCAL_VM | build --base PREPARED_VM | cleanup --name OWNED_VM",
-    );
-  if (process.platform !== "darwin" || process.arch !== "arm64")
-    throw new Error("Tart requires an Apple Silicon Mac");
-  await mkdir(state, { recursive: true, mode: 0o700 });
-  if (mode === "prepare" && !process.stdin.isTTY)
-    throw new Error(
-      "Run prepare in an interactive terminal for the first VM password prompt.",
-    );
-  if (mode === "check") {
-    console.log(await command("tart", ["--version"]));
-    console.log((await listLocalVmNames()).join("\n"));
-    return;
+      'Usage: vm check | prepare --source LOCAL_VM | build --base PREPARED_VM | cleanup --name OWNED_VM',
+    )
+  if (process.platform !== 'darwin' || process.arch !== 'arm64')
+    throw new Error('Tart requires an Apple Silicon Mac')
+  await mkdir(state, { recursive: true, mode: 0o700 })
+  if (mode === 'prepare' && !process.stdin.isTTY)
+    throw new Error('Run prepare in an interactive terminal for the first VM password prompt.')
+  if (mode === 'check') {
+    console.log(await command('tart', ['--version']))
+    console.log((await listLocalVmNames()).join('\n'))
+    return
   }
-  const lock = join(state, "active.lock");
-  await mkdir(lock); // Exclusive; a stale lock requires deliberate recovery.
-  let interrupted = false;
+  const lock = join(state, 'active.lock')
+  await mkdir(lock) // Exclusive; a stale lock requires deliberate recovery.
+  let interrupted = false
   const interrupt = () => {
-    interrupted = true;
-    cancelActiveCommands();
-  };
-  process.on("SIGINT", interrupt);
-  process.on("SIGTERM", interrupt);
+    interrupted = true
+    cancelActiveCommands()
+  }
+  process.on('SIGINT', interrupt)
+  process.on('SIGTERM', interrupt)
   try {
-    if (mode === "cleanup") {
-      const name = values.name ?? "";
-      const previous = await owned(name);
+    if (mode === 'cleanup') {
+      const name = values.name ?? ''
+      const previous = await owned(name)
       // A copy left stopped is a normal cleanup input; delete reports a missing VM.
-      await command("tart", ["stop", name]).catch(() => {});
-      await command("tart", ["delete", name]);
+      await command('tart', ['stop', name]).catch(() => {})
+      await command('tart', ['delete', name])
       await writeFile(
-        join(state, name, "record.json"),
-        JSON.stringify(
-          { ...previous, status: "removed" } satisfies VmRecord,
-          null,
-          2,
-        ),
-      );
-      console.log(`Removed owned VM ${name}; reports retained.`);
-      return;
+        join(state, name, 'record.json'),
+        JSON.stringify({ ...previous, status: 'removed' } satisfies VmRecord, null, 2),
+      )
+      console.log(`Removed owned VM ${name}; reports retained.`)
+      return
     }
     for (const entry of await readdir(state)) {
-      if (!isManagedName(entry)) continue;
-      const previous = await owned(entry);
-      if (previous.status === "failed-retained")
-        throw new Error(
-          `Clean up retained failed VM ${entry} before another run.`,
-        );
+      if (!isManagedName(entry)) continue
+      const previous = await owned(entry)
+      if (previous.status === 'failed-retained')
+        throw new Error(`Clean up retained failed VM ${entry} before another run.`)
     }
-    const reference =
-      mode === "build" ? await owned(values.base ?? "") : undefined;
+    const reference = mode === 'build' ? await owned(values.base ?? '') : undefined
     if (reference && !isPreparedReference(reference))
-      throw new Error("Base is not a prepared reference");
-    const source = reference?.name ?? values.source ?? "";
-    const locals = await listLocalVmNames();
+      throw new Error('Base is not a prepared reference')
+    const source = reference?.name ?? values.source ?? ''
+    const locals = await listLocalVmNames()
     if (!source || !locals.includes(source))
-      throw new Error(
-        "Source VM must already exist locally; no implicit image download",
-      );
-    const disk = await statfs(state);
+      throw new Error('Source VM must already exist locally; no implicit image download')
+    const disk = await statfs(state)
     if (disk.bavail * disk.bsize < 30 * 1024 ** 3)
       throw new Error(
-        "At least 30 GiB free required for preparation (disk usage is workload-dependent)",
-      );
-    const name = VM_PREFIX + randomUUID();
-    const dir = join(state, name);
-    await mkdir(dir, { mode: 0o700 });
-    const key = reference?.key ?? join(dir, "id_ed25519");
+        'At least 30 GiB free required for preparation (disk usage is workload-dependent)',
+      )
+    const name = VM_PREFIX + randomUUID()
+    const dir = join(state, name)
+    await mkdir(dir, { mode: 0o700 })
+    const key = reference?.key ?? join(dir, 'id_ed25519')
     const record: VmRecord & {
-      source: string;
-      revision: string;
-      createdAt: string;
+      source: string
+      revision: string
+      createdAt: string
     } = {
       owner: root,
       name,
       source,
-      mode: reference ? "build" : "prepare",
+      mode: reference ? 'build' : 'prepare',
       key,
-      status: "created",
-      revision: "",
+      status: 'created',
+      revision: '',
       createdAt: new Date().toISOString(),
-    };
+    }
     const save = () =>
-      writeFile(join(dir, "record.json"), JSON.stringify(record, null, 2), {
+      writeFile(join(dir, 'record.json'), JSON.stringify(record, null, 2), {
         mode: 0o600,
-      });
-    await save();
-    await beginSnapshots(root, name);
-    const activity = createWriteStream(join(dir, "activity.log"), {
-      flags: "a",
+      })
+    await save()
+    process.send?.({ type: 'vm-run', name })
+    await beginSnapshots(root, name)
+    const activity = createWriteStream(join(dir, 'activity.log'), {
+      flags: 'a',
       mode: 0o600,
-    });
+    })
     const journal = (message: string) => {
-      activity.write(
-        `[${new Date().toLocaleTimeString("fr-FR")}] ${message}\n`,
-      );
-    };
-    let imageQueue = Promise.resolve();
-    let outputLine = "";
+      activity.write(`[${new Date().toLocaleTimeString('fr-FR')}] ${message}\n`)
+    }
+    let imageQueue = Promise.resolve()
+    let outputLine = ''
     const output = (chunk: Buffer) => {
-      activity.write(chunk);
-      outputLine += chunk.toString("utf8");
-      const lines = outputLine.split("\n");
-      outputLine = (lines.pop() ?? "").slice(-65536);
+      activity.write(chunk)
+      outputLine += chunk.toString('utf8')
+      const lines = outputLine.split('\n')
+      outputLine = (lines.pop() ?? '').slice(-65536)
       for (const line of lines) {
-        if (!line.startsWith("[Capture] ")) continue;
+        if (!line.startsWith('[Capture] ')) continue
         try {
-          const event = JSON.parse(line.slice(10));
+          const event = JSON.parse(line.slice(10))
           if (
-            typeof event.file !== "string" ||
+            typeof event.file !== 'string' ||
             !SNAPSHOT.test(event.file) ||
-            typeof event.activity !== "string" ||
+            typeof event.activity !== 'string' ||
             event.activity.length > 300
           )
-            continue;
+            continue
           imageQueue = imageQueue
             .then(async () => {
-              const local = join(dir, "action-image.jpg");
+              const local = join(dir, 'action-image.jpg')
               try {
-                await transfer(
-                  `admin@${ip}:studio-vm/action-images/${event.file}`,
-                  local,
-                );
+                await transfer(`admin@${ip}:studio-vm/action-images/${event.file}`, local)
                 await saveSnapshot(
                   root,
                   name,
                   await readFile(local),
                   event.activity,
                   Number(event.file.slice(0, 13)),
-                );
+                )
               } finally {
-                await rm(local, { force: true });
+                await rm(local, { force: true })
               }
             })
-            .catch(() =>
-              journal("Une capture d’action n’a pas pu être rapatriée."),
-            );
+            .catch(() => journal('Une capture d’action n’a pas pu être rapatriée.'))
         } catch {
           /* Unstructured application output is only a log, never an instruction. */
         }
       }
-    };
-    journal("Exécution créée. Aucun modèle en apprentissage.");
-    let vm: ChildProcess | undefined;
-    let ip = "";
+    }
+    journal('Exécution créée. Aucun modèle en apprentissage.')
+    let vm: ChildProcess | undefined
+    let ip = ''
     // Shared hardening; only the host-key policy and authentication differ per transport.
     const transport = [
-      "-F",
-      "/dev/null",
-      "-o",
-      "ForwardAgent=no",
-      "-o",
-      "ClearAllForwardings=yes",
-      "-o",
-      "IdentitiesOnly=yes",
-      "-o",
-      `UserKnownHostsFile=${sshConfigValue(join(dir, "known_hosts"))}`,
-    ];
-    const ssh = (
-      script: string,
-      password = false,
-      timeout = 3_600_000,
-      live = false,
-    ) =>
+      '-F',
+      '/dev/null',
+      '-o',
+      'ForwardAgent=no',
+      '-o',
+      'ClearAllForwardings=yes',
+      '-o',
+      'IdentitiesOnly=yes',
+      '-o',
+      `UserKnownHostsFile=${sshConfigValue(join(dir, 'known_hosts'))}`,
+    ]
+    const ssh = (script: string, password = false, timeout = 3_600_000, live = false) =>
       command(
-        "ssh",
+        'ssh',
         [
           ...transport,
-          "-o",
-          "StrictHostKeyChecking=accept-new",
-          "-o",
-          "ConnectTimeout=10",
-          ...(password
-            ? ["-o", "PubkeyAuthentication=no"]
-            : ["-o", "BatchMode=yes", "-i", key]),
+          '-o',
+          'StrictHostKeyChecking=accept-new',
+          '-o',
+          'ConnectTimeout=10',
+          ...(password ? ['-o', 'PubkeyAuthentication=no'] : ['-o', 'BatchMode=yes', '-i', key]),
           `admin@${ip}`,
           `/bin/bash -lc ${quote(script)}`,
         ],
@@ -323,138 +290,107 @@ async function main() {
           timeout,
           ...(live ? { onOutput: output } : {}),
         },
-      );
+      )
     // Transfer over the isolated connection; no host folder mounts or credentials in the guest.
     const transfer = (from: string, to: string, recursive = false) =>
       command(
-        "scp",
+        'scp',
         [
           ...transport,
-          "-o",
-          "BatchMode=yes",
-          "-o",
-          "StrictHostKeyChecking=yes",
-          "-i",
+          '-o',
+          'BatchMode=yes',
+          '-o',
+          'StrictHostKeyChecking=yes',
+          '-i',
           key,
-          ...(recursive ? ["-r"] : []),
+          ...(recursive ? ['-r'] : []),
           from,
           to,
         ],
         { timeout: 600_000 },
-      );
+      )
     const provision = async () => {
-      await command("ssh-keygen", [
-        "-t",
-        "ed25519",
-        "-N",
-        "",
-        "-f",
-        key,
-        "-C",
-        "studio-vm-only",
-      ]);
-      const pub = (await readFile(`${key}.pub`, "utf8")).trim();
-      console.log(
-        "One-time VM SSH password required. No personal SSH keys will be transferred.",
-      );
+      await command('ssh-keygen', ['-t', 'ed25519', '-N', '', '-f', key, '-C', 'studio-vm-only'])
+      const pub = (await readFile(`${key}.pub`, 'utf8')).trim()
+      console.log('One-time VM SSH password required. No personal SSH keys will be transferred.')
       await ssh(
         `mkdir -p ~/.ssh && chmod 700 ~/.ssh && printf '%s\n' ${quote(pub)} >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys`,
         true,
-      );
-      console.log(
-        await ssh(await readFile(join(root, "tools/vm/provision.sh"), "utf8")),
-      );
-    };
+      )
+      console.log(await ssh(await readFile(join(root, 'tools/vm/provision.sh'), 'utf8')))
+    }
     const buildRelease = async () => {
-      journal("Récupération de Studio et préparation du catalogue.");
+      journal('Récupération de Studio et préparation du catalogue.')
       // Read the remote into an isolated clone; do not touch the user's checkout.
-      const checkout = join(dir, "source");
+      const checkout = join(dir, 'source')
       await command(
-        "git",
+        'git',
         [
-          "clone",
-          "--depth",
-          "1",
-          "--no-tags",
-          "--single-branch",
-          "--branch",
-          "develop",
-          "git@github.com:pasquelin/AIDesktopStudio.git",
+          'clone',
+          '--depth',
+          '1',
+          '--no-tags',
+          '--single-branch',
+          '--branch',
+          'develop',
+          'git@github.com:pasquelin/AIDesktopStudio.git',
           checkout,
         ],
         { timeout: 600_000 },
-      );
+      )
       // Imported here so check, prepare and cleanup never load the bundler.
-      const { buildCatalogue } = await import("../src/catalogue/build.ts");
-      const catalogue = await buildCatalogue(checkout);
-      record.revision = catalogue.appRevision;
-      await save();
-      const catalogueText = JSON.stringify(catalogue, null, 2);
-      await writeFile(join(dir, "catalogue.json"), catalogueText);
-      const tree = await command("git", [
-        "-C",
+      const { buildCatalogue } = await import('../src/catalogue/build.ts')
+      const catalogue = await buildCatalogue(checkout)
+      record.revision = catalogue.appRevision
+      await save()
+      const catalogueText = JSON.stringify(catalogue, null, 2)
+      await writeFile(join(dir, 'catalogue.json'), catalogueText)
+      const tree = await command('git', ['-C', checkout, 'ls-tree', '-r', 'HEAD'])
+      const attributes = await command('git', [
+        '-C',
         checkout,
-        "ls-tree",
-        "-r",
-        "HEAD",
-      ]);
-      const attributes = await command("git", [
-        "-C",
-        checkout,
-        "grep",
-        "-l",
-        "filter=lfs",
-        "--",
-        ":(glob)**/.gitattributes",
-        ".gitattributes",
-      ]).catch(() => "");
+        'grep',
+        '-l',
+        'filter=lfs',
+        '--',
+        ':(glob)**/.gitattributes',
+        '.gitattributes',
+      ]).catch(() => '')
       if (/^160000 /m.test(tree) || attributes)
         throw new Error(
-          "Source now requires submodule/LFS support; refusing an incomplete archive.",
-        );
-      const archive = join(dir, "source.tar");
-      await command("git", [
-        "-C",
+          'Source now requires submodule/LFS support; refusing an incomplete archive.',
+        )
+      const archive = join(dir, 'source.tar')
+      await command('git', [
+        '-C',
         checkout,
-        "archive",
-        "--format=tar",
+        'archive',
+        '--format=tar',
         `--output=${archive}`,
         record.revision,
-      ]);
-      journal("Transfert de la révision figée vers la VM.");
-      await ssh("mkdir -p ~/studio-vm/source");
-      await transfer(archive, `admin@${ip}:studio-vm/source.tar`);
-      await ssh(
-        "tar -xf ~/studio-vm/source.tar -C ~/studio-vm/source && rm ~/studio-vm/source.tar",
-      );
-      await rm(archive);
-      await rm(checkout, { recursive: true });
+      ])
+      journal('Transfert de la révision figée vers la VM.')
+      await ssh('mkdir -p ~/studio-vm/source')
+      await transfer(archive, `admin@${ip}:studio-vm/source.tar`)
+      await ssh('tar -xf ~/studio-vm/source.tar -C ~/studio-vm/source && rm ~/studio-vm/source.tar')
+      await rm(archive)
+      await rm(checkout, { recursive: true })
       for (const script of guestScripts) {
-        const content = frozen.get(script.local);
-        if (content === undefined) continue;
-        await writeFile(join(dir, script.local), content);
+        const content = frozen.get(script.local)
+        if (content === undefined) continue
+        await writeFile(join(dir, script.local), content)
         if (script.guest)
-          await transfer(
-            join(dir, script.local),
-            `admin@${ip}:studio-vm/${script.guest}`,
-          );
+          await transfer(join(dir, script.local), `admin@${ip}:studio-vm/${script.guest}`)
       }
       if (values.journey) {
-        for (const file of [
-          "bench.mjs",
-          "scenario-spec.json",
-          "seed-media.json",
-        ]) {
-          await writeFile(join(dir, file), frozen.get(file) ?? "");
-          await transfer(
-            join(dir, file),
-            `admin@${ip}:studio-vm/source/${file}`,
-          );
+        for (const file of ['bench.mjs', 'scenario-spec.json', 'seed-media.json']) {
+          await writeFile(join(dir, file), frozen.get(file) ?? '')
+          await transfer(join(dir, file), `admin@${ip}:studio-vm/source/${file}`)
         }
         await transfer(
-          join(dir, "catalogue.json"),
+          join(dir, 'catalogue.json'),
           `admin@${ip}:studio-vm/source/scenario-catalogue.json`,
-        );
+        )
       }
       if (values.scenario) {
         // In journey mode the scenario is exactly the transferred spec; one hash, one field.
@@ -463,130 +399,117 @@ async function main() {
           studioRevision: record.revision,
           catalogueHash: sha256(catalogueText),
           scenarioHash: sha256(
-            values.journey
-              ? (frozen.get("scenario-spec.json") ?? "")
-              : JSON.stringify([...frozen]),
+            values.journey ? (frozen.get('scenario-spec.json') ?? '') : JSON.stringify([...frozen]),
           ),
-          engineHash: values.journey
-            ? sha256(frozen.get("bench.mjs") ?? "")
-            : undefined,
-          mediaHash: values.journey
-            ? sha256(frozen.get("seed-media.json") ?? "")
-            : undefined,
-          kind: "real-vm",
-        };
-        await writeFile(
-          join(dir, "provenance.json"),
-          JSON.stringify(provenance, null, 2),
-        );
-        await transfer(
-          join(dir, "provenance.json"),
-          `admin@${ip}:studio-vm/source/provenance.json`,
-        );
+          engineHash: values.journey ? sha256(frozen.get('bench.mjs') ?? '') : undefined,
+          mediaHash: values.journey ? sha256(frozen.get('seed-media.json') ?? '') : undefined,
+          kind: 'real-vm',
+        }
+        await writeFile(join(dir, 'provenance.json'), JSON.stringify(provenance, null, 2))
+        await transfer(join(dir, 'provenance.json'), `admin@${ip}:studio-vm/source/provenance.json`)
       }
       try {
         console.log(
           await ssh(
-            `${values.scenario ? "export STUDIO_FT_SCENARIO=1\n" : ""}${buildScript}`,
+            `${values.scenario ? 'export STUDIO_FT_SCENARIO=1\n' : ''}${buildScript}`,
             false,
             3_600_000,
             true,
           ),
-        );
+        )
       } finally {
-        await imageQueue;
+        await imageQueue
         // Reports and logs are what a failed build leaves behind; fetch them either way.
-        await transfer(`admin@${ip}:studio-vm/results`, dir, true).catch(
-          () => {},
-        );
+        await transfer(`admin@${ip}:studio-vm/results`, dir, true).catch(() => {})
       }
-    };
+    }
     try {
       await cycle(
         {
           clone: async () => {
-            journal("Création de la copie jetable.");
-            await command("tart", ["clone", source, name], {
+            journal('Création de la copie jetable.')
+            await command('tart', ['clone', source, name], {
               timeout: 600_000,
-            });
+            })
           },
           start: async () => {
-            journal("Démarrage de la VM : 4 cœurs, 16 Gio de mémoire invitée.");
-            await command("tart", [
-              "set",
+            journal('Démarrage de la VM : 4 cœurs, 16 Gio, écran 1920 × 1080.')
+            await command('tart', [
+              'set',
               name,
-              "--cpu",
-              "4",
-              "--memory",
-              "16384",
-            ]);
-            vm = spawn(
-              "tart",
-              ["run", name, "--no-graphics", "--no-audio", "--no-clipboard"],
-              { stdio: "ignore" },
-            );
-            let bootError: Error | undefined;
-            vm.on("error", (error) => {
-              bootError = error;
-            });
+              '--cpu',
+              '4',
+              '--memory',
+              '16384',
+              '--display',
+              '1920x1080pt',
+              '--no-display-refit',
+            ])
+            vm = spawn('tart', ['run', name, '--no-graphics', '--no-audio', '--no-clipboard'], {
+              stdio: 'ignore',
+            })
+            let bootError: Error | undefined
+            vm.on('error', error => {
+              bootError = error
+            })
             for (let i = 0; i < 90; i++) {
               if (interrupted || bootError || vm.exitCode !== null)
-                throw new Error("VM launch interrupted or failed");
+                throw new Error('VM launch interrupted or failed')
               try {
-                ip = await command("tart", ["ip", name], { timeout: 3000 });
+                ip = await command('tart', ['ip', name], { timeout: 3000 })
               } catch {
-                ip = "";
+                ip = ''
               }
-              if (/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ip)) return;
-              await delay(2000);
+              if (/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ip)) return
+              await delay(2000)
             }
-            throw new Error("VM did not obtain an IP address");
+            throw new Error('VM did not obtain an IP address')
           },
           execute: async () => {
-            if (interrupted) throw new Error("Interrupted");
-            await (mode === "prepare" ? provision() : buildRelease());
-            if (interrupted) throw new Error("Interrupted");
+            if (interrupted) throw new Error('Interrupted')
+            await (mode === 'prepare' ? provision() : buildRelease())
+            if (interrupted) throw new Error('Interrupted')
           },
           stop: async () => {
-            journal("Arrêt de la VM.");
+            journal('Arrêt de la VM.')
             if (ip) {
               // SSH disconnects when macOS shuts down; allow the guest to flush its disk first.
-              await ssh("sync; sudo shutdown -h now", false, 30_000).catch(
-                () => {},
-              );
-              if (vm?.exitCode === null)
-                await Promise.race([once(vm, "exit"), delay(30_000)]);
+              await ssh('sync; sudo shutdown -h now', false, 30_000).catch(() => {})
+              if (vm?.exitCode === null) await Promise.race([once(vm, 'exit'), delay(30_000)])
             }
-            if (vm?.exitCode === null) await command("tart", ["stop", name]);
+            if (vm?.exitCode === null) await command('tart', ['stop', name])
           },
           remove: async () => {
-            journal(
-              "Suppression de la copie jetable ; conservation des rapports.",
-            );
-            await owned(name);
-            await command("tart", ["delete", name]);
+            journal('Suppression de la copie jetable ; conservation des rapports.')
+            await owned(name)
+            await command('tart', ['delete', name])
           },
         },
-        mode === "prepare",
-      );
-      record.status = mode === "prepare" ? "ready" : "build-passed";
-      journal("Exécution terminée avec succès.");
+        mode === 'prepare',
+      )
+      record.status = mode === 'prepare' ? 'ready' : 'build-passed'
+      journal('Exécution terminée avec succès.')
     } catch (error) {
-      record.status = "failed-retained";
-      journal("Échec : copie conservée pour diagnostic.");
-      throw error;
+      record.status = 'failed-retained'
+      journal('Échec : copie conservée pour diagnostic.')
+      throw error
     } finally {
-      activity.end();
-      await save();
-      console.log(`VM report: ${join(dir, "record.json")}`);
+      await new Promise<void>(resolve => activity.end(resolve))
+      await save()
+      try {
+        console.log(`Rapports locaux : ${await exportRunFolder(root, name)}`)
+      } catch (error) {
+        console.error('Export du rapport local impossible :', error)
+      }
+      console.log(`VM report: ${join(dir, 'record.json')}`)
     }
   } finally {
-    process.off("SIGINT", interrupt);
-    process.off("SIGTERM", interrupt);
-    await rm(lock, { recursive: true });
+    process.off('SIGINT', interrupt)
+    process.off('SIGTERM', interrupt)
+    await rm(lock, { recursive: true })
   }
 }
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : "VM operation failed");
-  process.exitCode = 1;
-});
+main().catch(error => {
+  console.error(error instanceof Error ? error.message : 'VM operation failed')
+  process.exitCode = 1
+})

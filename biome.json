@@ -12,7 +12,8 @@
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "indentWidth": 2
+    "indentWidth": 2,
+    "lineWidth": 100
   },
   "linter": {
     "enabled": true,
@@ -20,13 +21,138 @@
       "preset": "recommended",
       "suspicious": {
         "noExplicitAny": "error"
+      },
+      "complexity": {
+        "noExcessiveLinesPerFunction": {
+          "level": "error",
+          "options": {
+            "maxLines": 50,
+            "skipBlankLines": true,
+            "skipIifes": true
+          }
+        },
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": {
+            "maxAllowedComplexity": 15
+          }
+        }
       }
     }
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "double",
-      "semicolons": "always"
+      "quoteStyle": "single",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "asNeeded",
+      "trailingCommas": "all",
+      "bracketSpacing": true,
+      "bracketSameLine": false
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["src/admin/**/*.tsx", "src/admin/**/*.ts"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useButtonType": "error",
+            "useKeyWithClickEvents": "error",
+            "useValidAnchor": "error",
+            "noLabelWithoutControl": "error"
+          },
+          "correctness": {
+            "useHookAtTopLevel": "error",
+            "useExhaustiveDependencies": "error",
+            "useJsxKeyInIterable": "error",
+            "noNestedComponentDefinitions": "error",
+            "noUnusedImports": "error",
+            "noUnusedVariables": "error",
+            "noUnusedFunctionParameters": "error",
+            "noChildrenProp": "error"
+          },
+          "suspicious": {
+            "noArrayIndexKey": "error",
+            "noConsole": {
+              "level": "error",
+              "options": {
+                "allow": ["warn", "error"]
+              }
+            }
+          },
+          "style": {
+            "useConsistentArrayType": "error",
+            "noNonNullAssertion": "error"
+          },
+          "complexity": {
+            "noUselessFragments": "error",
+            "noForEach": "off",
+            "noExcessiveLinesPerFunction": {
+              "level": "error",
+              "options": {
+                "maxLines": 150,
+                "skipBlankLines": true,
+                "skipIifes": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/admin/json-validators.js", "src/admin/json-validators.d.ts"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["tests/**"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noExcessiveLinesPerFunction": "off",
+            "noExcessiveCognitiveComplexity": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/scenarios/case-design.ts",
+        "src/scenarios/conversation.ts",
+        "src/scenarios/declarative.ts",
+        "src/scenarios/examples.ts",
+        "src/scenarios/export-approved.ts",
+        "src/scenarios/inventory.ts",
+        "src/scenarios/preflight.ts",
+        "tools/draft-locales.ts",
+        "tools/model.ts",
+        "tools/prepare-examples.ts",
+        "tools/prepare-scenarios.ts",
+        "tools/vm.ts",
+        "tools/vm/scenarios/declarative.mjs"
+      ],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noExcessiveLinesPerFunction": "off",
+            "noExcessiveCognitiveComplexity": "off"
+          }
+        }
+      }
+    }
+  ],
+  "json": {
+    "formatter": {
+      "trailingCommas": "none"
     }
   }
 }

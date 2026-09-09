@@ -2,11 +2,7 @@
   "version": 1,
   "id": "P013",
   "request": "« Prépare le runtime nécessaire, puis annule l’opération si je change d’avis. »",
-  "requires": [
-    "isolated-vm",
-    "motion-runtime-absent",
-    "runtime-install-authorized"
-  ],
+  "requires": ["isolated-vm", "motion-runtime-absent", "runtime-install-authorized"],
   "steps": [
     {
       "id": "project",

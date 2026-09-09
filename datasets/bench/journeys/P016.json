@@ -2,12 +2,7 @@
   "version": 1,
   "id": "P016",
   "request": "« Montre les changements puis synchronise ceux que j’ai choisis. »",
-  "requires": [
-    "isolated-vm",
-    "cloud-sync-fixture",
-    "cloud-test-account",
-    "cloud-push-authorized"
-  ],
+  "requires": ["isolated-vm", "cloud-sync-fixture", "cloud-test-account", "cloud-push-authorized"],
   "steps": [
     {
       "id": "project",

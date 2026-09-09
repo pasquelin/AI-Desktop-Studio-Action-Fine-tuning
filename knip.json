@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "tools/*.ts",
+    "tools/vm/*.ts",
+    "tools/vm/*.mjs",
+    "tools/vm/scenarios/*.mjs",
+    "src/scenarios/declarative.ts",
+    "src/scenarios/runner.ts",
+    "src/vm/scenario-consent.ts",
+    "src/admin/main.tsx",
+    "tests/**/*.test.ts"
+  ],
+  "project": ["src/**/*.{ts,tsx,css}", "tools/**/*.{ts,mjs}"],
+  "ignoreBinaries": ["ollama", "tart"],
+  "ignoreUnresolved": ["./bench.mjs", "./runner.ts", "./window-view.ts", "./scenario-consent.ts"]
+}

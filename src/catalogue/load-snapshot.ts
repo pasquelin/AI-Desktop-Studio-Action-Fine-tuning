@@ -1,32 +1,32 @@
-import { mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
-import { runInNewContext } from "node:vm";
-import { build, normalizePath } from "vite";
+import { mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join, resolve } from 'node:path'
+import { runInNewContext } from 'node:vm'
+import { build, normalizePath } from 'vite'
 
 // Vite resolves module ids through realpath, and on Windows it reports either
 // the short 8.3 spelling or the expanded one depending on when it probes the
 // drives, so both sides of the comparison go through the same canonical form.
 function canonical(path: string): string {
   try {
-    return normalizePath(realpathSync.native(path));
+    return normalizePath(realpathSync.native(path))
   } catch {
-    return normalizePath(path);
+    return normalizePath(path)
   }
 }
 
 export async function loadSnapshot(root: string): Promise<unknown> {
-  const temp = canonical(mkdtempSync(join(tmpdir(), "studio-catalogue-")));
-  root = canonical(root);
+  const temp = canonical(mkdtempSync(join(tmpdir(), 'studio-catalogue-')))
+  root = canonical(root)
   try {
-    const entry = join(temp, "snapshot.ts");
-    const shared = resolve(root, "src/shared");
+    const entry = join(temp, 'snapshot.ts')
+    const shared = resolve(root, 'src/shared')
     writeFileSync(
       entry,
       `
-import { ACTION_FAMILIES, ACTION_REGISTRY } from ${JSON.stringify(join(shared, "domain/assistant.ts"))};
-import { schemaOfFields, mcpTools } from ${JSON.stringify(resolve(root, "src/main/mcp/tools.ts"))};
-import { TRANSLATIONS, textAt } from ${JSON.stringify(join(shared, "i18n/index.ts"))};
+import { ACTION_FAMILIES, ACTION_REGISTRY } from ${JSON.stringify(join(shared, 'domain/assistant.ts'))};
+import { schemaOfFields, mcpTools } from ${JSON.stringify(resolve(root, 'src/main/mcp/tools.ts'))};
+import { TRANSLATIONS, textAt } from ${JSON.stringify(join(shared, 'i18n/index.ts'))};
 const languages = Object.keys(TRANSLATIONS);
 const actions = ACTION_FAMILIES.flatMap(family => family.actions.map(action => ({
   ...action,
@@ -44,47 +44,43 @@ export default JSON.stringify({
   registryNames: ACTION_REGISTRY.map(action => action.name), actions, mcpTools: mcpTools(),
 }, (_key, value) => typeof value === 'function' ? {runtimeFunction: true} : value);
 `,
-    );
+    )
     const result = await build({
       configFile: false,
       root: temp,
       envDir: temp,
       publicDir: false,
-      logLevel: "silent",
-      resolve: { alias: { "@shared": shared } },
+      logLevel: 'silent',
+      resolve: { alias: { '@shared': shared } },
       build: {
         write: false,
         minify: false,
-        target: "esnext",
-        lib: { entry, name: "StudioCatalogue", formats: ["iife"] },
+        target: 'esnext',
+        lib: { entry, name: 'StudioCatalogue', formats: ['iife'] },
       },
       plugins: [
         {
-          name: "restrict-catalogue-imports",
+          name: 'restrict-catalogue-imports',
           moduleParsed(info) {
-            const id = canonical(info.id);
+            const id = canonical(info.id)
             if (
               id !== canonical(entry) &&
               !id.startsWith(`${canonical(shared)}/`) &&
-              id !== canonical(resolve(root, "src/main/mcp/tools.ts"))
+              id !== canonical(resolve(root, 'src/main/mcp/tools.ts'))
             ) {
-              throw new Error(`Unexpected catalogue dependency: ${info.id}`);
+              throw new Error(`Unexpected catalogue dependency: ${info.id}`)
             }
           },
         },
       ],
-    });
-    const outputs = Array.isArray(result) ? result : [result];
-    const output = outputs[0];
-    if (outputs.length !== 1 || !output || !("output" in output))
-      throw new Error("Unexpected build result.");
-    const chunk = output.output[0];
-    if (
-      output.output.length !== 1 ||
-      chunk?.type !== "chunk" ||
-      chunk.imports.length > 0
-    )
-      throw new Error("Catalogue must be self-contained.");
+    })
+    const outputs = Array.isArray(result) ? result : [result]
+    const output = outputs[0]
+    if (outputs.length !== 1 || !output || !('output' in output))
+      throw new Error('Unexpected build result.')
+    const chunk = output.output[0]
+    if (output.output.length !== 1 || chunk?.type !== 'chunk' || chunk.imports.length > 0)
+      throw new Error('Catalogue must be self-contained.')
     // Only the reviewed registry modules run; no application entry, Node globals or server.
     const serialized: unknown = runInNewContext(
       `${chunk.code}\nStudioCatalogue`,
@@ -93,11 +89,10 @@ export default JSON.stringify({
         timeout: 10000,
         contextCodeGeneration: { strings: false, wasm: false },
       },
-    );
-    if (typeof serialized !== "string")
-      throw new Error("Unexpected catalogue payload.");
-    return JSON.parse(serialized);
+    )
+    if (typeof serialized !== 'string') throw new Error('Unexpected catalogue payload.')
+    return JSON.parse(serialized)
   } finally {
-    rmSync(temp, { recursive: true, force: true });
+    rmSync(temp, { recursive: true, force: true })
   }
 }

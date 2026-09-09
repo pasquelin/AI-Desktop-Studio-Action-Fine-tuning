@@ -1,0 +1,74 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: false;
+}
+/* Faithful Studio dark theme, verified 2026-09-09. Source and sync policy: docs/admin-ui.md. */
+@plugin "daisyui/theme" {
+  name: "aidesktopstudio-dark";
+  default: true;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #202124;
+  --color-base-200: #191a1c;
+
+  --color-base-300: #3c3f44;
+  --color-base-content: #dfe1e5;
+  --color-primary: #346ef2;
+  --color-primary-content: #ffffff;
+  --color-secondary: #3c3f44;
+  --color-secondary-content: #dfe1e5;
+
+  --color-accent: #346ef2;
+  --color-accent-content: #ffffff;
+  --color-neutral: #34363a;
+  --color-neutral-content: #dfe1e5;
+  --color-info: #346ef2;
+  --color-info-content: #ffffff;
+  --color-success: #57a773;
+  --color-success-content: #12180f;
+  --color-warning: #e0a350;
+  --color-warning-content: #1d1608;
+  --color-error: #ff715b;
+  --color-error-content: #2a0d08;
+
+  --radius-selector: 4px;
+  --radius-field: 4px;
+  --radius-box: 6px;
+
+  --size-selector: calc(var(--sc-tick) / 5);
+  --size-field: calc(var(--sc-control) / 8);
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+@theme {
+  --color-chassis: #2b2d30;
+  --color-muted: #91959b;
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --text-tiny: calc(11px * var(--sc-font-scale));
+  --text-body: calc(13px * var(--sc-font-scale));
+  --text-xs: calc(12px * var(--sc-font-scale));
+  --text-sm: calc(14px * var(--sc-font-scale));
+  --text-base: calc(16px * var(--sc-font-scale));
+  --text-lg: calc(18px * var(--sc-font-scale));
+}
+:root {
+  --sc-font-scale: 1;
+  --sc-control: 28px;
+  --sc-tick: 16px;
+  --font-size-min: var(--text-tiny);
+}
+/* Studio index-extras.css: daisyUI controls follow the same text floor. */
+.input-sm,
+.select-sm,
+.textarea-sm,
+.btn-sm {
+  --font-size-min: var(--text-tiny);
+}
+
+/* Badges keep the native daisyUI gauge; the 16px selector token belongs to checkboxes. */
+.badge {
+  --size-selector: 0.25rem;
+}

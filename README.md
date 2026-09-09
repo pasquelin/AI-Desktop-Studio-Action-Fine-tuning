@@ -102,7 +102,7 @@ Mac Apple Silicon et [Tart](https://tart.run) requis pour les commandes VM. Dét
 
 `npm start` (ou `pnpm start`) lance le parcours et démarre automatiquement l’observateur. Le terminal affiche immédiatement son adresse complète : ouvrir ce lien dans le navigateur. Il n’y a pas de clé à saisir ni de deuxième commande à lancer. `npm run vm:run` fournit également le suivi pour le contrôle de construction/démarrage seul.
 
-Un observateur déjà actif est réutilisé. Il reste disponible après le test pour consulter les résultats ; fermer l’onglet ne stoppe pas les tests. L’adresse reste toujours `http://127.0.0.1:4318/`, même après redémarrage. Le port fixe ne peut être occupé que par un seul observateur ; s’il est occupé par un autre service, le lancement échoue clairement au lieu de choisir une nouvelle adresse. Elle est également enregistrée dans `artifacts/vm/observer.json`.
+Un observateur déjà actif est réutilisé. Il reste disponible après le test pour consulter les résultats ; fermer l’onglet ne stoppe pas les tests. L’adresse reste toujours `http://127.0.0.1:4328/`, même après redémarrage. Le port fixe ne peut être occupé que par un seul observateur ; s’il est occupé par un autre service, le lancement échoue clairement au lieu de choisir une nouvelle adresse. Elle est également enregistrée dans `artifacts/vm/observer.json`.
 
 Les captures sont produites après les actions, avec leur résultat, indépendamment de l’ouverture de la page. Seule la dernière session est conservée dans `artifacts/vm/captures/`. La liste suit l’ordre chronologique, avec les dernières images en bas. Aucun rafraîchissement manuel ni capture périodique : le suivi consulte seulement les images disponibles.
 

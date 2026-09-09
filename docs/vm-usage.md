@@ -77,3 +77,11 @@ Le suivi visuel se met à jour après chaque action du parcours : aucune capture
 Le parcours refuse de fonctionner hors d'une VM macOS ou si ses projets existent déjà. Il utilise un profil dédié et un dossier de projets jetables dans la VM. Le rapport `results/scenario.json` distingue les étapes réussies et échouées ; les journaux sont rapatriés même en cas d'échec. Une VM en échec est arrêtée et conservée pour diagnostic.
 
 Les scripts invités sont figés au démarrage et conservés avec le rapport. Une relecture peut donc continuer pendant l'exécution ; une correction ultérieure nécessite une nouvelle exécution. Un résultat ne valide que la version exécutée.
+
+## Écran et captures
+
+Chaque nouvelle copie utilise un espace de travail de 1920 × 1080 points, fixe même si le panneau d’observation change de taille. macOS peut produire davantage de pixels physiques en mode Retina.
+
+Avant chaque capture, la fenêtre de Studio ou de Welcome est mise au premier plan et ses animations sont attendues via le moteur de rendu. L’image elle-même est prise par `screencapture`, lancé dans la session Aqua de l’invité : **la VM de référence doit avoir accordé l’autorisation macOS « Enregistrement de l’écran »**, sans quoi la première capture échoue. Une capture couvre donc l’écran, pas uniquement la fenêtre mise au premier plan.
+
+Au premier lancement, le banc parcourt les étapes Welcome et vérifie la persistance de sa fin avant d’attendre Studio visible. Cela couvre le chemin Continuer/Terminer avec les options initiales, pas toutes les variantes de configuration proposées.
