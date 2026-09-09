@@ -72,6 +72,39 @@ describe("VM command transport", () => {
 });
 
 describe("VM ownership", () => {
+  it.each(["created", "ready", "build-passed", "failed-retained", "removed"])(
+    "accepts the emitted status %s",
+    (status) => {
+      const name = "studio-ft-00000000-0000-4000-8000-000000000000";
+      const record = {
+        name,
+        owner: "/repo",
+        mode: "prepare",
+        status,
+        key: join("/state", name, "id_ed25519"),
+      };
+      expect(validateOwnership(record, name, "/repo", "/state").status).toBe(
+        status,
+      );
+    },
+  );
+  it.each(["unknown", "", undefined, null, 0, ["ready"]])(
+    "rejects an invalid status %j",
+    (status) => {
+      const name = "studio-ft-00000000-0000-4000-8000-000000000000";
+      const record = {
+        name,
+        owner: "/repo",
+        mode: "prepare",
+        status,
+        key: join("/state", name, "id_ed25519"),
+      };
+      expect(() =>
+        validateOwnership(record, name, "/repo", "/state"),
+      ).toThrow();
+    },
+  );
+
   it("refuses foreign names, ownership and personal keys", async () => {
     const name = "studio-ft-00000000-0000-4000-8000-000000000000";
     const record = {

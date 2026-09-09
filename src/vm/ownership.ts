@@ -1,8 +1,17 @@
 import { join } from "node:path";
+export const VM_STATUSES = [
+  "created",
+  "ready",
+  "build-passed",
+  "failed-retained",
+  "removed",
+] as const;
+export type VmStatus = (typeof VM_STATUSES)[number];
+
 export interface VmRecord {
   name: string;
   owner: string;
-  status: string;
+  status: VmStatus;
   mode: string;
   key: string;
 }
@@ -26,7 +35,7 @@ export function validateOwnership(
     record.name !== name ||
     record.owner !== root ||
     !["prepare", "build"].includes(String(record.mode)) ||
-    typeof record.status !== "string" ||
+    !VM_STATUSES.some((status) => status === record.status) ||
     typeof record.key !== "string"
   )
     throw new Error("VM ownership mismatch");

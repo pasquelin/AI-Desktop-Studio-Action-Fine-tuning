@@ -14,6 +14,7 @@ import { cycle } from "../src/vm/lifecycle.ts";
 import {
   isManagedName,
   VM_PREFIX,
+  type VmRecord,
   validateOwnership,
 } from "../src/vm/ownership.ts";
 import { cancelActiveCommands, command, quote } from "../src/vm/process.ts";
@@ -73,7 +74,11 @@ async function main() {
       await command("tart", ["delete", name]);
       await writeFile(
         join(state, name, "record.json"),
-        JSON.stringify({ ...previous, status: "removed" }, null, 2),
+        JSON.stringify(
+          { ...previous, status: "removed" } satisfies VmRecord,
+          null,
+          2,
+        ),
       );
       console.log(`Removed owned VM ${name}; reports retained.`);
       return;
@@ -110,11 +115,15 @@ async function main() {
     const dir = join(state, name);
     await mkdir(dir, { mode: 0o700 });
     const key = reference?.key ?? join(dir, "id_ed25519");
-    const record = {
+    const record: VmRecord & {
+      source: string;
+      revision: string;
+      createdAt: string;
+    } = {
       owner: root,
       name,
       source,
-      mode,
+      mode: reference ? "build" : "prepare",
       key,
       status: "created",
       revision: "",
