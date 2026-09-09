@@ -1,11 +1,20 @@
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { makeCatalogue } from "../src/catalogue/catalogue.ts";
 import { loadSnapshot } from "../src/catalogue/load-snapshot.ts";
 import { assertFresh, inspectSource } from "../src/catalogue/source.ts";
+
+// Windows and macOS reach the same directory through several spellings.
+const caseInsensitive = existsSync(tmpdir().toUpperCase());
 
 const roots: string[] = [];
 function source(): string {
@@ -89,4 +98,19 @@ describe("source binding and freshness", () => {
       inputSchema: { properties: { consent: { type: "string" } } },
     });
   });
+  it.skipIf(!caseInsensitive)(
+    "loads modules when the root is spelled non-canonically",
+    async () => {
+      const root = source();
+      const disguised = join(dirname(root), basename(root).toUpperCase());
+      const info = inspectSource(root);
+      const result = makeCatalogue(
+        await loadSnapshot(disguised),
+        info.names,
+        info.revision,
+        info.hashes,
+      );
+      expect(result.actions[0]).toMatchObject({ name: "node.add" });
+    },
+  );
 });

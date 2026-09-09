@@ -4,9 +4,20 @@ import { join, resolve } from "node:path";
 import { runInNewContext } from "node:vm";
 import { build, normalizePath } from "vite";
 
+// Vite resolves module ids through realpath, and on Windows it reports either
+// the short 8.3 spelling or the expanded one depending on when it probes the
+// drives, so both sides of the comparison go through the same canonical form.
+function canonical(path: string): string {
+  try {
+    return normalizePath(realpathSync.native(path));
+  } catch {
+    return normalizePath(path);
+  }
+}
+
 export async function loadSnapshot(root: string): Promise<unknown> {
-  const temp = realpathSync(mkdtempSync(join(tmpdir(), "studio-catalogue-")));
-  root = realpathSync(root);
+  const temp = canonical(mkdtempSync(join(tmpdir(), "studio-catalogue-")));
+  root = canonical(root);
   try {
     const entry = join(temp, "snapshot.ts");
     const shared = resolve(root, "src/shared");
@@ -51,10 +62,11 @@ export default JSON.stringify({
         {
           name: "restrict-catalogue-imports",
           moduleParsed(info) {
+            const id = canonical(info.id);
             if (
-              info.id !== normalizePath(entry) &&
-              !info.id.startsWith(`${normalizePath(shared)}/`) &&
-              info.id !== normalizePath(resolve(root, "src/main/mcp/tools.ts"))
+              id !== canonical(entry) &&
+              !id.startsWith(`${canonical(shared)}/`) &&
+              id !== canonical(resolve(root, "src/main/mcp/tools.ts"))
             ) {
               throw new Error(`Unexpected catalogue dependency: ${info.id}`);
             }
