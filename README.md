@@ -1,16 +1,20 @@
 <div align="center">
 
+<img src="docs/assets/logo.svg" alt="AI Desktop Studio" width="120">
+
 # AI Desktop Studio — Action Fine-tuning
 
 **Compagnon de préparation et d’évaluation d’un assistant local multilingue pour AI Desktop Studio.**
 
 [![Validate](https://github.com/pasquelin/AI-Desktop-Studio-Action-Fine-tuning/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/pasquelin/AI-Desktop-Studio-Action-Fine-tuning/actions/workflows/validate.yml)
-[![Node](https://img.shields.io/badge/node-%E2%89%A524.8%20%3C25-339933?logo=node.js&logoColor=white)](.node-version)
-[![pnpm](https://img.shields.io/badge/pnpm-12.3.4-F69220?logo=pnpm&logoColor=white)](package.json)
-[![TypeScript](https://img.shields.io/badge/TypeScript-7.0.2%20strict-3178C6?logo=typescript&logoColor=white)](tsconfig.json)
-[![Biome](https://img.shields.io/badge/Biome-2.5.12-60A5FA?logo=biome&logoColor=white)](biome.json)
-[![Vitest](https://img.shields.io/badge/Vitest-3.2.7-6E9F18?logo=vitest&logoColor=white)](package.json)
-[![Licence](https://img.shields.io/badge/licence-UNLICENSED-lightgrey)](#licence)
+[![Node](https://img.shields.io/badge/Node-%E2%89%A524.8%20%3C25-2b2d30?logo=node.js&logoColor=5fa04e)](.node-version)
+[![pnpm](https://img.shields.io/badge/pnpm-12.3.4-2b2d30?logo=pnpm&logoColor=f69220)](package.json)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7%20strict-2b2d30?logo=typescript&logoColor=3178c6)](tsconfig.json)
+[![Biome](https://img.shields.io/badge/Biome-2.5-2b2d30?logo=biome&logoColor=60a5fa)](biome.json)
+[![Vitest](https://img.shields.io/badge/Vitest-3.2-2b2d30?logo=vitest&logoColor=6da95f)](package.json)
+[![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-2b2d30)](LICENSE)
+
+**[→ AI Desktop Studio](https://www.aidesktopstudio.com/)**
 
 </div>
 
@@ -148,4 +152,10 @@ Modèle principal candidat : **Qwen3.5-2B** ; comparaison : **Qwen3-1.7B**. La c
 
 ## Licence
 
-La licence du code **n’est pas choisie** : paquet privé `UNLICENSED`. Apache 2.0 concerne les modèles candidats, pas automatiquement ce code. En l’absence de licence, aucun droit d’usage n’est accordé.
+**[PolyForm Noncommercial 1.0.0](LICENSE)** — la même licence qu’AI Desktop Studio, dont ce
+dépôt fait partie. Tout usage non commercial est permis : étude, recherche, expérimentation,
+projets personnels, enseignement et organismes à but non lucratif. L’usage commercial ne
+l’est pas.
+
+Cette licence couvre le code de ce dépôt. Elle ne couvre ni les dépendances tierces, ni les
+modèles candidats qu’il nomme : Apache 2.0 sur un modèle ne s’étend pas à ce code.

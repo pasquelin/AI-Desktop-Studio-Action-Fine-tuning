@@ -1,0 +1,11 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <title>AI Desktop Studio</title>
+  <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="#161921"/>
+  <g id="aid-mark">
+    <path d="M165 706 349 350q33-64 66 0l184 356q16 31-19 31h-61q-18 0-26-16L382 506q-7-14-14 0L257 721q-8 16-26 16h-61q-35 0-5-31Z" fill="#fff"/>
+    <path d="M340 721 382 639l42 82q8 16-10 16h-64q-18 0-10-16Z" fill="#346ef2"/>
+    <circle cx="540" cy="379" r="46" fill="#346ef2"/>
+    <rect x="494" y="453" width="92" height="284" rx="42" fill="#346ef2"/>
+    <path d="M617 453h72q170 0 170 142t-170 142h-72v-70h65q79 0 79-72t-79-72h-65Z" fill="#fff"/>
+  </g>
+</svg>
