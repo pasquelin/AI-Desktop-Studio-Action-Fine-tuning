@@ -28,7 +28,7 @@ Il prépare le terrain d’un assistant local pour AI Desktop Studio, avec tél�
 - **Inventorier** les scénarios d’usage — 310 actions réparties en 26 familles — et signaler leur dérive quand Studio évolue.
 - **Construire** Studio dans une machine virtuelle macOS jetable et vérifier que son interface monte, sans toucher au poste de travail.
 
-Ce qui n’existe pas encore : les parcours exécutés dans l’application, la capture de données et l’entraînement.
+Les parcours métier s’exécutent désormais dans la VM et laissent leurs preuves ; le dernier essai réel a échoué à la réouverture du document. Ce qui n’existe pas encore : la capture de données approuvée et l’entraînement.
 
 ## État réel
 
@@ -41,7 +41,9 @@ Chaque ligne dit ce qui est **exécuté et vérifié**, pas ce qui est prévu.
 | Inventaire des scénarios | 310 actions, 26 familles, sans exécution | [docs/scenarios/](docs/scenarios/README.md) |
 | Préparation et build en VM jetable | Recette réelle du 9 septembre 2026 | [docs/vm-usage.md](docs/vm-usage.md) |
 | Chargement de l’interface Studio | Vérifié par son renderer, dans la VM | `startup.json` du rapport |
-| Rendu 3D, sauvegarde, scénarios métier | **Non exécutés** | — |
+| Interface d’administration | Sert scénarios, rapports et suivi en local | [docs/admin-ui.md](docs/admin-ui.md) |
+| Projet, scène, cube et sauvegarde | Exécutés dans la VM, étapes réussies | Onglet « Rapports » de l’interface |
+| Réouverture du document | **Échoue** sur `document.open` | Dernier rapport d’essai |
 | Capture de données, entraînement, fusion | **Non implémentés** | [docs/roadmap.md](docs/roadmap.md) |
 
 > [!NOTE]
@@ -108,6 +110,36 @@ Les captures sont produites après les actions, avec leur résultat, indépendam
 
 `npm run vm:observe` reste une commande facultative pour consulter les rapports sans lancer un nouveau test.
 
+## L’interface
+
+Quatre vues, servies par le même observateur local sur `http://127.0.0.1:4328/`. Elles lisent les fichiers du dépôt et les rapports déjà écrits ; elles n’exécutent rien d’elles-mêmes et ne déduisent aucune réussite.
+
+### Live — l’essai en cours
+
+![Vue Live : le bureau invité à gauche, le déroulé horodaté à droite](docs/assets/admin-live.png)
+
+Le bureau de la VM à gauche, les étapes et les journaux à droite. La capture ci-dessus montre un essai réel qui a créé le projet, la scène et le cube, puis a échoué à la réouverture du document : l’échec reste affiché tel quel, et la copie est conservée pour diagnostic. Aucun clic ni touche n’est envoyé à la VM depuis cette page.
+
+### Scénarios — le catalogue et l’éditeur
+
+![Vue Scénarios : le catalogue à gauche, l’éditeur d’étapes à droite](docs/assets/admin-scenarios.png)
+
+Les 5 228 éléments du catalogue, filtrables par type, langue et état. L’éditeur ouvre un parcours étape par étape : action Studio, paramètres et vérifications attendues en JSON validé contre le schéma partagé, traductions, activation. Le serveur valide actions, paramètres et références à l’enregistrement ; aucune exécution n’est déclenchée.
+
+### Rapports — les preuves conservées
+
+![Vue Rapports : la liste des essais à gauche, le détail d’un essai à droite](docs/assets/admin-reports.png)
+
+Chaque essai conserve ses étapes, ses captures, ses preuves et ses journaux. Une étape échouée montre l’erreur brute renvoyée par Studio, et les étapes suivantes sont marquées bloquées plutôt que rejouées. L’état de la VM est distingué du résultat métier : une VM nettoyée ne vaut pas un parcours réussi.
+
+### Vue d’ensemble — l’état calculé
+
+![Vue d’ensemble : compteurs, derniers résultats et couverture par langue](docs/assets/admin-overview.png)
+
+Les compteurs sont calculés depuis les fichiers actuels, pas depuis un historique. Ils disent ce qui est prêt à être tenté, pas ce qui est validé : « prêt à essayer » ne signifie pas validé dans Studio, « activé » ne signifie pas approuvé pour l’entraînement, et la présence d’un texte dans une langue ne valide pas sa traduction.
+
+Détail des vues et de leurs routes : [interface](docs/admin-ui.md) et [administration locale](docs/administration.md).
+
 ### Visuel et journaux dans la même fenêtre
 
 Le bureau invité occupe le panneau gauche ; le panneau droit montre les étapes
@@ -154,6 +186,7 @@ Aucun partage de dossier, de presse-papiers ou de son. La copie de build est dé
 | `src/scenarios/` | Inventaire des scénarios et contrôle de fraîcheur |
 | `src/studio/` | Lecture du checkout Studio configuré |
 | `src/vm/` | Cycle de vie, propriété et transport des VM |
+| `src/admin/` | Interface d’administration et lecture des scénarios et rapports |
 | `tools/` | Commandes locales |
 | `configs/` | Choix du pilote, sans chemins personnels |
 | `schemas/` | Formats versionnés implémentés |
@@ -175,6 +208,8 @@ Modèle principal candidat : **Qwen3.5-2B** ; comparaison : **Qwen3-1.7B**. La c
 | [Scénarios](docs/scenarios/README.md) | Actions MCP, demandes existantes et cas candidats |
 | [Environnement VM](docs/vm-environment.md) | Cadrage et choix d’isolation |
 | [Mode d’emploi VM](docs/vm-usage.md) | Commandes, limites et recette réelle |
+| [Interface](docs/admin-ui.md) | Vues, routes et navigation de l’interface |
+| [Administration locale](docs/administration.md) | Service local, scénarios et rapports |
 | [Validation](docs/validation.md) | Ce qui est contrôlé, et ce qui ne l’est pas |
 
 ## Organisation Git

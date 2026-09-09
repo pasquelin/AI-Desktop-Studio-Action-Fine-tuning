@@ -1,6 +1,6 @@
 # Administration locale
 
-L’interface d’administration utilise le même serveur local que le suivi, à l’adresse `http://127.0.0.1:4328/`. Le serveur compile ses ressources au démarrage ; aucune seconde commande de serveur web n’est nécessaire. `npm run vm:observe` ouvre le service sans lancer de test. `npm run start` conserve le lancement existant des essais et de l’observateur.
+L’interface d’administration utilise le même serveur local que le suivi, à l’adresse `http://127.0.0.1:4328/`. Le serveur reconstruit ses ressources uniquement lorsqu’une source de l’interface a changé ; aucune seconde commande de serveur web n’est nécessaire. `npm run vm:observe` ouvre le service sans lancer de test. `npm run start` conserve le lancement existant des essais et de l’observateur.
 
 Le menu sépare quatre usages : **Live**, **Scénarios**, **Rapports** et **Vue d’ensemble**. Les primitives sont celles de DaisyUI, avec la palette sombre et le logo d’AI Desktop Studio. `npm run admin:build` vérifie la compilation locale, également incluse dans la validation générale.
 
