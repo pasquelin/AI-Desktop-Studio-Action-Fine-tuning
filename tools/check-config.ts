@@ -8,6 +8,6 @@ await runCheck(
       process.argv[2] ?? new URL("../configs/pilot.json", import.meta.url);
     return validatePilot(JSON.parse(readFileSync(path, "utf8")));
   },
-  "Pilot configuration valid. No model loaded or downloaded.",
+  "Pilot configuration valid. This check does not load or download models.",
   "Configuration check failed.",
 );

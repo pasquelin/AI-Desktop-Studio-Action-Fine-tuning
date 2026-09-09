@@ -22,7 +22,14 @@
     "catalogue:check": "node tools/check-catalogue.ts",
     "vm": "node tools/vm.ts",
     "freshness:check": "node tools/check-freshness.ts",
-    "vm:run": "node tools/run-vm.ts"
+    "vm:run": "node tools/run-vm.ts",
+    "vm:scenario": "node tools/run-vm.ts --scenario",
+    "vm:observe": "node tools/observe-vm.ts",
+    "start": "node tools/run-vm.ts --scenario",
+    "model:pull": "node tools/model.ts pull",
+    "model:check": "node tools/model.ts check",
+    "model:eval": "node tools/model.ts evaluate",
+    "scenarios:prepare": "node tools/prepare-scenarios.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",

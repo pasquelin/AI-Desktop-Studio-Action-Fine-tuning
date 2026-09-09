@@ -1,6 +1,7 @@
 import { type ChildProcess, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { once } from "node:events";
+import { createWriteStream } from "node:fs";
 import {
   mkdir,
   readdir,
@@ -27,6 +28,7 @@ import {
   quote,
   sshConfigValue,
 } from "../src/vm/process.ts";
+import { beginSnapshots, SNAPSHOT, saveSnapshot } from "../src/vm/snapshots.ts";
 import { listLocalVmNames } from "../src/vm/tart.ts";
 
 const root = resolve(import.meta.dirname, "..");
@@ -37,11 +39,38 @@ const { positionals, values } = parseArgs({
     source: { type: "string" },
     base: { type: "string" },
     name: { type: "string" },
+    scenario: { type: "boolean", default: false },
   },
 });
 const mode = positionals[0];
 const owned = (name: string) => readRecord(name, root, state);
+/** Guest executables, kept with the report; no `guest` means delivery over ssh stdin. */
+const guestScripts = [
+  { source: "tools/vm/build.sh", local: "build.sh" },
+  {
+    source: "src/vm/scenario-consent.ts",
+    local: "scenario-consent.ts",
+    guest: "source/scenario-consent.ts",
+    scenarioOnly: true,
+  },
+  {
+    source: "tools/vm/scenarios/project.mjs",
+    local: "project.mjs",
+    guest: "source/.ft-project.mjs",
+    scenarioOnly: true,
+  },
+];
 async function main() {
+  // Freeze guest executables before the asynchronous VM preparation starts.
+  const frozen = new Map<string, string>();
+  if (mode === "build")
+    for (const script of guestScripts)
+      if (values.scenario || !script.scenarioOnly)
+        frozen.set(
+          script.local,
+          await readFile(join(root, script.source), "utf8"),
+        );
+  const buildScript = frozen.get("build.sh") ?? "";
   if (!["prepare", "build", "cleanup", "check"].includes(mode ?? ""))
     throw new Error(
       "Usage: vm check | prepare --source LOCAL_VM | build --base PREPARED_VM | cleanup --name OWNED_VM",
@@ -131,6 +160,62 @@ async function main() {
         mode: 0o600,
       });
     await save();
+    await beginSnapshots(root, name);
+    const activity = createWriteStream(join(dir, "activity.log"), {
+      flags: "a",
+      mode: 0o600,
+    });
+    const journal = (message: string) => {
+      activity.write(
+        `[${new Date().toLocaleTimeString("fr-FR")}] ${message}\n`,
+      );
+    };
+    let imageQueue = Promise.resolve();
+    let outputLine = "";
+    const output = (chunk: Buffer) => {
+      activity.write(chunk);
+      outputLine += chunk.toString("utf8");
+      const lines = outputLine.split("\n");
+      outputLine = (lines.pop() ?? "").slice(-65536);
+      for (const line of lines) {
+        if (!line.startsWith("[Capture] ")) continue;
+        try {
+          const event = JSON.parse(line.slice(10));
+          if (
+            typeof event.file !== "string" ||
+            !SNAPSHOT.test(event.file) ||
+            typeof event.activity !== "string" ||
+            event.activity.length > 300
+          )
+            continue;
+          imageQueue = imageQueue
+            .then(async () => {
+              const local = join(dir, "action-image.jpg");
+              try {
+                await transfer(
+                  `admin@${ip}:studio-vm/action-images/${event.file}`,
+                  local,
+                );
+                await saveSnapshot(
+                  root,
+                  name,
+                  await readFile(local),
+                  event.activity,
+                  Number(event.file.slice(0, 13)),
+                );
+              } finally {
+                await rm(local, { force: true });
+              }
+            })
+            .catch(() =>
+              journal("Une capture d’action n’a pas pu être rapatriée."),
+            );
+        } catch {
+          /* Unstructured application output is only a log, never an instruction. */
+        }
+      }
+    };
+    journal("Exécution créée. Aucun modèle en apprentissage.");
     let vm: ChildProcess | undefined;
     let ip = "";
     // Shared hardening; only the host-key policy and authentication differ per transport.
@@ -146,7 +231,12 @@ async function main() {
       "-o",
       `UserKnownHostsFile=${sshConfigValue(join(dir, "known_hosts"))}`,
     ];
-    const ssh = (script: string, password = false, timeout = 3_600_000) =>
+    const ssh = (
+      script: string,
+      password = false,
+      timeout = 3_600_000,
+      live = false,
+    ) =>
       command(
         "ssh",
         [
@@ -161,7 +251,11 @@ async function main() {
           `admin@${ip}`,
           `/bin/bash -lc ${quote(script)}`,
         ],
-        { interactive: password, timeout },
+        {
+          interactive: password,
+          timeout,
+          ...(live ? { onOutput: output } : {}),
+        },
       );
     // Transfer over the isolated connection; no host folder mounts or credentials in the guest.
     const transfer = (from: string, to: string, recursive = false) =>
@@ -205,6 +299,7 @@ async function main() {
       );
     };
     const buildRelease = async () => {
+      journal("Récupération de Studio et préparation du catalogue.");
       // Read the remote into an isolated clone; do not touch the user's checkout.
       const checkout = join(dir, "source");
       await command(
@@ -261,6 +356,7 @@ async function main() {
         `--output=${archive}`,
         record.revision,
       ]);
+      journal("Transfert de la révision figée vers la VM.");
       await ssh("mkdir -p ~/studio-vm/source");
       await transfer(archive, `admin@${ip}:studio-vm/source.tar`);
       await ssh(
@@ -268,11 +364,27 @@ async function main() {
       );
       await rm(archive);
       await rm(checkout, { recursive: true });
+      for (const script of guestScripts) {
+        const content = frozen.get(script.local);
+        if (content === undefined) continue;
+        await writeFile(join(dir, script.local), content);
+        if (script.guest)
+          await transfer(
+            join(dir, script.local),
+            `admin@${ip}:studio-vm/${script.guest}`,
+          );
+      }
       try {
         console.log(
-          await ssh(await readFile(join(root, "tools/vm/build.sh"), "utf8")),
+          await ssh(
+            `${values.scenario ? "export STUDIO_FT_SCENARIO=1\n" : ""}${buildScript}`,
+            false,
+            3_600_000,
+            true,
+          ),
         );
       } finally {
+        await imageQueue;
         // Reports and logs are what a failed build leaves behind; fetch them either way.
         await transfer(`admin@${ip}:studio-vm/results`, dir, true).catch(
           () => {},
@@ -283,11 +395,13 @@ async function main() {
       await cycle(
         {
           clone: async () => {
+            journal("Création de la copie jetable.");
             await command("tart", ["clone", source, name], {
               timeout: 600_000,
             });
           },
           start: async () => {
+            journal("Démarrage de la VM : 4 cœurs, 16 Gio de mémoire invitée.");
             await command("tart", [
               "set",
               name,
@@ -324,6 +438,7 @@ async function main() {
             if (interrupted) throw new Error("Interrupted");
           },
           stop: async () => {
+            journal("Arrêt de la VM.");
             if (ip) {
               // SSH disconnects when macOS shuts down; allow the guest to flush its disk first.
               await ssh("sync; sudo shutdown -h now", false, 30_000).catch(
@@ -335,6 +450,9 @@ async function main() {
             if (vm?.exitCode === null) await command("tart", ["stop", name]);
           },
           remove: async () => {
+            journal(
+              "Suppression de la copie jetable ; conservation des rapports.",
+            );
             await owned(name);
             await command("tart", ["delete", name]);
           },
@@ -342,10 +460,13 @@ async function main() {
         mode === "prepare",
       );
       record.status = mode === "prepare" ? "ready" : "build-passed";
+      journal("Exécution terminée avec succès.");
     } catch (error) {
       record.status = "failed-retained";
+      journal("Échec : copie conservée pour diagnostic.");
       throw error;
     } finally {
+      activity.end();
       await save();
       console.log(`VM report: ${join(dir, "record.json")}`);
     }

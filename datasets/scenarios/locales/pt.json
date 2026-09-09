@@ -1,0 +1,29 @@
+{
+  "language": "pt",
+  "sourceHash": "4b49040ba242c3c2e4f7a8fa27222703a7acd5bb194147219d4e4a29f48b463c",
+  "model": "qwen3.5:2b",
+  "status": "machine-draft-unreviewed",
+  "templates": {
+    "T001": "Minimal nominal : solicitar {action} em um cenário válido, fornecer apenas os parâmetros obrigatórios ; verificar o resultado descrito acima com um leitor de negócios independente.",
+    "T002": "Completo nominal : preencher todos os parâmetros compatíveis, comparar cada um com o resultado ; não combinar opções mutuamente exclusivas sem consultar o handler.",
+    "T003": "Campo desconhecido no fil MCP : verificar o rejeito previsto por additionalProperties=false ; distinguir este rejeito da normalização do motor interno.",
+    "T004": "Falha do executor : injetar uma erro determinística do port concernado ; resposta explícita, nenhuma anúncio de sucesso e nenhuma mutação colateral.",
+    "T005": "Retorno perdido ou requisição repetida : observar os efeitos antes de uma possível reanulação ; não confundir repetível com idempotente, não duplicar um efeito não solicitado.",
+    "T006": "Estado concorrente : modificar a alvo ou fechar o documento entre leitura e ação ; reler ou recusar explicitamente, sem agir sobre outro objeto.",
+    "T007": "Solicitação cancelada antes da execução : não iniciar a ação ; testar separadamente uma cancelação tardia, que não garante a cancelação de um efeito já realizado.",
+    "T008": "Parâmetro {field} ausente : verificar o rejeito ou a clareza antes do chamado útil, de acordo com o contrato.",
+    "T009": "Parâmetro {field} com null e tipo incompatível : verificar a validação do fil MCP, e, separadamente, a do handler ; resultado sem efeito parcial não previsto.",
+    "T010": "Opção de {field} : {value} ; fixture compatível, verificar precisamente a rama de negócios correspondente.",
+    "T011": "Opção desconhecida de {field} : verificar o rejeito, sem seleção silenciosa de uma opção próxima.",
+    "T012": "Texto {field} : vazio, espaços, acentos, Unicode, nome longo e caracteres de pontuação ; verificar validação e conservação de acordo com a semântica do campo.",
+    "T013": "Parâmetro {field} ausente : verificar o valor real por padrão ou a conservação do valor atual ; não inventar um novo.",
+    "T014": "Valor de {field} : zero, negativo, fracionário e muito grande mas finito ; verificar unidade, precisão e restrições de negócios, sem presumir que todas sejam válidas.",
+    "T015": "Lista {field} : vazio, singleton, múltiplos elementos, duplicatas e um elemento inválido ; verificar ordem, deduplicação e atomicidade realmente previstas.",
+    "T016": "Booléen {field} : verdadeiro depois falso com estado inicial oposto ; verificar os dois efeitos e não tratar o falso como um parâmetro ausente.",
+    "T017": "Alvo {field} : identificador válido, ausente, obsoleto, outro documento/projeto e dois nomes idênticos ; resolver o identificador real, esclarecer a ambiguidade, proteger a alvo adjacente.",
+    "T018": "Consentimento : acordo, rejeição, ausência de resposta e modificação da solicitação após o acordo ; verificar o mecanismo real de confirmação antes dos efeitos sensíveis, sem inventar um campo consentimento.",
+    "T019": "Preparação ou restrição dinâmica faltante : testar cada rama do callback do handler ; o marcador runtimeFunction do catálogo não revela essas ramos.",
+    "T020": "Contexto ausente ou incompatível : nenhuma superfície ativa, documento de outro tipo, alvo fechado ; verificar a pré-condição real e uma explicação explorável.",
+    "T021": "Borda {bound} de {field} = {value} : valor exato e valores de ambos os lados ; verificar rejeito ou clamp de acordo com o contrato real, e o resultado efetivamente armazenado."
+  }
+}

@@ -89,6 +89,7 @@ npx --yes pnpm@12.3.4 install --frozen-lockfile --ignore-scripts
 
 | Commande | Fonction |
 | --- | --- |
+| `npm run vm:observe` | Affiche l’adresse de la page locale d’observation |
 | `npm run vm:run` | Enchaîne préparation et build dans une VM jetable |
 | `npm run vm -- check` | Version de Tart et VM locales |
 | `npm run vm -- prepare --source IMAGE` | Prépare une référence depuis une image locale |
@@ -96,6 +97,36 @@ npx --yes pnpm@12.3.4 install --frozen-lockfile --ignore-scripts
 | `npm run vm -- cleanup --name VM` | Supprime une VM appartenant à ce dépôt |
 
 Mac Apple Silicon et [Tart](https://tart.run) requis pour les commandes VM. Détail dans [le mode d’emploi](docs/vm-usage.md).
+
+## Lancer un test et ouvrir son suivi
+
+`npm start` (ou `pnpm start`) lance le parcours et démarre automatiquement l’observateur. Le terminal affiche immédiatement son adresse complète : ouvrir ce lien dans le navigateur. Il n’y a pas de clé à saisir ni de deuxième commande à lancer. `npm run vm:run` fournit également le suivi pour le contrôle de construction/démarrage seul.
+
+Un observateur déjà actif est réutilisé. Il reste disponible après le test pour consulter les résultats ; fermer l’onglet ne stoppe pas les tests. L’adresse reste toujours `http://127.0.0.1:4318/`, même après redémarrage. Le port fixe ne peut être occupé que par un seul observateur ; s’il est occupé par un autre service, le lancement échoue clairement au lieu de choisir une nouvelle adresse. Elle est également enregistrée dans `artifacts/vm/observer.json`.
+
+Les captures sont produites après les actions, avec leur résultat, indépendamment de l’ouverture de la page. Seule la dernière session est conservée dans `artifacts/vm/captures/`. La liste suit l’ordre chronologique, avec les dernières images en bas. Aucun rafraîchissement manuel ni capture périodique : le suivi consulte seulement les images disponibles.
+
+`npm run vm:observe` reste une commande facultative pour consulter les rapports sans lancer un nouveau test.
+
+### Visuel et journaux dans la même fenêtre
+
+Le bureau invité occupe le panneau gauche ; le panneau droit montre les étapes
+et les sorties de la dernière exécution. La page tient dans la hauteur disponible :
+le défilement reste dans le journal. Sur un écran étroit, les panneaux passent
+l’un au-dessus de l’autre.
+
+Les journaux se chargent automatiquement, puis se mettent à jour toutes les deux
+secondes lorsque l’onglet est visible. Décocher **Suivre la fin** pour remonter dans
+l’historique sans être ramené en bas. Ils restent consultables après le nettoyage
+de la VM. Les prochaines exécutions alimentent `activity.log` au fil de la
+construction et du cycle de vie ; les anciennes utilisent leur `build.log`
+conservé. Les sorties du démarrage de Studio sont relayées pendant les prochains
+builds. Il ne s’agit pas de tous les journaux système de macOS ni d’actions métier
+qui n’ont pas encore été exécutées.
+
+Le défilement manuel suspend le suivi de fin pendant trente secondes après le dernier mouvement, pour les étapes, les journaux et les captures. Un nouveau mouvement relance ce délai ; ensuite le suivi reprend automatiquement.
+
+Pour les limites, le nettoyage et les rapports : [mode d’emploi VM](docs/vm-usage.md).
 
 ## Comment le banc VM fonctionne
 
@@ -159,3 +190,19 @@ l’est pas.
 
 Cette licence couvre le code de ce dépôt. Elle ne couvre ni les dépendances tierces, ni les
 modèles candidats qu’il nomme : Apache 2.0 sur un modèle ne s’étend pas à ce code.
+
+## Premier essai du modèle local
+
+Ollama doit être installé et démarré. `npm run model:pull` télécharge explicitement Qwen3.5-2B. `npm run model:check` vérifie sa présence et affiche son empreinte. `npm run model:eval` réalise 34 demandes synthétiques sur 15 langues, sans exécuter une action Studio. Les commandes fonctionnent aussi avec `pnpm`.
+
+Les rapports sont dans `artifacts/model/baseline.md` et `baseline.json`, hors Git. Ce sont des propositions avant entraînement, pas des scénarios métier validés. [Protocole et limites](docs/model-usage.md).
+
+### Couverture multilingue complète à construire
+
+La [stratégie multilingue](docs/multilingual-strategy.md) fixe les quinze langues, la relecture, les variantes et la séparation entraînement/test. Le [registre de couverture](docs/multilingual-coverage.csv) rattache les 5 165 cas de conception aux 310 actions et réserve leurs quinze couvertures linguistiques. Les cellules `planned` signalent un travail restant, pas un test rédigé ou validé.
+
+### Fiches structurées de tout l’inventaire
+
+`npm run scenarios:prepare` prépare les 5 165 cas et 63 parcours depuis les documents sources. Le résultat est consultable dans `artifacts/scenarios/README.md`. Les sources versionnables vivent dans `datasets/scenarios/` : variantes de paramètres, instructions et demandes des parcours en quinze langues, et références aux fixtures et contrôles du banc Studio. La génération refuse les doublons, actions sans cas, traductions absentes et paramètres de traduction perdus.
+
+**Ce sont des brouillons, pas des scénarios opérationnels ni des données approuvées pour l’entraînement.** Les traductions automatiques peuvent changer le sens malgré une structure valide. Il reste à relire chaque formulation, construire les dialogues des cas individuels, lier les ressources réelles, préciser les contrôles métier et vérifier l’exécution. Les verdicts de schéma concernent les paramètres internes des actions ; ils ne prouvent ni le contrat MCP ni le résultat métier. Les sorties générées sont remplaçables : modifier leurs sources, pas les fichiers produits.

@@ -2,7 +2,23 @@
   "schemaVersion": 1,
   "phase": "foundation",
   "network": "disabled",
-  "languages": ["en", "fr", "es", "de", "pt", "ar", "hi", "zh", "ja", "ko"],
+  "languages": [
+    "fr",
+    "en",
+    "ar",
+    "de",
+    "es",
+    "hi",
+    "id",
+    "it",
+    "ja",
+    "ko",
+    "pt",
+    "ru",
+    "tr",
+    "vi",
+    "zh"
+  ],
   "models": [
     {
       "id": "Qwen/Qwen3.5-2B",

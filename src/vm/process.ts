@@ -7,11 +7,18 @@ export function cancelActiveCommands(): void {
 export function command(
   executable: string,
   args: string[],
-  options: { input?: string; interactive?: boolean; timeout?: number } = {},
+  options: {
+    input?: string;
+    interactive?: boolean;
+    timeout?: number;
+    onOutput?: (chunk: Buffer) => void;
+  } = {},
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     const child = spawn(executable, args, {
-      stdio: options.interactive ? "inherit" : ["pipe", "pipe", "inherit"],
+      stdio: options.interactive
+        ? "inherit"
+        : ["pipe", "pipe", options.onOutput ? "pipe" : "inherit"],
       env: {
         ...process.env,
         TART_NO_AUTO_PRUNE: "1",
@@ -22,7 +29,9 @@ export function command(
     let output = "";
     child.stdout?.on("data", (data: Buffer) => {
       output += data.toString();
+      options.onOutput?.(data);
     });
+    child.stderr?.on("data", (data: Buffer) => options.onOutput?.(data));
     child.stdin?.on("error", () => {});
     child.stdin?.end(options.input);
     const timer = setTimeout(() => {

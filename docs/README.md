@@ -18,3 +18,5 @@
 Le lot 1A demande un accord de développement dans le compagnon. Le lot 1B demandera séparément l’accord pour les dépendances et poids nécessaires. Le micro-entraînement de preuve d’export appartient au lot 1C et nécessite son propre accord. Aucun de ces accords n’est acquis par la rédaction de ce dossier.
 
 Les chemins du plan sont relatifs au compagnon, sauf les modifications de l’application explicitement isolées. Seuls ces documents ont été créés dans le worktree attribué ; ni le checkout de l’application ni les anciens worktrees n’ont été modifiés.
+
+- [Stratégie multilingue](multilingual-strategy.md) et [registre des 310 actions × 15 langues](multilingual-coverage.csv) : planification, statuts et critères ; pas une attestation de traductions validées.

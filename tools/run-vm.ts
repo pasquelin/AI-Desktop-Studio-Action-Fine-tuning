@@ -1,5 +1,7 @@
 import { mkdir, readdir } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import { parseArgs } from "node:util";
+import { ensureObserver } from "../src/vm/observer-process.ts";
 import {
   isManagedName,
   isPreparedReference,
@@ -11,6 +13,9 @@ import { command } from "../src/vm/process.ts";
 import { listLocalVmNames } from "../src/vm/tart.ts";
 import { runCheck } from "./run-check.ts";
 
+const { values } = parseArgs({
+  options: { scenario: { type: "boolean", default: false } },
+});
 const root = resolve(import.meta.dirname, "..");
 const state = stateDir(root);
 const vm = (...args: string[]) =>
@@ -22,6 +27,9 @@ const vm = (...args: string[]) =>
 await runCheck(
   async () => {
     await mkdir(state, { recursive: true, mode: 0o700 });
+    console.log(
+      `Suivre le test dans le navigateur : ${await ensureObserver(root)}`,
+    );
     await runPipeline({
       findReference: async () => {
         const [locals, entries] = await Promise.all([
@@ -47,7 +55,12 @@ await runCheck(
         await vm("prepare", "--source", "sequoia-vanilla");
       },
       build: async (reference) => {
-        await vm("build", "--base", reference);
+        await vm(
+          "build",
+          "--base",
+          reference,
+          ...(values.scenario ? ["--scenario"] : []),
+        );
       },
     });
     return [];

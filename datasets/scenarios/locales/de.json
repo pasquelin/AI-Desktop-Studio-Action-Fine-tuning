@@ -1,0 +1,32 @@
+{
+  "language": "de",
+  "sourceHash": "4b49040ba242c3c2e4f7a8fa27222703a7acd5bb194147219d4e4a29f48b463c",
+  "model": "qwen3.5:2b",
+  "status": "machine-draft-unreviewed",
+  "corrections": {
+    "T001": "Assistant correction preserving action placeholder"
+  },
+  "templates": {
+    "T001": "Minimaler Normalfall: {action} in einem gültigen Ausgangszustand anfordern und nur die Pflichtparameter angeben; das oben beschriebene Ergebnis durch eine unabhängige Prüfung des Anwendungszustands kontrollieren.",
+    "T002": "Nominal vollständig: Alle kompatiblen Parameter eingeben, jeden einzelnen mit dem Ergebnis vergleichen; nicht ohne den Handler konsultieren, wenn sich widersprüchliche Optionen kombinieren lassen.",
+    "T003": "Unbekannter Feldwert im MCP-Thread: Das erwartete Verweigerungsergebnis durch additionalProperties=false überprüfen; diesen Abbruch vom internen Motor-Normalisierungsvorgang unterscheiden.",
+    "T004": "Fehler des Exekutors: Ein deterministischer Fehler des betroffenen Ports einleiten; explizite Antwort, keine Erfolgsmeldung und keine kollaterale Modifikation.",
+    "T005": "Verlorener Rückweg oder wiederholte Anfrage: Vor einer möglichen Wiederholung die Auswirkungen beobachten; nicht zwischen wiederholbar und idempotent verwechseln, einen nicht angeforderten Effekt nicht duplizieren.",
+    "T006": "Konkurrierender Zustand: Zwischen der Lektüre und der Aktion die Zielfeld oder den Dokument schließen; explizit erneut lesen oder ablehnen, ohne auf ein anderes Objekt zu handeln.",
+    "T007": "Abgebrochene Anfrage vor Ausführung: Die Aktion nicht ausführen; eine späte Abbruchprüfung separat testen, die jedoch keine Abkündigung eines bereits realisierten Effekts garantiert.",
+    "T008": "Fehlender Parameter {field}: Vor der nützlichen Aufruf das Verweigerungsergebnis oder die Klärung überprüfen, je nach Vertrag.",
+    "T009": "Parameter {field} mit null und unkompatiblem Typ: Die MCP-Thread-Validierung prüfen, dann separat die Handler-Validierung; Ergebnis ohne teilweise nicht erwartete Wirkung.",
+    "T010": "Option von {field}: {value}; kompatibler Fixture, genau die entsprechende Geschäftsverzweigung überprüfen.",
+    "T011": "Unbekannte Option von {field}: Verweigerung prüfen, keine stille Auswahl einer nahen Option durchführen.",
+    "T012": "Text {field}: leer, Leerzeichen, Akzente, Unicode, langer Name und Sonderzeichen; Validierung und Konservation je nach Semantik des Feldes überprüfen.",
+    "T013": "Fehlender Parameter {field}: Die tatsächliche Standardwert prüfen oder die aktuelle Wertsicherung durchführen; eine erfundene nicht erstellen.",
+    "T014": "Wert von {field}: Null, negativ, bruchteilig und sehr groß aber endlich; Einheit, Präzision und Geschäftsvorgaben überprüfen, ohne annehmen zu müssen, dass alle gültig sind.",
+    "T015": "Liste {field}: leer, Singleton, mehrere Elemente, Duplikate und ein ungültiges Element; Reihenfolge, Deduplizierung und tatsächlich erwartete Atomarität überprüfen.",
+    "T016": "Boolean {field}: wahr dann falsch mit einem gegenüberliegenden Initialzustand; beide Effekte prüfen und falschen Wert nicht als fehlenden Parameter behandeln.",
+    "T017": "Zielfeld {field}: gültiger Identifikator, fehlend, veraltet, anderes Dokument/Projekt und zwei identische Namen; den echten Identifikator lösen, die Unklarheit klären, die Zielfeld-Nachbarn schützen.",
+    "T018": "Einverständnis: Zustimmung, Ablehnung, Fehlen einer Antwort und Änderung der Anfrage nach Zustimmung; das reale Konfirmationsmechanismus vor sensiblen Effekten überprüfen, ohne ein consent-Feld erfunden zu erstellen.",
+    "T019": "Fehlende Vorbereitung oder dynamische Einschränkung: Jede Verzweigung des Handler-callbacks testen; das runtimeFunction-Marker im Katalog offenbart diese Verzweigungen nicht.",
+    "T020": "Fehlender oder unkompatibler Kontext: Keine aktive Oberfläche, Dokument eines anderen Typs, geschlossener Zielfeld; die reale Prerequisitprüfung und eine ertragbare Erklärung überprüfen.",
+    "T021": "Bindezahl {bound} von {field} = {value}: exakte Werte und Werte auf beiden Seiten; Verweigerung oder Clamp je nach echtem Vertrag prüfen und das tatsächlich gespeicherte Ergebnis."
+  }
+}

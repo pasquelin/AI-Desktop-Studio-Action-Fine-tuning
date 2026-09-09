@@ -61,3 +61,19 @@ La copie de build a récupéré Studio à la révision `8031cd23b2c81bc26a63d9d4
 Corrections issues de cette recette : chemin du fichier SSH de confiance correctement cité lorsqu’il contient des espaces, installation de pnpm dans un préfixe explicite, node-gyp disponible pour les modules natifs, arrêt macOS avec synchronisation du disque, nettoyage acceptant une copie déjà arrêtée. La copie de build a été supprimée après succès ; l’image initiale et la référence préparée sont arrêtées.
 
 Chaque build démarre désormais Studio pour vérifier que son interface monte. Il ne s’agit pas encore d’une validation fonctionnelle de l’ensemble de l’application.
+
+## Observer le bureau invité
+
+Le suivi démarre automatiquement avec `npm start` (ou `pnpm start`). `npm run vm:run` conserve le contrôle de démarrage seul. L’adresse complète est affichée dans le terminal. Un serveur local déjà actif est réutilisé ; il reste accessible après la fin du test. La commande séparée `npm run vm:observe` est facultative.
+
+Le parcours prend une capture après chaque action, avec son résultat. L’observateur consulte cette liste sans déclencher de photos. L’ordre est chronologique, avec la dernière en bas ; un clic ouvre la modale. Seule la dernière session est conservée, et fermer la page ne stoppe pas le test.
+
+Le suivi visuel se met à jour après chaque action du parcours : aucune capture périodique, aucun bouton de rafraîchissement. La consultation régulière de la liste ne crée pas de nouvelles images. Les captures portent le nom de l’action et son résultat, et seule la dernière session est conservée. La palette et le logo de l’observateur proviennent du thème sombre de Studio.
+
+## Premier parcours métier
+
+`npm run vm:scenario` construit la dernière révision distante de `develop` dans une copie jetable, puis exécute le parcours de référence : créer un projet, créer une scène, ajouter/renommer/déplacer un cube, sauvegarder, rouvrir, renommer le projet, retirer/remettre dans les récents et mettre à la corbeille. Les actions passent par le serveur MCP de Studio et les confirmations attendues sont acceptées explicitement dans son interface. Aucun modèle ni entraînement n'est utilisé.
+
+Le parcours refuse de fonctionner hors d'une VM macOS ou si ses projets existent déjà. Il utilise un profil dédié et un dossier de projets jetables dans la VM. Le rapport `results/scenario.json` distingue les étapes réussies et échouées ; les journaux sont rapatriés même en cas d'échec. Une VM en échec est arrêtée et conservée pour diagnostic.
+
+Les scripts invités sont figés au démarrage et conservés avec le rapport. Une relecture peut donc continuer pendant l'exécution ; une correction ultérieure nécessite une nouvelle exécution. Un résultat ne valide que la version exécutée.

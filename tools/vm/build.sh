@@ -12,15 +12,32 @@ manager=$(node -p 'JSON.parse(require("node:fs").readFileSync("package.json","ut
 [[ "$manager" =~ ^pnpm@[0-9]+\.[0-9]+\.[0-9]+(\+sha[0-9]+\.[a-f0-9]+)?$ ]] || { echo 'Unsupported package manager'; exit 1; }
 # pnpm honors the project's declared packageManager; lockfile changes are refused.
 command -v node-gyp >/dev/null || npm install --global --prefix /opt/homebrew node-gyp@13.0.2
+echo "[Étape] Installation des dépendances dans la VM"
 pnpm install --frozen-lockfile
 node scripts/fetch-engine.mjs --sources-only
+echo "[Étape] Construction et vérification de Studio"
 pnpm build
 node -e 'const fs=require("node:fs"); const crypto=require("node:crypto"); fs.writeFileSync(process.env.HOME+"/studio-vm/results/build.json",JSON.stringify({status:"build-passed",scenariosExecuted:false,node:process.version,lockfileHash:crypto.createHash("sha256").update(fs.readFileSync("pnpm-lock.yaml")).digest("hex")},null,2))'
 
 # Smoke check: launch only inside the disposable VM, inspect the renderer, then exit.
-node node_modules/electron/cli.js . --remote-debugging-port=9333 > "$results/startup.log" 2>&1 &
+# Prepare the isolated test profile before Studio reads it. MCP stays guest-local.
+mkdir -p "$HOME/studio-vm/profile"
+node --input-type=module <<'PROFILE'
+import {existsSync,readFileSync,writeFileSync} from 'node:fs';
+const path=process.env.HOME+'/studio-vm/profile/settings.json';
+const stored=existsSync(path)?JSON.parse(readFileSync(path,'utf8')):{};
+stored.settings={...stored.settings,mcp:{...stored.settings?.mcp,enabled:true}};
+writeFileSync(path,JSON.stringify(stored));
+PROFILE
+# CI deliberately skips Studio's macOS identity postinstall; apply its own script after download.
+node -e 'require("electron")'
+env -u CI node scripts/dev-app-identity.mjs
+echo "[Étape] Ouverture de Studio et contrôle de son interface"
+node node_modules/electron/cli.js . --user-data-dir="$HOME/studio-vm/profile" --remote-debugging-port=9333 > "$results/startup.log" 2>&1 &
 app_pid=$!
-trap 'kill "$app_pid" 2>/dev/null || true' EXIT
+tail -n +1 -F "$results/startup.log" &
+log_pid=$!
+trap 'kill "$app_pid" "$log_pid" 2>/dev/null || true' EXIT
 node --input-type=module <<'JS'
 import { writeFileSync } from 'node:fs';
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -52,3 +69,8 @@ if (!mounted(result)) throw new Error('Studio did not mount its interface in the
 writeFileSync(process.env.HOME+'/studio-vm/results/startup.json', JSON.stringify({status:'renderer-mounted', ...result, scenariosExecuted:false},null,2));
 console.log('Studio renderer mounted inside the VM; business scenarios not executed.');
 JS
+
+if [[ "${STUDIO_FT_SCENARIO:-0}" == 1 ]]; then
+  echo "[Étape] Exécution du parcours projet, scène et cube"
+  node .ft-project.mjs
+fi

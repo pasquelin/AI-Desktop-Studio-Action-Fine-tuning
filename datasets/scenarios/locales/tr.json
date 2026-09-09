@@ -1,0 +1,29 @@
+{
+  "language": "tr",
+  "sourceHash": "4b49040ba242c3c2e4f7a8fa27222703a7acd5bb194147219d4e4a29f48b463c",
+  "model": "qwen3.5:2b",
+  "status": "machine-draft-unreviewed",
+  "templates": {
+    "T001": "Minimal nominal : talep etmek {action} geçerli bir ortamda, sadece zorunlu parametreleri sunmak; yukarıdaki sonuçları bağımsız iş makinesi okuyucuyla doğrulamak.",
+    "T002": "Tam nominal: tüm uyumlu parametreleri doldurmak, her birini sonucu karşılaştırmak; birbirini dışlayıcı seçenekleri kombin etmek için handler'i kontrol etmemek.",
+    "T003": "MCP filinde bilinmeyen alan: additionalProperties=false tarafından öngörülen reddiye bakmak; bu reddiyi iç motorun normalizasyonundan ayırt etmek.",
+    "T004": "İşleyici başarısızlığı: ilgili porttan belirlenen bir hata eklemek; açık bir yanıt vermek, başarı haberi vermemek ve yan etkileri değiştirmemek.",
+    "T005": "Kaybolan dönüş veya tekrarlanan istek: öncelikle herhangi bir yeniden başlatma sonrası etkileri gözlemlemek; tekrarlanabilir ile idempotent'i karıştırmamak, talep edilmiş bir etkiye tekrarlamak.",
+    "T006": "Çatışma durumu: okuma ve işlem arasında hedefi değiştirme veya dosyayı kapatmak; belirlenen bir şeyi değiştirmemek, başka bir objeye işlem yapmak.",
+    "T007": "İşlem öncesi iptal edilmiş talep: işlemi başlatmamak; geçici bir iptal test etmek, ancak gerçek bir etkiyi iptal etmediğini garanti etmemek.",
+    "T008": "{field} parametresi eksik: çağrıdan önce reddi veya açıklama yapmak, sözleşmeye göre.",
+    "T009": "{field} parametresi null ve uyumsuz tip: MCP filinin validasyonunu kontrol etmek, sonra da handler'in validasyonunu ayrı olarak kontrol etmek; beklenmeyen kısmen etkili sonuç vermemek.",
+    "T010": "{field} seçeneği: {value}; uygun fixture, ilgili iş mantığı branşını kesinlikle doğrulamak.",
+    "T011": "{field} bilinmeyen seçeneği: reddiye bakmak, yakın bir seçeneğin sessiz olarak seçilmesini önlememek.",
+    "T012": "{field} metni: boşluklar, noktalı işaretler, aksanlar, Unicode karakterleri, uzun isim ve virgül; validasyon ve korunumu semantik alanına göre kontrol etmek.",
+    "T013": "{field} parametresi eksik: gerçek varsayılan değeri veya mevcut değerin korunmasını kontrol etmek; yeni bir değer yaratmamak.",
+    "T014": "{field} değeri: sıfır, negatif, kademeli ve çok büyük ama sonlu; birim, hassasiyet ve iş sözleşmesi ile ilgili sınırlar, tümlerinin geçerli olduğunu varsaymadan kontrol etmek.",
+    "T015": "{field} listesi: boşluk, tek bir öğe, birden fazla öğe, tekrarlar ve geçersiz bir öğe; sıralama, deduplikasyon ve gerçekten planlanan atomikliği doğrulamak.",
+    "T016": "{field} boolean: doğru sonra yanlış ile başlangıç durumu karşılaştırılmış; her iki etkiyi kontrol etmek ve yanlışları eksik parametre olarak işlememek.",
+    "T017": "{field} hedefi: geçerli bir kimlik numarası, eksik, eski, başka bir belge/proje ve iki aynı isim; gerçek kimlik numarasını çözmek, belirsizliği netleştirmek, yakın hedefi korumak.",
+    "T018": "Onay: onay, reddedilmeme, cevap vermemiş durum ve onaydan sonra talebin değiştirilmesi; hassas etkiler için gerçek onay mekanizmasını kontrol etmek, yeni bir 'onay alanı' yaratmamak.",
+    "T019": "Yapılandırma veya dinamik zorlama eksikliği: handler callback her bir branşını test etmek; katalogdaki runtimeFunction işareti bu branşları göstermez.",
+    "T020": "Eksik veya uyumsuz bağlam: aktif yüzey yok, başka tip bir belge, kapatılmış hedef; gerçek ön koşulu ve açıklayıcı bir açıklama doğrulamak.",
+    "T021": "{bound} {field} = {value}: kesin değer ve her iki tarafın değerleri; sözleşmenin gerçek olarak reddi veya clamp etmek ve gerçekten depolanan sonucu kontrol etmek."
+  }
+}

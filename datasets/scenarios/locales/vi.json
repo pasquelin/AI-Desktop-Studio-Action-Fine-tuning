@@ -1,0 +1,29 @@
+{
+  "language": "vi",
+  "sourceHash": "4b49040ba242c3c2e4f7a8fa27222703a7acd5bb194147219d4e4a29f48b463c",
+  "model": "qwen3.5:2b",
+  "status": "machine-draft-unreviewed",
+  "templates": {
+    "T001": "Minimal nominal : demander {action} dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+    "T002": "Complet nominal : renseigner tous les paramètres compatibles, comparer chacun au résultat ; ne pas combiner des options mutuellement exclusives sans consulter le handler.",
+    "T003": "Champ inconnu sur le fil MCP : vérifier le refus prévu par additionalProperties=false ; distinguer ce rejet de la normalisation du moteur interne.",
+    "T004": "Échec de l'exécuteur : injecter une erreur déterministe du port concerné ; réponse explicite, aucune annonce de réussite et aucune mutation collatérale.",
+    "T005": "Retour perdu ou requête répétée : observer les effets avant une éventuelle relance ; ne pas confondre répétable avec idempotent, ne pas dupliquer un effet non demandé.",
+    "T006": "État concurrent : modifier la cible ou fermer le document entre lecture et action ; relire ou refuser explicitement, sans agir sur un autre objet.",
+    "T007": "Demande annulée avant exécution : ne pas lancer l'action ; tester séparément une annulation tardive, qui ne garantit pas l'annulation d'un effet déjà réalisé.",
+    "T008": "Paramètre {field} absent : vérifier refus ou clarification avant l'appel utile, selon le contrat.",
+    "T009": "Paramètre {field} avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+    "T010": "Option de {field} : {value} ; fixture compatible, vérifier précisément la branche métier correspondante.",
+    "T011": "Option inconnue de {field} : vérifier rejet, pas de sélection silencieuse d'une option voisine.",
+    "T012": "Texte {field} : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+    "T013": "Paramètre {field} absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+    "T014": "Valeur de {field} : zéro, négative, fractionnaire et très grande mais finie ; vérifier unité, précision et contraintes métier, sans présumer qu'elles sont toutes valides.",
+    "T015": "Liste {field} : vide, singleton, plusieurs éléments, doublons et un élément invalide ; vérifier ordre, déduplication et atomicité réellement prévus.",
+    "T016": "Booléen {field} : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+    "T017": "Cible {field} : identifiant valide, absent, obsolète, autre document/projet et deux noms identiques ; résoudre l'identifiant réel, clarifier l'ambiguïté, protéger la cible voisine.",
+    "T018": "Consentement : accord, refus, absence de réponse et modification de la demande après accord ; vérifier le mécanisme réel de confirmation avant effets sensibles, sans inventer un champ consent.",
+    "T019": "Préparation ou contrainte dynamique manquante : tester chaque branche du callback du handler ; le marqueur runtimeFunction du catalogue ne révèle pas ces branches.",
+    "T020": "Contexte absent ou incompatible : aucune surface active, document d'un autre type, cible fermée ; vérifier la précondition réelle et une explication exploitable.",
+    "T021": "Borne {bound} de {field} = {value} : valeur exacte et valeurs de part et d'autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké."
+  }
+}

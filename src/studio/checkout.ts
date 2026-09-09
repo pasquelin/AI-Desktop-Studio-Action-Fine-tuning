@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { Ajv } from "ajv";
 
 export interface StudioLink {
@@ -21,6 +22,14 @@ export function readStudioLink(path: string): StudioLink | null {
   if (!linkValid(link))
     throw new Error("Invalid local Studio source configuration.");
   return link;
+}
+
+/** Where catalogue:export wrote its output; the default only applies with no binding. */
+export function cataloguePath(root: string): string {
+  return (
+    readStudioLink(resolve(root, ".studio-source.json"))?.output ??
+    resolve(root, "artifacts/catalogue.json")
+  );
 }
 
 export function execGit(root: string, ...args: string[]): string {

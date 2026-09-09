@@ -1,0 +1,29 @@
+{
+  "language": "en",
+  "sourceHash": "4b49040ba242c3c2e4f7a8fa27222703a7acd5bb194147219d4e4a29f48b463c",
+  "model": "qwen3.5:2b",
+  "status": "machine-draft-unreviewed",
+  "templates": {
+    "T001": "Nominal minimal : request {action} in a valid context, provide only the mandatory parameters; verify the result described above with an independent business reader.",
+    "T002": "Nominal complete: fill in all compatible parameters, compare each one to the result; do not combine mutually exclusive options without consulting the handler.",
+    "T003": "Unknown field on MCP wire: verify the rejection expected by additionalProperties=false; distinguish this rejection from internal normalization.",
+    "T004": "Executor failure: inject a deterministic error from the affected port; explicit response, no success announcement, and no collateral mutation.",
+    "T005": "Lost return or repeated request: observe effects before any possible retry; do not confuse repeatable with idempotent, do not duplicate an unrequested effect.",
+    "T006": "Concurrent state: modify the target or close the document between reading and action; re-read or refuse explicitly, without acting on another object.",
+    "T007": "Cancelled request before execution: do not launch the action; test separately a late cancellation, which does not guarantee cancellation of an already realized effect.",
+    "T008": "Missing parameter {field}: verify rejection or clarification before the useful call, according to the contract.",
+    "T009": "Parameter {field} with null and incompatible type: verify MCP wire validation, then separately handler validation; result without partial side effects not expected.",
+    "T010": "Option of {field}: {value}; compatible fixture, precisely verify the corresponding business branch.",
+    "T011": "Unknown option of {field}: verify rejection, no silent selection of a nearby option.",
+    "T012": "Text {field}: empty, spaces, accents, Unicode, long names and punctuation characters; verify validation and conservation according to field semantics.",
+    "T013": "Missing parameter {field}: verify the real default value or conservation of the current value; do not invent one.",
+    "T014": "Value of {field}: zero, negative, fractional and very large but finite; verify unit, precision and business constraints, without presuming they are all valid.",
+    "T015": "List {field}: empty, singleton, multiple elements, duplicates and an invalid element; verify order, deduplication and actual atomicity.",
+    "T016": "Boolean {field}: true then false with initially opposite state; verify both effects and do not treat false as a missing parameter.",
+    "T017": "Target {field}: valid identifier, absent, obsolete, other document/project and two identical names; resolve the real identifier, clarify ambiguity, protect the nearby target.",
+    "T018": "Consent: agreement, refusal, absence of response and modification of the request after agreement; verify the real confirmation mechanism before sensitive effects, without inventing a consent field.",
+    "T019": "Missing preparation or dynamic constraint: test each branch of the handler callback; the runtimeFunction marker in the catalog does not reveal these branches.",
+    "T020": "Absent or incompatible context: no active surface, document of another type, closed target; verify the real precondition and an exploitable explanation.",
+    "T021": "Bound {bound} of {field} = {value}: exact value and values on both sides; verify rejection or clamp according to the real contract, and the result actually stored."
+  }
+}

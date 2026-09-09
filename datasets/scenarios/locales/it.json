@@ -1,0 +1,32 @@
+{
+  "language": "it",
+  "sourceHash": "4b49040ba242c3c2e4f7a8fa27222703a7acd5bb194147219d4e4a29f48b463c",
+  "model": "qwen3.5:2b",
+  "status": "machine-draft-unreviewed",
+  "corrections": {
+    "T001": "Assistant correction preserving action placeholder"
+  },
+  "templates": {
+    "T001": "Caso nominale minimo: richiedere {action} in uno stato iniziale valido e fornire solo i parametri obbligatori; verificare il risultato descritto sopra mediante una lettura indipendente dello stato applicativo.",
+    "T002": "Nominal completo: inserire tutti i parametri compatibili, confrontare ciascuno con il risultato; non combinare opzioni mutuamente esclusive senza consultare il handler.",
+    "T003": "Campo sconosciuto sul fil MCP: verificare il rifiuto previsto da additionalProperties=false; distinguere questo rifiuto dalla normalizzazione del motore interno.",
+    "T004": "Fallimento dell'esecutore: iniettare un errore deterministico del portale interessato; risposta esplicita, nessuna annuncio di successo e nessuna mutazione collaterale.",
+    "T005": "Ritorno perso o richiesta ripetuta: osservare gli effetti prima di eventuali riavvi; non confondere ripetibile con idempotente, non duplicare un effetto non richiesto.",
+    "T006": "Stato concorrente: modificare la target o chiudere il documento tra lettura e azione; rilettere o rifiutare esplicitamente, senza agire su un altro oggetto.",
+    "T007": "Richiesta annullata prima dell'esecuzione: non avviare l'azione; testare separatamente un ritardo nell'annullamento, che non garantisce l'annullamento di un effetto già realizzato.",
+    "T008": "Parametro {field} assente: verificare il rifiuto o la chiarificazione prima dell'appello utile, in base al contratto.",
+    "T009": "Parametro {field} con null e tipo incompatibile: verificare la validazione del fil MCP, poi separatamente quella del handler; risultato senza effetti parziali non previsti.",
+    "T010": "Opzione di {field}: {value}; fixture compatibile, verificare precisamente la ramieta di business corrispondente.",
+    "T011": "Opzione sconosciuta di {field}: verificare il rifiuto, non una selezione silenziosa di un'opzione vicina.",
+    "T012": "Testo {field}: vuoto, spazi, accenti, Unicode, nome lungo e caratteri di punteggiatura; verificare la validazione e la conservazione in base alla semantica del campo.",
+    "T013": "Parametro {field} assente: verificare il valore di default reale o la conservazione del valore corrente; non inventarne uno.",
+    "T014": "Valore di {field}: zero, negativo, frazionario e molto grande ma finito; verificare unità, precisione e vincoli di business, senza presumere che tutti siano validi.",
+    "T015": "Lista {field}: vuota, singleton, più elementi, duplicati e un elemento invalido; verificare ordine, deduplicazione e atomicità realmente previste.",
+    "T016": "Boolenne {field}: vero poi falso con stato iniziale opposto; verificare entrambi gli effetti e non trattare il falso come un parametro assente.",
+    "T017": "Target {field}: identificativo valido, assente, obsoleto, altro documento/progetto e due nomi identici; risolvere l'identificativo reale, chiarire l'ambiguità, proteggere la target vicina.",
+    "T018": "Consentimento: accordo, rifiuto, assenza di risposta e modifica della richiesta dopo accordo; verificare il meccanismo reale di conferma prima degli effetti sensibili, senza inventare un campo consent.",
+    "T019": "Preparazione o vincolo dinamico mancante: testare ogni ramo del callback del handler; il marker runtimeFunction del catalogo non rivela queste rami.",
+    "T020": "Contesto assente o incompatibile: nessuna superficie attiva, documento di un altro tipo, target chiusa; verificare la condizione precondizionale reale e una spiegazione utilizzabile.",
+    "T021": "Bordo {bound} di {field} = {value}: valore esatto e valori da parte e dall'altra; verificare rifiuto o clamp in base al contratto reale, e il risultato effettivamente salvato."
+  }
+}
