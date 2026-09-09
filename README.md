@@ -2,7 +2,7 @@
 
 Compagnon de préparation et d’évaluation d’un assistant local multilingue pour AI Desktop Studio.
 
-**État : fondation du dépôt.** Linter, typage, tests et contrôles de configuration fonctionnent sans modèle. L’export automatique du catalogue est disponible. Les parcours dans l’application et l’entraînement ne sont pas encore implémentés.
+**État : outillage en place, aucun entraînement.** Linter, typage, tests et contrôles de configuration fonctionnent sans modèle. L’export du catalogue, l’inventaire des scénarios et le banc de build en VM jetable sont disponibles. Les parcours dans l’application et l’entraînement ne sont pas implémentés.
 
 ## Démarrage
 
@@ -25,6 +25,9 @@ L’installation initiale nécessite Internet ; la validation utilise ensuite le
 | `npm run repo:check` | Noms, types et tailles des fichiers candidats Git |
 | `npm run catalogue:export -- --source CHEMIN` | Export complet depuis Studio |
 | `npm run catalogue:check` | Contrôle de fraîcheur du catalogue configuré |
+| `npm run freshness:check` | Écart entre scénarios, modèle et checkout Studio (avertissements) |
+| `npm run vm -- check\|prepare\|build\|cleanup` | Étapes VM une par une |
+| `npm run vm:run` | Enchaîne préparation et build dans une VM jetable |
 
 Les scripts se lancent aussi avec `npm run` ; les installations et mises à jour utilisent pnpm et son unique lockfile. Si le lanceur pnpm local est indisponible : `npx --yes pnpm@12.3.4 install --frozen-lockfile --ignore-scripts`.
 
@@ -34,6 +37,10 @@ Les scripts se lancent aussi avec `npm run` ; les installations et mises à jour
 | --- | --- |
 | `src/config/` | Validation des configurations |
 | `src/repository/` | Contrôles d’hygiène |
+| `src/catalogue/` | Export du catalogue d’actions depuis Studio |
+| `src/scenarios/` | Inventaire des scénarios et contrôle de fraîcheur |
+| `src/studio/` | Lecture du checkout Studio configuré |
+| `src/vm/` | Cycle de vie, propriété et transport des VM |
 | `tools/` | Commandes locales |
 | `configs/` | Choix du pilote, sans chemins personnels |
 | `schemas/` | Formats versionnés implémentés |
@@ -54,6 +61,6 @@ Consulter [le contrat et les résultats de l’export](docs/export.md).
 
 Consulter [le cadrage de l’environnement VM](docs/vm-environment.md) : conception prête, automatisation à implémenter.
 
-Les [scripts VM et leur mode d’emploi](docs/vm-usage.md) préparent une référence et construisent Studio dans une copie jetable. Recette réelle encore à effectuer.
+Les [scripts VM et leur mode d’emploi](docs/vm-usage.md) préparent une référence et construisent Studio dans une copie jetable, dont le chargement de l’interface est vérifié. Recette réelle effectuée le 9 septembre 2026 ; aucun scénario métier exécuté.
 
 Consulter [l’inventaire complet des scénarios](docs/scenarios/README.md) : actions MCP, demandes existantes et cas candidats, sans exécution.
