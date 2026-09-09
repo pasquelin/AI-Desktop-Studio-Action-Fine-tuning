@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "id": "P015",
+  "request": "« Décris mes images et corrige le titre de celle choisie. »",
+  "requires": [
+    "isolated-vm",
+    "caption-image-fixture",
+    "caption-provider-test-account",
+    "caption-spend-authorized"
+  ],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "assets",
+      "action": "assets.searchProjectCatalogue",
+      "input": {
+        "text": "Image à décrire",
+        "type": "image",
+        "limit": 10
+      },
+      "saveAs": "assets",
+      "assertions": []
+    },
+    {
+      "id": "before",
+      "action": "asset.get",
+      "input": {
+        "assetIds": [
+          {
+            "$ref": "assets",
+            "find": {
+              "name": "Image à décrire"
+            },
+            "pick": "id"
+          }
+        ]
+      },
+      "saveAs": "before",
+      "assertions": []
+    },
+    {
+      "id": "caption",
+      "action": "assets.captionImages",
+      "input": {
+        "assetIds": [
+          {
+            "$ref": "assets",
+            "find": {
+              "name": "Image à décrire"
+            },
+            "pick": "id"
+          }
+        ]
+      },
+      "saveAs": "caption",
+      "assertions": []
+    },
+    {
+      "id": "rename",
+      "action": "asset.update",
+      "input": {
+        "assetId": {
+          "$ref": "assets",
+          "find": {
+            "name": "Image à décrire"
+          },
+          "pick": "id"
+        },
+        "name": "Bateau bleu"
+      },
+      "saveAs": "rename",
+      "assertions": []
+    },
+    {
+      "id": "after",
+      "action": "asset.get",
+      "input": {
+        "assetIds": [
+          {
+            "$ref": "assets",
+            "find": {
+              "name": "Image à décrire"
+            },
+            "pick": "id"
+          }
+        ]
+      },
+      "saveAs": "after",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "after",
+            "find": {
+              "name": "Bateau bleu"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "assets",
+            "find": {
+              "name": "Image à décrire"
+            },
+            "pick": "id"
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "CaptionImages appelle une API : pas de compte/dépense implicite. Vérifier hash du fichier source et métadonnées témoin via fixture avant approbation."
+  ],
+  "trainingApproved": false
+}

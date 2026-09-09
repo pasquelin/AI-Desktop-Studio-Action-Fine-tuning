@@ -1,0 +1,199 @@
+{
+  "version": 1,
+  "id": "P019",
+  "request": "« Duplique ces calques et range les copies dans un groupe. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Composition",
+        "folder": ""
+      },
+      "saveAs": "image",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "image.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "a",
+      "action": "layer.add",
+      "input": {
+        "kind": "text",
+        "name": "A",
+        "text": "Original A"
+      },
+      "saveAs": "a",
+      "assertions": []
+    },
+    {
+      "id": "b",
+      "action": "layer.add",
+      "input": {
+        "kind": "text",
+        "name": "B",
+        "text": "Original B"
+      },
+      "saveAs": "b",
+      "assertions": []
+    },
+    {
+      "id": "copyA",
+      "action": "layer.duplicate",
+      "input": {
+        "layerId": {
+          "$ref": "a.layerId"
+        },
+        "name": "Copie A"
+      },
+      "saveAs": "copyA",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "copyA.layerId"
+          },
+          "op": "notEqual",
+          "expected": {
+            "$ref": "a.layerId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "copyB",
+      "action": "layer.duplicate",
+      "input": {
+        "layerId": {
+          "$ref": "b.layerId"
+        },
+        "name": "Copie B"
+      },
+      "saveAs": "copyB",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "copyB.layerId"
+          },
+          "op": "notEqual",
+          "expected": {
+            "$ref": "b.layerId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "group",
+      "action": "layer.group",
+      "input": {
+        "layerIds": [
+          {
+            "$ref": "copyA.layerId"
+          },
+          {
+            "$ref": "copyB.layerId"
+          }
+        ],
+        "name": "Copies"
+      },
+      "saveAs": "group",
+      "assertions": []
+    },
+    {
+      "id": "state",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "state",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "state.layers",
+            "find": {
+              "name": "A"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "Original A"
+        },
+        {
+          "actual": {
+            "$ref": "state.layers",
+            "find": {
+              "name": "B"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "Original B"
+        },
+        {
+          "actual": {
+            "$ref": "state.layers",
+            "find": {
+              "name": "Copie A"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "Original A"
+        },
+        {
+          "actual": {
+            "$ref": "state.layers",
+            "find": {
+              "name": "Copie B"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "Original B"
+        },
+        {
+          "actual": {
+            "$ref": "state.layers",
+            "find": {
+              "name": "Copies"
+            },
+            "pick": "kind"
+          },
+          "op": "equal",
+          "expected": "group"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "canvas.state aplatit les calques sans parentId : appartenance réelle au groupe et ordre nécessitent un lecteur du document sauvegardé .ora (ZIP), non pris en charge par les lecteurs fichier du DSL."
+  ],
+  "trainingApproved": false
+}

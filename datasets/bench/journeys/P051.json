@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "id": "P051",
+  "request": "Exporte la scène vide vers le dossier Bench Export sans compression ni simplification.",
+  "requires": ["game-export-runtime-bundle", "exported-game-launch-check"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-created",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "created"
+    },
+    {
+      "id": "save",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "created.documentId"
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "export",
+      "action": "game.export",
+      "input": {
+        "entryScene": {
+          "$ref": "created.documentId"
+        },
+        "title": "Bench Game",
+        "folder": "Bench Export",
+        "generateLods": false,
+        "geometrySimplification": "off",
+        "textureCompression": "off",
+        "textureReduction": "off"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "exported"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "exported"
+    },
+    {
+      "id": "artifact",
+      "action": "file.facts",
+      "input": {
+        "path": "Bench Export/index.html"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "artifact"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "artifact"
+    }
+  ],
+  "blockers": [
+    "An exported-game launch probe is required to prove the artifact is runnable; file existence alone cannot pass this journey. Verify exact returned export path before execution."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

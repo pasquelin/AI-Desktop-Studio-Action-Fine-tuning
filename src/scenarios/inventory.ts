@@ -1,3 +1,6 @@
+import { readdir, readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 export type InventoryCase = {
   id: string;
   action: string;
@@ -46,4 +49,17 @@ export function parseInventory(sources: Record<string, string>) {
   if (cases.length === 0 || journeys.length === 0)
     throw new Error("Empty scenario inventory or journeys");
   return { cases, journeys };
+}
+
+/** The authored inventory has one home; every preparation tool reads it the same way. */
+export async function readScenarioSources(
+  root: string,
+): Promise<Record<string, string>> {
+  const directory = join(root, "docs/scenarios");
+  const sources: Record<string, string> = {};
+  for (const file of (await readdir(directory))
+    .filter((file) => file.endsWith(".md"))
+    .sort())
+    sources[file] = await readFile(join(directory, file), "utf8");
+  return sources;
 }

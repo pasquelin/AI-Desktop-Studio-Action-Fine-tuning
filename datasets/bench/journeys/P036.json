@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "id": "P036",
+  "request": "« Règle le soleil puis annule les ajustements d’image. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "skyboxes",
+        "createDocument": true,
+        "title": "Bench P036"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "sun",
+      "action": "skybox.setSun",
+      "input": {
+        "elevation": 0.6,
+        "azimuth": 1.2,
+        "intensity": 2
+      },
+      "saveAs": "sun",
+      "assertions": []
+    },
+    {
+      "id": "adjust",
+      "action": "skybox.adjustImage",
+      "input": {
+        "exposure": 1,
+        "contrast": 1.5,
+        "saturation": 0.5
+      },
+      "saveAs": "adjust",
+      "assertions": []
+    },
+    {
+      "id": "changed",
+      "action": "skybox.state",
+      "input": {},
+      "saveAs": "changed",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "changed.adjustments.exposure"
+          },
+          "op": "equal",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "changed.sun.intensity"
+          },
+          "op": "equal",
+          "expected": 2
+        }
+      ]
+    },
+    {
+      "id": "reset",
+      "action": "skybox.resetAdjustments",
+      "input": {},
+      "saveAs": "reset",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "skybox.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.adjustments.exposure"
+          },
+          "op": "equal",
+          "expected": 0
+        },
+        {
+          "actual": {
+            "$ref": "result.adjustments.contrast"
+          },
+          "op": "equal",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "result.adjustments.saturation"
+          },
+          "op": "equal",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "result.sun.elevation"
+          },
+          "op": "equal",
+          "expected": 0.6
+        },
+        {
+          "actual": {
+            "$ref": "result.sun.azimuth"
+          },
+          "op": "equal",
+          "expected": 1.2
+        },
+        {
+          "actual": {
+            "$ref": "result.sun.intensity"
+          },
+          "op": "equal",
+          "expected": 2
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

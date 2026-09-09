@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "note": "Exact selection targets on synthetic contexts. VM adapters must rebind identifiers and paths from real reads; this file grants no execution consent. Expected states are assertions to implement, not observations.",
+  "examples": [
+    {
+      "id": "project-create",
+      "language": "fr",
+      "semanticGroup": "project-scene-cube",
+      "purpose": "synthetic-tool-selection-example",
+      "prompt": "Crée le projet Atelier dans /vm/projects.",
+      "context": {
+        "project": null,
+        "writableSandbox": "/vm/projects",
+        "existingPaths": []
+      },
+      "expectedCall": {
+        "name": "project_create",
+        "arguments": {
+          "name": "Atelier",
+          "folder": "/vm/projects"
+        }
+      },
+      "expectedState": {
+        "project.path": "/vm/projects/Atelier",
+        "projectDirectoryExists": true
+      },
+      "fixtureKind": "explicit-synthetic-context-not-live-identifiers",
+      "runtimeSource": "tools/vm/scenarios/project.mjs",
+      "executionStatus": "not-run",
+      "trainingApproved": false
+    },
+    {
+      "id": "scene-create",
+      "language": "fr",
+      "semanticGroup": "project-scene-cube",
+      "purpose": "synthetic-tool-selection-example",
+      "prompt": "Crée une scène 3D nommée Pilot Scene.",
+      "context": {
+        "project": {
+          "path": "/vm/projects/Atelier",
+          "ready": true
+        }
+      },
+      "expectedCall": {
+        "name": "workspace_open",
+        "arguments": {
+          "workspace": "3d",
+          "createDocument": true,
+          "title": "Pilot Scene"
+        }
+      },
+      "expectedState": {
+        "createdDocument.kind": "scene",
+        "createdDocument.title": "Pilot Scene",
+        "createdDocument.path": "nonempty project-relative path",
+        "activeDocumentReady": true
+      },
+      "fixtureKind": "explicit-synthetic-context-not-live-identifiers",
+      "runtimeSource": "tools/vm/scenarios/project.mjs",
+      "executionStatus": "not-run",
+      "trainingApproved": false
+    },
+    {
+      "id": "cube-add",
+      "language": "fr",
+      "semanticGroup": "project-scene-cube",
+      "purpose": "synthetic-tool-selection-example",
+      "prompt": "Ajoute un cube nommé Initial Cube dans la scène.",
+      "context": {
+        "activeDocument": {
+          "id": "doc-01",
+          "kind": "scene",
+          "ready": true
+        },
+        "nodes": []
+      },
+      "expectedCall": {
+        "name": "node_add",
+        "arguments": {
+          "kind": "box",
+          "name": "Initial Cube"
+        }
+      },
+      "expectedState": {
+        "matchingNodes": 1,
+        "node.name": "Initial Cube",
+        "node.shape": "box"
+      },
+      "fixtureKind": "explicit-synthetic-context-not-live-identifiers",
+      "runtimeSource": "tools/vm/scenarios/project.mjs",
+      "executionStatus": "not-run",
+      "trainingApproved": false
+    },
+    {
+      "id": "cube-rename",
+      "language": "fr",
+      "semanticGroup": "project-scene-cube",
+      "purpose": "synthetic-tool-selection-example",
+      "prompt": "Renomme Initial Cube en Pilot Cube.",
+      "context": {
+        "activeDocument": {
+          "id": "doc-01",
+          "kind": "scene",
+          "ready": true
+        },
+        "nodes": [
+          {
+            "id": "cube-01",
+            "name": "Initial Cube",
+            "kind": "box"
+          }
+        ]
+      },
+      "expectedCall": {
+        "name": "node_rename",
+        "arguments": {
+          "nodeId": "cube-01",
+          "name": "Pilot Cube"
+        }
+      },
+      "expectedState": {
+        "node.id": "cube-01",
+        "node.name": "Pilot Cube",
+        "nodeCountUnchanged": true
+      },
+      "fixtureKind": "explicit-synthetic-context-not-live-identifiers",
+      "runtimeSource": "tools/vm/scenarios/project.mjs",
+      "executionStatus": "not-run",
+      "trainingApproved": false
+    },
+    {
+      "id": "cube-move",
+      "language": "fr",
+      "semanticGroup": "project-scene-cube",
+      "purpose": "synthetic-tool-selection-example",
+      "prompt": "Place Pilot Cube à x=2, y=1, z=-3.",
+      "context": {
+        "activeDocument": {
+          "id": "doc-01",
+          "kind": "scene",
+          "ready": true
+        },
+        "nodes": [
+          {
+            "id": "cube-01",
+            "name": "Pilot Cube",
+            "kind": "box",
+            "transform": {
+              "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            }
+          }
+        ]
+      },
+      "expectedCall": {
+        "name": "node_transform",
+        "arguments": {
+          "nodeId": "cube-01",
+          "positionX": 2,
+          "positionY": 1,
+          "positionZ": -3
+        }
+      },
+      "expectedState": {
+        "node.id": "cube-01",
+        "node.transform.position": {
+          "x": 2,
+          "y": 1,
+          "z": -3
+        },
+        "nodeCountUnchanged": true
+      },
+      "fixtureKind": "explicit-synthetic-context-not-live-identifiers",
+      "runtimeSource": "tools/vm/scenarios/project.mjs",
+      "executionStatus": "not-run",
+      "trainingApproved": false
+    },
+    {
+      "id": "scene-save",
+      "language": "fr",
+      "semanticGroup": "project-scene-cube",
+      "purpose": "synthetic-tool-selection-example",
+      "prompt": "Sauvegarde le document doc-01.",
+      "context": {
+        "activeDocument": {
+          "id": "doc-01",
+          "kind": "scene",
+          "path": "Scenes/Pilot.scene.json",
+          "modified": true
+        },
+        "project": {
+          "path": "/vm/projects/Atelier"
+        },
+        "nodes": [
+          {
+            "id": "cube-01",
+            "name": "Pilot Cube",
+            "kind": "box",
+            "transform": {
+              "position": {
+                "x": 2,
+                "y": 1,
+                "z": -3
+              }
+            }
+          }
+        ]
+      },
+      "expectedCall": {
+        "name": "document_save",
+        "arguments": {
+          "documentId": "doc-01"
+        }
+      },
+      "expectedState": {
+        "document.modified": false,
+        "fileNonempty": true,
+        "savedCube.position": {
+          "x": 2,
+          "y": 1,
+          "z": -3
+        }
+      },
+      "fixtureKind": "explicit-synthetic-context-not-live-identifiers",
+      "runtimeSource": "tools/vm/scenarios/project.mjs",
+      "executionStatus": "not-run",
+      "trainingApproved": false
+    },
+    {
+      "id": "scene-reopen",
+      "language": "fr",
+      "semanticGroup": "project-scene-cube",
+      "purpose": "synthetic-tool-selection-example",
+      "prompt": "Ouvre Scenes/Pilot.scene.json.",
+      "context": {
+        "project": {
+          "path": "/vm/projects/Atelier",
+          "ready": true
+        },
+        "files": ["Scenes/Pilot.scene.json"],
+        "savedScene": {
+          "nodes": [
+            {
+              "name": "Pilot Cube",
+              "position": {
+                "x": 2,
+                "y": 1,
+                "z": -3
+              }
+            }
+          ]
+        }
+      },
+      "expectedCall": {
+        "name": "document_open",
+        "arguments": {
+          "path": "Scenes/Pilot.scene.json"
+        }
+      },
+      "expectedState": {
+        "activeDocument.path": "Scenes/Pilot.scene.json",
+        "readyBeforeSuccess": true,
+        "cube.position": {
+          "x": 2,
+          "y": 1,
+          "z": -3
+        }
+      },
+      "fixtureKind": "explicit-synthetic-context-not-live-identifiers",
+      "runtimeSource": "tools/vm/scenarios/project.mjs",
+      "executionStatus": "not-run",
+      "trainingApproved": false
+    }
+  ]
+}

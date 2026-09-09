@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "id": "P060",
+  "request": "Démarre la dictée sur le microphone synthétique de test puis arrête et jette le texte.",
+  "requires": ["synthetic-microphone", "guest-microphone-permission"],
+  "steps": [
+    {
+      "id": "before",
+      "action": "dictation.state",
+      "input": {},
+      "assertions": [],
+      "saveAs": "before"
+    },
+    {
+      "id": "start",
+      "action": "dictation.start",
+      "input": {},
+      "assertions": [],
+      "saveAs": "started"
+    },
+    {
+      "id": "stop",
+      "action": "dictation.stop",
+      "input": {
+        "discard": true
+      },
+      "assertions": [],
+      "saveAs": "stopped"
+    },
+    {
+      "id": "after",
+      "action": "dictation.state",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "after"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "after"
+    }
+  ],
+  "blockers": [
+    "No host microphone access. Provide deterministic audio input and assertions for exact dictation state and discarded transcript, including permission denial."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

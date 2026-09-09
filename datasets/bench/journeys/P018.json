@@ -1,0 +1,216 @@
+{
+  "version": 1,
+  "id": "P018",
+  "request": "« Ajoute un titre, positionne-le et garde le fond inchangé. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Composition",
+        "folder": ""
+      },
+      "saveAs": "image",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "image.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "background",
+      "action": "layer.add",
+      "input": {
+        "kind": "shape",
+        "name": "Fond témoin",
+        "shape": "rectangle",
+        "width": 64,
+        "height": 64,
+        "fill": "#112233",
+        "x": 2,
+        "y": 2
+      },
+      "saveAs": "background",
+      "assertions": []
+    },
+    {
+      "id": "before",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "before",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Fond témoin"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "background.layerId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Fond témoin"
+            },
+            "pick": "kind"
+          },
+          "op": "equal",
+          "expected": "shape"
+        }
+      ]
+    },
+    {
+      "id": "title",
+      "action": "layer.add",
+      "input": {
+        "kind": "text",
+        "name": "Titre",
+        "text": "Brouillon",
+        "x": 0,
+        "y": 0
+      },
+      "saveAs": "title",
+      "assertions": []
+    },
+    {
+      "id": "edit",
+      "action": "layer.editTextLayer",
+      "input": {
+        "layerId": {
+          "$ref": "title.layerId"
+        },
+        "text": "Bonjour Studio",
+        "size": 24,
+        "color": "#ffffff"
+      },
+      "saveAs": "edit",
+      "assertions": []
+    },
+    {
+      "id": "move",
+      "action": "layer.transform",
+      "input": {
+        "layerId": {
+          "$ref": "title.layerId"
+        },
+        "x": 40,
+        "y": 50
+      },
+      "saveAs": "move",
+      "assertions": []
+    },
+    {
+      "id": "after",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "after",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "Titre"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "Bonjour Studio"
+        },
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "Titre"
+            },
+            "pick": "transform.x"
+          },
+          "op": "equal",
+          "expected": 40
+        },
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "Titre"
+            },
+            "pick": "transform.y"
+          },
+          "op": "equal",
+          "expected": 50
+        },
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "Fond témoin"
+            },
+            "pick": "fill"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Fond témoin"
+            },
+            "pick": "fill"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "Fond témoin"
+            },
+            "pick": "transform"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Fond témoin"
+            },
+            "pick": "transform"
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "L’état du fond est vérifié ; pixels témoins exigent un oracle de rendu indépendant encore absent du DSL."
+  ],
+  "trainingApproved": false
+}

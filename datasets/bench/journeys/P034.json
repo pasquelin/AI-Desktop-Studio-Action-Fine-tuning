@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "id": "P034",
+  "request": "« Optimise le décor mais conserve le personnage. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P034",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "decor",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Décor"
+      },
+      "saveAs": "decor",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "decor.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "character",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Personnage témoin",
+        "positionX": 2
+      },
+      "saveAs": "character",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "character.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "exclude",
+      "action": "optimization.exclude",
+      "input": {
+        "nodeIds": [
+          {
+            "$ref": "character.nodeId"
+          }
+        ]
+      },
+      "saveAs": "exclude",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "exclude.mode"
+          },
+          "op": "equal",
+          "expected": "exclude"
+        }
+      ]
+    },
+    {
+      "id": "select",
+      "action": "node.select",
+      "input": {
+        "nodeIds": [
+          {
+            "$ref": "decor.nodeId"
+          }
+        ]
+      },
+      "saveAs": "select",
+      "assertions": []
+    },
+    {
+      "id": "before",
+      "action": "optimization.analyze",
+      "input": {},
+      "saveAs": "before",
+      "assertions": []
+    },
+    {
+      "id": "optimize",
+      "action": "optimization.selection",
+      "input": {},
+      "saveAs": "optimize",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "optimize.nodeIds"
+          },
+          "op": "equal",
+          "expected": [
+            {
+              "$ref": "decor.nodeId"
+            }
+          ]
+        },
+        {
+          "actual": {
+            "$ref": "optimize.mode"
+          },
+          "op": "equal",
+          "expected": "auto"
+        }
+      ]
+    },
+    {
+      "id": "after",
+      "action": "optimization.report",
+      "input": {},
+      "saveAs": "after",
+      "assertions": []
+    }
+  ],
+  "blockers": [
+    "Le résumé scene.state omet optimization : ajouter un lecteur indépendant du mode exclude et une comparaison des métriques/rendu ; ne pas déduire l’exclusion réelle du seul accusé de mutation."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

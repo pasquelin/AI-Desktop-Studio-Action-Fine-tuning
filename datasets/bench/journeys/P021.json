@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "id": "P021",
+  "request": "« Renomme Texte en Titre avec deux documents contenant Texte. »",
+  "requires": ["isolated-vm", "clarified-document-choice"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "imageA",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Document A",
+        "folder": ""
+      },
+      "saveAs": "imageA",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "imageA.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "textA",
+      "action": "layer.add",
+      "input": {
+        "kind": "text",
+        "name": "Texte",
+        "text": "A"
+      },
+      "saveAs": "textA",
+      "assertions": []
+    },
+    {
+      "id": "saveA",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "imageA.documentId"
+        }
+      },
+      "saveAs": "saveA",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "saveA.written"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "imageB",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Document B",
+        "folder": ""
+      },
+      "saveAs": "imageB",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "imageB.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "textB",
+      "action": "layer.add",
+      "input": {
+        "kind": "text",
+        "name": "Texte",
+        "text": "B"
+      },
+      "saveAs": "textB",
+      "assertions": []
+    },
+    {
+      "id": "docs",
+      "action": "documents.list",
+      "input": {},
+      "saveAs": "docs",
+      "assertions": []
+    },
+    {
+      "id": "activateA",
+      "action": "document.activate",
+      "input": {
+        "documentId": {
+          "$ref": "imageA.documentId"
+        }
+      },
+      "saveAs": "activateA",
+      "assertions": []
+    },
+    {
+      "id": "beforeA",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "beforeA",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "beforeA.documentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "imageA.documentId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "beforeA.layers",
+            "find": {
+              "name": "Texte"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "A"
+        },
+        {
+          "actual": {
+            "$ref": "beforeA.layers",
+            "find": {
+              "name": "Texte"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "textA.layerId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "renameA",
+      "action": "layer.rename",
+      "input": {
+        "layerId": {
+          "$ref": "textA.layerId"
+        },
+        "name": "Titre"
+      },
+      "saveAs": "renameA",
+      "assertions": []
+    },
+    {
+      "id": "afterA",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "afterA",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "afterA.layers",
+            "find": {
+              "name": "Titre"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "A"
+        }
+      ]
+    },
+    {
+      "id": "activateB",
+      "action": "document.activate",
+      "input": {
+        "documentId": {
+          "$ref": "imageB.documentId"
+        }
+      },
+      "saveAs": "activateB",
+      "assertions": []
+    },
+    {
+      "id": "afterB",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "afterB",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "afterB.layers",
+            "find": {
+              "name": "Texte"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "textB.layerId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "afterB.layers",
+            "find": {
+              "name": "Texte"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "B"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Le DSL ne représente pas la question/réponse de clarification. Ces étapes couvrent seulement la branche déjà clarifiée Document A ; ajouter le dialogue avant emploi comme entraînement."
+  ],
+  "trainingApproved": false
+}

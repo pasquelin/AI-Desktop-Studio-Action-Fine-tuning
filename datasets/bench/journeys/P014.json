@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "id": "P014",
+  "request": "« Quels médias manquent à mon projet ? »",
+  "requires": ["isolated-vm", "missing-asset-fixture"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "assets",
+      "action": "assets.searchProjectCatalogue",
+      "input": {
+        "text": "Média absent",
+        "limit": 10
+      },
+      "saveAs": "assets",
+      "assertions": []
+    },
+    {
+      "id": "asset",
+      "action": "asset.get",
+      "input": {
+        "assetIds": [
+          {
+            "$ref": "assets",
+            "find": {
+              "name": "Média absent"
+            },
+            "pick": "id"
+          }
+        ]
+      },
+      "saveAs": "asset",
+      "assertions": []
+    },
+    {
+      "id": "missing",
+      "action": "assets.listMissing",
+      "input": {
+        "assetIds": [
+          {
+            "$ref": "assets",
+            "find": {
+              "name": "Média absent"
+            },
+            "pick": "id"
+          }
+        ]
+      },
+      "saveAs": "missing",
+      "assertions": []
+    }
+  ],
+  "blockers": [
+    "Injection fixture catalogue cassée et format réponse assets.absent à binder côté service ; ne pas remplacer la ressource manquante par un fichier inventé."
+  ],
+  "trainingApproved": false
+}

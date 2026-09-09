@@ -1,0 +1,22 @@
+# Provisional smoke configuration; requires reviewed, executed examples first.
+model: Qwen/Qwen3.5-2B
+train: false
+data: artifacts/dataset/approved
+fine_tune_type: lora
+num_layers: 4
+batch_size: 1
+iters: 100
+learning_rate: 0.00001
+max_seq_length: 2048
+grad_checkpoint: true
+mask_prompt: true
+adapter_path: checkpoints/studio-lora
+seed: 42
+steps_per_report: 10
+steps_per_eval: 25
+val_batches: 1
+save_every: 100
+lora_parameters:
+  rank: 8
+  scale: 16.0
+  dropout: 0.0

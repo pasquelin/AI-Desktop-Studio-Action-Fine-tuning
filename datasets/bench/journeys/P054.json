@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "id": "P054",
+  "request": "Pousse seulement la branche de test vers son dépôt bare local jetable.",
+  "requires": ["local-bare-remote-fixture"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "remotes",
+      "action": "git.remotes",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "remotes"
+          },
+          "op": "length",
+          "expected": 1
+        }
+      ],
+      "saveAs": "remotes"
+    },
+    {
+      "id": "fetch",
+      "action": "git.fetch",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "fetched.kind"
+          },
+          "op": "equal",
+          "expected": "ready"
+        }
+      ],
+      "saveAs": "fetched"
+    },
+    {
+      "id": "push",
+      "action": "git.push",
+      "input": {
+        "setUpstream": true
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "pushed.kind"
+          },
+          "op": "equal",
+          "expected": "ready"
+        }
+      ],
+      "saveAs": "pushed"
+    }
+  ],
+  "blockers": [
+    "Require an origin URL proven to be a local path under sandbox and a prepared authorized branch; compare bare remote ref to local commit. Never run against an external URL."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

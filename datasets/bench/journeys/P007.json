@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "id": "P007",
+  "request": "« Renomme mon document, sauvegarde et rouvre-le. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Original",
+        "folder": ""
+      },
+      "saveAs": "image",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "image.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "text",
+      "action": "layer.add",
+      "input": {
+        "kind": "text",
+        "name": "Titre",
+        "text": "Témoin inchangé",
+        "x": 20,
+        "y": 30
+      },
+      "saveAs": "text",
+      "assertions": []
+    },
+    {
+      "id": "resizeWitness",
+      "action": "canvas.resize",
+      "input": {
+        "width": 640,
+        "height": 360,
+        "scalePixels": false
+      },
+      "saveAs": "resizeWitness",
+      "assertions": []
+    },
+    {
+      "id": "before",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "before",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "before.width"
+          },
+          "op": "equal",
+          "expected": 640
+        },
+        {
+          "actual": {
+            "$ref": "before.height"
+          },
+          "op": "equal",
+          "expected": 360
+        },
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Titre"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "Témoin inchangé"
+        },
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Titre"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "text.layerId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rename",
+      "action": "document.rename",
+      "input": {
+        "documentId": {
+          "$ref": "image.documentId"
+        },
+        "title": "Variante"
+      },
+      "saveAs": "rename",
+      "assertions": []
+    },
+    {
+      "id": "saved",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "image.documentId"
+        }
+      },
+      "saveAs": "saved",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "saved.written"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "docs",
+      "action": "documents.list",
+      "input": {},
+      "saveAs": "docs",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "docs",
+            "find": {
+              "title": "Variante"
+            },
+            "pick": "modified"
+          },
+          "op": "equal",
+          "expected": false
+        }
+      ]
+    },
+    {
+      "id": "close",
+      "action": "document.close",
+      "input": {
+        "documentId": {
+          "$ref": "image.documentId"
+        }
+      },
+      "saveAs": "close",
+      "assertions": []
+    },
+    {
+      "id": "open",
+      "action": "document.open",
+      "input": {
+        "path": {
+          "$ref": "docs",
+          "find": {
+            "title": "Variante"
+          },
+          "pick": "path"
+        }
+      },
+      "saveAs": "open",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "open.documentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "image.documentId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "after",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "after",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "after.layers"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "before.layers"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "after.documentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "before.documentId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "after.width"
+          },
+          "op": "equal",
+          "expected": 640
+        },
+        {
+          "actual": {
+            "$ref": "after.height"
+          },
+          "op": "equal",
+          "expected": 360
+        },
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "Titre"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "Témoin inchangé"
+        },
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "Titre"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "text.layerId"
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false
+}

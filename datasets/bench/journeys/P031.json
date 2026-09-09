@@ -1,0 +1,198 @@
+{
+  "version": 1,
+  "id": "P031",
+  "request": "« Creuse une ouverture puis sépare le résultat si nécessaire. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P031",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "matter",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Matière"
+      },
+      "saveAs": "matter",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "matter.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "scale",
+      "action": "node.transform",
+      "input": {
+        "nodeId": {
+          "$ref": "matter.nodeId"
+        },
+        "scaleX": 3,
+        "scaleY": 3,
+        "scaleZ": 3
+      },
+      "saveAs": "scale",
+      "assertions": []
+    },
+    {
+      "id": "tool",
+      "action": "node.add",
+      "input": {
+        "kind": "cylinder",
+        "name": "Outil"
+      },
+      "saveAs": "tool",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "tool.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "scaleTool",
+      "action": "node.transform",
+      "input": {
+        "nodeId": {
+          "$ref": "tool.nodeId"
+        },
+        "scaleY": 4
+      },
+      "saveAs": "scaleTool",
+      "assertions": []
+    },
+    {
+      "id": "mark",
+      "action": "node.markAsCuttingTool",
+      "input": {
+        "nodeIds": [
+          {
+            "$ref": "tool.nodeId"
+          }
+        ],
+        "negative": true
+      },
+      "saveAs": "mark",
+      "assertions": []
+    },
+    {
+      "id": "carve",
+      "action": "node.combineIntoSolid",
+      "input": {
+        "nodeIds": [
+          {
+            "$ref": "matter.nodeId"
+          },
+          {
+            "$ref": "tool.nodeId"
+          }
+        ],
+        "operation": "subtract",
+        "matterId": {
+          "$ref": "matter.nodeId"
+        }
+      },
+      "saveAs": "carve",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "carve.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "solid",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "solid",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "solid.nodes",
+            "find": {
+              "id": {
+                "$ref": "carve.nodeId"
+              }
+            },
+            "pick": "type"
+          },
+          "op": "equal",
+          "expected": "carved"
+        }
+      ]
+    },
+    {
+      "id": "separate",
+      "action": "node.separate",
+      "input": {
+        "nodeId": {
+          "$ref": "carve.nodeId"
+        }
+      },
+      "saveAs": "separate",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "separate.nodeIds"
+          },
+          "op": "length",
+          "expected": 2
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Inspecter la géométrie CSG calculée (ouverture, volume et solides séparés) via moteur rendu ; type carved et deux identifiants ne prouvent pas le solide attendu."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

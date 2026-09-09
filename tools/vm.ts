@@ -13,6 +13,8 @@ import {
 import { join, resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { parseArgs } from "node:util";
+import { sha256 } from "../src/catalogue/catalogue.ts";
+import { benchReadiness } from "../src/scenarios/capabilities.ts";
 import { cycle } from "../src/vm/lifecycle.ts";
 import {
   isManagedName,
@@ -40,13 +42,26 @@ const { positionals, values } = parseArgs({
     base: { type: "string" },
     name: { type: "string" },
     scenario: { type: "boolean", default: false },
+    journey: { type: "string" },
   },
 });
 const mode = positionals[0];
 const owned = (name: string) => readRecord(name, root, state);
 /** Guest executables, kept with the report; no `guest` means delivery over ssh stdin. */
 const guestScripts = [
+  {
+    source: "tools/vm/scenarios/client.mjs",
+    local: "client.mjs",
+    guest: "source/client.mjs",
+    scenarioOnly: true,
+  },
   { source: "tools/vm/build.sh", local: "build.sh" },
+  {
+    source: "src/scenarios/runner.ts",
+    local: "runner.ts",
+    guest: "source/runner.ts",
+    scenarioOnly: true,
+  },
   {
     source: "src/vm/scenario-consent.ts",
     local: "scenario-consent.ts",
@@ -54,7 +69,9 @@ const guestScripts = [
     scenarioOnly: true,
   },
   {
-    source: "tools/vm/scenarios/project.mjs",
+    source: values.journey
+      ? "tools/vm/scenarios/declarative.mjs"
+      : "tools/vm/scenarios/project.mjs",
     local: "project.mjs",
     guest: "source/.ft-project.mjs",
     scenarioOnly: true,
@@ -63,6 +80,56 @@ const guestScripts = [
 async function main() {
   // Freeze guest executables before the asynchronous VM preparation starts.
   const frozen = new Map<string, string>();
+  if (values.journey) {
+    if (!values.scenario || !/^P[0-9]{3}$/.test(values.journey))
+      throw new Error("Journey requires --scenario and a valid journey id");
+    const { parseScenario } = await import("../src/scenarios/declarative.ts");
+    const spec = await readFile(
+      join(root, "datasets/bench/journeys", `${values.journey}.json`),
+      "utf8",
+    );
+    const { ready, missing, unbound, blockers } = benchReadiness(
+      parseScenario(JSON.parse(spec)),
+    );
+    if (!ready)
+      throw new Error(
+        `Journey not ready: ${[...missing, ...unbound, ...blockers].join("; ")}`,
+      );
+    frozen.set("scenario-spec.json", spec);
+    const { buildMediaFixtures } = await import("./prepare-media-fixtures.ts");
+    frozen.set(
+      "seed-media.json",
+      JSON.stringify(
+        Object.fromEntries(
+          Object.entries(buildMediaFixtures()).map(([name, bytes]) => [
+            name,
+            bytes.toString("base64"),
+          ]),
+        ),
+      ),
+    );
+    const { build } = await import("vite");
+    const bundled = await build({
+      configFile: false,
+      logLevel: "error",
+      build: {
+        write: false,
+        minify: false,
+        lib: {
+          entry: join(root, "src/scenarios/declarative.ts"),
+          formats: ["es"],
+        },
+        rollupOptions: { external: (id) => id.startsWith("node:") },
+      },
+    });
+    const outputs = Array.isArray(bundled) ? bundled : [bundled];
+    const chunks = outputs
+      .flatMap((output) => ("output" in output ? output.output : []))
+      .filter((output) => output.type === "chunk");
+    if (chunks.length !== 1 || !chunks[0])
+      throw new Error("Expected one guest engine bundle");
+    frozen.set("bench.mjs", chunks[0].code);
+  }
   if (mode === "build")
     for (const script of guestScripts)
       if (values.scenario || !script.scenarioOnly)
@@ -322,10 +389,8 @@ async function main() {
       const catalogue = await buildCatalogue(checkout);
       record.revision = catalogue.appRevision;
       await save();
-      await writeFile(
-        join(dir, "catalogue.json"),
-        JSON.stringify(catalogue, null, 2),
-      );
+      const catalogueText = JSON.stringify(catalogue, null, 2);
+      await writeFile(join(dir, "catalogue.json"), catalogueText);
       const tree = await command("git", [
         "-C",
         checkout,
@@ -373,6 +438,51 @@ async function main() {
             join(dir, script.local),
             `admin@${ip}:studio-vm/${script.guest}`,
           );
+      }
+      if (values.journey) {
+        for (const file of [
+          "bench.mjs",
+          "scenario-spec.json",
+          "seed-media.json",
+        ]) {
+          await writeFile(join(dir, file), frozen.get(file) ?? "");
+          await transfer(
+            join(dir, file),
+            `admin@${ip}:studio-vm/source/${file}`,
+          );
+        }
+        await transfer(
+          join(dir, "catalogue.json"),
+          `admin@${ip}:studio-vm/source/scenario-catalogue.json`,
+        );
+      }
+      if (values.scenario) {
+        // In journey mode the scenario is exactly the transferred spec; one hash, one field.
+        const provenance = {
+          runId: record.name,
+          studioRevision: record.revision,
+          catalogueHash: sha256(catalogueText),
+          scenarioHash: sha256(
+            values.journey
+              ? (frozen.get("scenario-spec.json") ?? "")
+              : JSON.stringify([...frozen]),
+          ),
+          engineHash: values.journey
+            ? sha256(frozen.get("bench.mjs") ?? "")
+            : undefined,
+          mediaHash: values.journey
+            ? sha256(frozen.get("seed-media.json") ?? "")
+            : undefined,
+          kind: "real-vm",
+        };
+        await writeFile(
+          join(dir, "provenance.json"),
+          JSON.stringify(provenance, null, 2),
+        );
+        await transfer(
+          join(dir, "provenance.json"),
+          `admin@${ip}:studio-vm/source/provenance.json`,
+        );
       }
       try {
         console.log(

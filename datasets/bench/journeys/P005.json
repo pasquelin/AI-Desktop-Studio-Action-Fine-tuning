@@ -1,0 +1,389 @@
+{
+  "version": 1,
+  "id": "P005",
+  "request": "« Annule le déplacement puis rétablis-le. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "inputFolder",
+      "action": "folder.new",
+      "input": {
+        "name": "Entrée"
+      },
+      "saveAs": "inputFolder",
+      "assertions": []
+    },
+    {
+      "id": "image",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Image témoin",
+        "folder": "Entrée"
+      },
+      "saveAs": "image",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "image.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "resizeWitness",
+      "action": "canvas.resize",
+      "input": {
+        "width": 640,
+        "height": 360,
+        "scalePixels": false
+      },
+      "saveAs": "resizeWitness",
+      "assertions": []
+    },
+    {
+      "id": "witnessLayer",
+      "action": "layer.add",
+      "input": {
+        "kind": "text",
+        "name": "P005 témoin persistant",
+        "text": "P005 contenu vérifié",
+        "x": 37,
+        "y": 53
+      },
+      "saveAs": "witnessLayer",
+      "assertions": []
+    },
+    {
+      "id": "witnessBeforeSave",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "witnessBeforeSave",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "witnessBeforeSave.width"
+          },
+          "op": "equal",
+          "expected": 640
+        },
+        {
+          "actual": {
+            "$ref": "witnessBeforeSave.height"
+          },
+          "op": "equal",
+          "expected": 360
+        },
+        {
+          "actual": {
+            "$ref": "witnessBeforeSave.layers",
+            "find": {
+              "name": "P005 témoin persistant"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "P005 contenu vérifié"
+        },
+        {
+          "actual": {
+            "$ref": "witnessBeforeSave.layers",
+            "find": {
+              "name": "P005 témoin persistant"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "witnessLayer.layerId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "saved",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "image.documentId"
+        }
+      },
+      "saveAs": "saved",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "saved.written"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "docs",
+      "action": "documents.list",
+      "input": {},
+      "saveAs": "docs",
+      "assertions": []
+    },
+    {
+      "id": "closeDocument",
+      "action": "document.close",
+      "input": {
+        "documentId": {
+          "$ref": "image.documentId"
+        }
+      },
+      "saveAs": "closeDocument",
+      "assertions": []
+    },
+    {
+      "id": "originalFacts",
+      "action": "file.facts",
+      "input": {
+        "path": {
+          "$ref": "docs",
+          "find": {
+            "title": "Image témoin"
+          },
+          "pick": "path"
+        }
+      },
+      "saveAs": "originalFacts",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "docs",
+                "find": {
+                  "title": "Image témoin"
+                },
+                "pick": "path"
+              },
+              "read": "sha256"
+            }
+          },
+          "op": "exists",
+          "saveAs": "beforeHash"
+        }
+      ]
+    },
+    {
+      "id": "folder",
+      "action": "folder.new",
+      "input": {
+        "name": "Images"
+      },
+      "saveAs": "folder",
+      "assertions": []
+    },
+    {
+      "id": "move",
+      "action": "files.move",
+      "input": {
+        "paths": [
+          {
+            "$ref": "docs",
+            "find": {
+              "title": "Image témoin"
+            },
+            "pick": "path"
+          }
+        ],
+        "folder": "Images"
+      },
+      "saveAs": "move",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "move.refused"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "canUndo",
+      "action": "files.canUndoRedo",
+      "input": {},
+      "saveAs": "canUndo",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "canUndo.undo"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "undo",
+      "action": "files.undoFileOperation",
+      "input": {},
+      "saveAs": "undo",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "undo.refused"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "restoredFacts",
+      "action": "file.facts",
+      "input": {
+        "path": {
+          "$ref": "docs",
+          "find": {
+            "title": "Image témoin"
+          },
+          "pick": "path"
+        }
+      },
+      "saveAs": "restoredFacts",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "restoredFacts.bytes"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "originalFacts.bytes"
+          }
+        },
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "docs",
+                "find": {
+                  "title": "Image témoin"
+                },
+                "pick": "path"
+              },
+              "read": "sha256"
+            }
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "beforeHash"
+          }
+        }
+      ]
+    },
+    {
+      "id": "emptyFolder",
+      "action": "files.list",
+      "input": {
+        "folder": "Images"
+      },
+      "saveAs": "emptyFolder",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "emptyFolder"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "canRedo",
+      "action": "files.canUndoRedo",
+      "input": {},
+      "saveAs": "canRedo",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "canRedo.redo"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "redo",
+      "action": "files.redoFileOperation",
+      "input": {},
+      "saveAs": "redo",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "redo.refused"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "movedFacts",
+      "action": "file.facts",
+      "input": {
+        "path": {
+          "$ref": "move.done.0.to"
+        }
+      },
+      "saveAs": "movedFacts",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "movedFacts.bytes"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "originalFacts.bytes"
+          }
+        },
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "move.done.0.to"
+              },
+              "read": "sha256"
+            }
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "beforeHash"
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false
+}

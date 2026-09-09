@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "id": "P058",
+  "request": "Relis les réglages du profil invité et active uniquement le compte de test.",
+  "requires": ["isolated-test-account"],
+  "steps": [
+    {
+      "id": "settings",
+      "action": "settings.read",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "settings.settings"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "settings"
+    },
+    {
+      "id": "accounts",
+      "action": "accounts.list",
+      "input": {},
+      "assertions": [],
+      "saveAs": "accounts"
+    },
+    {
+      "id": "activate",
+      "action": "accounts.activate",
+      "input": {
+        "accountId": {
+          "$ref": "accounts",
+          "find": {
+            "name": "Bench Account"
+          },
+          "pick": "id"
+        }
+      },
+      "assertions": [],
+      "saveAs": "activated"
+    }
+  ],
+  "blockers": [
+    "Provision a dedicated Bench Account and choose an exact settings field from settings.read; no account from the host may be activated and no arbitrary default setting is written."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

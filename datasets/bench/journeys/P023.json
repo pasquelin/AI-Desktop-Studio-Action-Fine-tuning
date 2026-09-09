@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "id": "P023",
+  "request": "« Ajoute un repère, recadre puis tourne l’image. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Bench P023"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "size",
+      "action": "canvas.resize",
+      "input": {
+        "width": 64,
+        "height": 48,
+        "scalePixels": false
+      },
+      "saveAs": "size",
+      "assertions": []
+    },
+    {
+      "id": "guide",
+      "action": "guide.add",
+      "input": {
+        "axis": "x",
+        "position": 8
+      },
+      "saveAs": "guide",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "guide.guideId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "moveGuide",
+      "action": "guide.move",
+      "input": {
+        "guideId": {
+          "$ref": "guide.guideId"
+        },
+        "position": 12
+      },
+      "saveAs": "moveGuide",
+      "assertions": []
+    },
+    {
+      "id": "guided",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "guided",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "guided.guides",
+            "find": {
+              "id": {
+                "$ref": "guide.guideId"
+              }
+            },
+            "pick": "position"
+          },
+          "op": "equal",
+          "expected": 12
+        }
+      ]
+    },
+    {
+      "id": "crop",
+      "action": "canvas.crop",
+      "input": {
+        "x": 4,
+        "y": 4,
+        "width": 40,
+        "height": 24
+      },
+      "saveAs": "crop",
+      "assertions": []
+    },
+    {
+      "id": "cropped",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "cropped",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "cropped.width"
+          },
+          "op": "equal",
+          "expected": 40
+        },
+        {
+          "actual": {
+            "$ref": "cropped.height"
+          },
+          "op": "equal",
+          "expected": 24
+        }
+      ]
+    },
+    {
+      "id": "rotate",
+      "action": "canvas.flipOrRotate",
+      "input": {
+        "turn": "rotateClockwise"
+      },
+      "saveAs": "rotate",
+      "assertions": []
+    },
+    {
+      "id": "rotated",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "rotated",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "rotated.width"
+          },
+          "op": "equal",
+          "expected": 24
+        },
+        {
+          "actual": {
+            "$ref": "rotated.height"
+          },
+          "op": "equal",
+          "expected": 40
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "La conservation ou transformation du guide après crop/rotation et les pixels témoins nécessitent un oracle indépendant complémentaire ; les contrôles de dimensions seuls ne valident pas tout le parcours."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "id": "P057",
+  "request": "Oublie la convention SC_ et sa carte, mais conserve la convention témoin.",
+  "requires": [],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "target",
+      "action": "memory.write",
+      "input": {
+        "type": "convention",
+        "summary": "Préfixe SC_",
+        "importance": 3
+      },
+      "assertions": [],
+      "saveAs": "target"
+    },
+    {
+      "id": "witness",
+      "action": "memory.write",
+      "input": {
+        "type": "convention",
+        "summary": "Témoin inchangé",
+        "importance": 3
+      },
+      "assertions": [],
+      "saveAs": "witness"
+    },
+    {
+      "id": "card",
+      "action": "context.writeProjectCard",
+      "input": {
+        "title": "Préfixe SC_",
+        "body": "À oublier",
+        "active": true
+      },
+      "assertions": [],
+      "saveAs": "card"
+    },
+    {
+      "id": "forget",
+      "action": "memory.forget",
+      "input": {
+        "memoryId": {
+          "$ref": "target.id"
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "delete-card",
+      "action": "context.deleteProjectCard",
+      "input": {
+        "cardId": {
+          "$ref": "card.id"
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-target",
+      "action": "memory.read",
+      "input": {
+        "memoryId": {
+          "$ref": "target.id"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "forgotten.state"
+          },
+          "op": "equal",
+          "expected": "dropped"
+        }
+      ],
+      "saveAs": "forgotten"
+    },
+    {
+      "id": "read-witness",
+      "action": "memory.read",
+      "input": {
+        "memoryId": {
+          "$ref": "witness.id"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "held.summary"
+          },
+          "op": "equal",
+          "expected": "Témoin inchangé"
+        },
+        {
+          "actual": {
+            "$ref": "held.state"
+          },
+          "op": "equal",
+          "expected": "live"
+        }
+      ],
+      "saveAs": "held"
+    },
+    {
+      "id": "cards",
+      "action": "context.readProjectCards",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "cards.cards"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ],
+      "saveAs": "cards"
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

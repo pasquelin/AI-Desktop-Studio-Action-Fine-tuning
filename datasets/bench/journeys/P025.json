@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "id": "P025",
+  "request": "« Coupe le clip, raccourcis la fin et ajoute un fondu. »",
+  "requires": ["isolated-vm", "synthetic-video-4s", "video-render-oracle"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "video",
+        "createDocument": true,
+        "title": "Bench P025"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "trackState",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "trackState",
+      "assertions": []
+    },
+    {
+      "id": "nameTrack",
+      "action": "track.rename",
+      "input": {
+        "trackId": {
+          "$ref": "trackState.tracks",
+          "find": {
+            "kind": "video"
+          },
+          "pick": "id"
+        },
+        "name": "Montage"
+      },
+      "saveAs": "nameTrack",
+      "assertions": []
+    },
+    {
+      "id": "addClip",
+      "action": "clip.add",
+      "input": {
+        "assetId": {
+          "$ref": "fixtures.videoAssetId"
+        },
+        "trackId": {
+          "$ref": "trackState.tracks",
+          "find": {
+            "kind": "video"
+          },
+          "pick": "id"
+        },
+        "start": 0
+      },
+      "saveAs": "addClip",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "addClip.clipIds"
+          },
+          "op": "length",
+          "expected": 1
+        }
+      ]
+    },
+    {
+      "id": "firstState",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "firstState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "firstState.tracks",
+            "find": {
+              "name": "Montage"
+            },
+            "pick": "clips.0.duration"
+          },
+          "op": "equal",
+          "expected": 4000000
+        }
+      ]
+    },
+    {
+      "id": "split",
+      "action": "clip.split",
+      "input": {
+        "clipId": {
+          "$ref": "addClip.clipIds.0"
+        },
+        "at": 2000000
+      },
+      "saveAs": "split",
+      "assertions": []
+    },
+    {
+      "id": "splitState",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "splitState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "splitState.tracks",
+            "find": {
+              "name": "Montage"
+            },
+            "pick": "clips"
+          },
+          "op": "length",
+          "expected": 2
+        }
+      ]
+    },
+    {
+      "id": "trim",
+      "action": "clip.trim",
+      "input": {
+        "clipId": {
+          "$ref": "splitState.tracks",
+          "find": {
+            "name": "Montage"
+          },
+          "pick": "clips.1.id"
+        },
+        "edge": "out",
+        "at": 3500000
+      },
+      "saveAs": "trim",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "trim.end"
+          },
+          "op": "equal",
+          "expected": 3500000
+        }
+      ]
+    },
+    {
+      "id": "fade",
+      "action": "clip.fade",
+      "input": {
+        "clipId": {
+          "$ref": "splitState.tracks",
+          "find": {
+            "name": "Montage"
+          },
+          "pick": "clips.1.id"
+        },
+        "edge": "out",
+        "length": 500000
+      },
+      "saveAs": "fade",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "fade.fadeOut"
+          },
+          "op": "equal",
+          "expected": 500000
+        }
+      ]
+    },
+    {
+      "id": "result",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.tracks",
+            "find": {
+              "name": "Montage"
+            },
+            "pick": "clips.1.inPoint"
+          },
+          "op": "equal",
+          "expected": 2000000
+        },
+        {
+          "actual": {
+            "$ref": "result.tracks",
+            "find": {
+              "name": "Montage"
+            },
+            "pick": "clips.1.duration"
+          },
+          "op": "equal",
+          "expected": 1500000
+        },
+        {
+          "actual": {
+            "$ref": "result.tracks",
+            "find": {
+              "name": "Montage"
+            },
+            "pick": "clips.1.fadeOut"
+          },
+          "op": "equal",
+          "expected": 500000
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Fournisseur de fixture vidéo synthétique/catalogue invité requis ; aucun assetId fictif ni téléchargement implicite.",
+    "Comparer la transition visible sur la source synthétique ; les valeurs de montage seules ne prouvent pas le rendu du fondu."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixtures"]
+}

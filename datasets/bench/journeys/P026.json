@@ -1,0 +1,240 @@
+{
+  "version": 1,
+  "id": "P026",
+  "request": "« Accélère ce clip puis rapproche le suivant. »",
+  "requires": ["isolated-vm", "synthetic-video-4s"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "video",
+        "createDocument": true,
+        "title": "Bench P026"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "trackState",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "trackState",
+      "assertions": []
+    },
+    {
+      "id": "nameTrack",
+      "action": "track.rename",
+      "input": {
+        "trackId": {
+          "$ref": "trackState.tracks",
+          "find": {
+            "kind": "video"
+          },
+          "pick": "id"
+        },
+        "name": "Montage"
+      },
+      "saveAs": "nameTrack",
+      "assertions": []
+    },
+    {
+      "id": "addClip",
+      "action": "clip.add",
+      "input": {
+        "assetId": {
+          "$ref": "fixtures.videoAssetId"
+        },
+        "trackId": {
+          "$ref": "trackState.tracks",
+          "find": {
+            "kind": "video"
+          },
+          "pick": "id"
+        },
+        "start": 0
+      },
+      "saveAs": "addClip",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "addClip.clipIds"
+          },
+          "op": "length",
+          "expected": 1
+        }
+      ]
+    },
+    {
+      "id": "firstState",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "firstState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "firstState.tracks",
+            "find": {
+              "name": "Montage"
+            },
+            "pick": "clips.0.duration"
+          },
+          "op": "equal",
+          "expected": 4000000
+        }
+      ]
+    },
+    {
+      "id": "secondClip",
+      "action": "clip.add",
+      "input": {
+        "assetId": {
+          "$ref": "fixtures.videoAssetId"
+        },
+        "trackId": {
+          "$ref": "trackState.tracks",
+          "find": {
+            "kind": "video"
+          },
+          "pick": "id"
+        },
+        "start": 6000000
+      },
+      "saveAs": "secondClip",
+      "assertions": []
+    },
+    {
+      "id": "speed",
+      "action": "clip.speed",
+      "input": {
+        "clipId": {
+          "$ref": "addClip.clipIds.0"
+        },
+        "speed": 2
+      },
+      "saveAs": "speed",
+      "assertions": []
+    },
+    {
+      "id": "speedState",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "speedState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "speedState.tracks",
+            "find": {
+              "name": "Montage"
+            },
+            "pick": "clips.0.duration"
+          },
+          "op": "equal",
+          "expected": 4000000
+        }
+      ]
+    },
+    {
+      "id": "move",
+      "action": "clip.move",
+      "input": {
+        "clipId": {
+          "$ref": "secondClip.clipIds.0"
+        },
+        "trackId": {
+          "$ref": "trackState.tracks",
+          "find": {
+            "kind": "video"
+          },
+          "pick": "id"
+        },
+        "start": 4000000
+      },
+      "saveAs": "move",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "move.start"
+          },
+          "op": "equal",
+          "expected": 4000000
+        }
+      ]
+    },
+    {
+      "id": "result",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.tracks",
+            "find": {
+              "name": "Montage"
+            },
+            "pick": "clips.0.speed"
+          },
+          "op": "equal",
+          "expected": 2
+        },
+        {
+          "actual": {
+            "$ref": "result.tracks",
+            "find": {
+              "name": "Montage"
+            },
+            "pick": "clips.1.start"
+          },
+          "op": "equal",
+          "expected": 4000000
+        },
+        {
+          "actual": {
+            "$ref": "result.duration"
+          },
+          "op": "equal",
+          "expected": 8000000
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Fournisseur de fixture vidéo synthétique/catalogue invité requis ; aucun assetId fictif ni téléchargement implicite.",
+    "Comparer l’empreinte des octets du média source avant/après via le fournisseur de fixture."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixtures"]
+}

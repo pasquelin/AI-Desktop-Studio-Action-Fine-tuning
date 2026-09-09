@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "id": "P049",
+  "request": "Passe la vitesse du script Hero de 1 à 3 et vérifie le comportement du personnage.",
+  "requires": ["script-attached-runtime-fixture"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-created",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "created"
+    },
+    {
+      "id": "seed-script",
+      "action": "script.write",
+      "input": {
+        "path": "Scripts/Hero.ts",
+        "source": "export default class Hero { speed = 1; }\n"
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-original",
+      "action": "script.read",
+      "input": {
+        "path": "Scripts/Hero.ts"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "original.source"
+          },
+          "op": "equal",
+          "expected": "export default class Hero { speed = 1; }\n"
+        }
+      ],
+      "saveAs": "original"
+    },
+    {
+      "id": "correct-script",
+      "action": "script.write",
+      "input": {
+        "path": "Scripts/Hero.ts",
+        "source": "export default class Hero { speed = 3; }\n"
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-corrected",
+      "action": "script.read",
+      "input": {
+        "path": "Scripts/Hero.ts"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "corrected.source"
+          },
+          "op": "equal",
+          "expected": "export default class Hero { speed = 3; }\n"
+        }
+      ],
+      "saveAs": "corrected"
+    },
+    {
+      "id": "runtime-report",
+      "action": "runtime.report",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "runtime.errors"
+          },
+          "op": "equal",
+          "expected": 0
+        }
+      ],
+      "saveAs": "runtime"
+    }
+  ],
+  "blockers": [
+    "Script text round-trip is specified; lifecycle-compatible character binding, runtime start and measured movement are still required to prove behaviour."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

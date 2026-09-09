@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "id": "P027",
+  "request": "« Isole la voix et verrouille la musique. »",
+  "requires": ["isolated-vm", "synthetic-voice-and-music", "audio-mix-oracle"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "audio",
+        "createDocument": true,
+        "title": "Bench P027"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "oneTrack",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "oneTrack",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "oneTrack.tracks"
+          },
+          "op": "length",
+          "expected": 4
+        }
+      ]
+    },
+    {
+      "id": "nameVoice",
+      "action": "track.rename",
+      "input": {
+        "trackId": {
+          "$ref": "oneTrack.tracks.0.id"
+        },
+        "name": "Voix"
+      },
+      "saveAs": "nameVoice",
+      "assertions": []
+    },
+    {
+      "id": "twoTracks",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "twoTracks",
+      "assertions": []
+    },
+    {
+      "id": "nameMusic",
+      "action": "track.rename",
+      "input": {
+        "trackId": {
+          "$ref": "twoTracks.tracks.1.id"
+        },
+        "name": "Musique"
+      },
+      "saveAs": "nameMusic",
+      "assertions": []
+    },
+    {
+      "id": "solo",
+      "action": "track.setMuteSoloLockHeight",
+      "input": {
+        "trackId": {
+          "$ref": "oneTrack.tracks.0.id"
+        },
+        "solo": true
+      },
+      "saveAs": "solo",
+      "assertions": []
+    },
+    {
+      "id": "lock",
+      "action": "track.setMuteSoloLockHeight",
+      "input": {
+        "trackId": {
+          "$ref": "twoTracks.tracks.1.id"
+        },
+        "locked": true
+      },
+      "saveAs": "lock",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "sequence.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.tracks",
+            "find": {
+              "name": "Voix"
+            },
+            "pick": "solo"
+          },
+          "op": "equal",
+          "expected": true
+        },
+        {
+          "actual": {
+            "$ref": "result.tracks",
+            "find": {
+              "name": "Musique"
+            },
+            "pick": "locked"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Les pistes préparées sont vides : la configuration solo/verrouillage est vérifiable, mais l’isolation audible de la voix nécessite deux médias audio synthétiques référencés et une vérification du mix."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

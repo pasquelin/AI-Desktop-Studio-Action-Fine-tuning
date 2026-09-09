@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "id": "P020",
+  "request": "« Verrouille le logo, puis essaie de le déplacer. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Composition",
+        "folder": ""
+      },
+      "saveAs": "image",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "image.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "logo",
+      "action": "layer.add",
+      "input": {
+        "kind": "shape",
+        "name": "Logo",
+        "shape": "rectangle",
+        "width": 32,
+        "height": 32,
+        "fill": "#3366ff",
+        "x": 10,
+        "y": 20
+      },
+      "saveAs": "logo",
+      "assertions": []
+    },
+    {
+      "id": "lock",
+      "action": "layer.lock",
+      "input": {
+        "layerId": {
+          "$ref": "logo.layerId"
+        },
+        "position": true
+      },
+      "saveAs": "lock",
+      "assertions": []
+    },
+    {
+      "id": "before",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "before",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Logo"
+            },
+            "pick": "locked.position"
+          },
+          "op": "equal",
+          "expected": true
+        },
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Logo"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "logo.layerId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Logo"
+            },
+            "pick": "transform.x"
+          },
+          "op": "equal",
+          "expected": 10
+        },
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Logo"
+            },
+            "pick": "transform.y"
+          },
+          "op": "equal",
+          "expected": 20
+        }
+      ]
+    },
+    {
+      "id": "attempt",
+      "action": "layer.transform",
+      "input": {
+        "layerId": {
+          "$ref": "logo.layerId"
+        },
+        "x": 100,
+        "y": 200
+      },
+      "saveAs": "attempt",
+      "assertions": []
+    },
+    {
+      "id": "after",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "after",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "Logo"
+            },
+            "pick": "transform"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Logo"
+            },
+            "pick": "transform"
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Lecture actuelle : layer.transform appelle setLayerTransform/patch sans vérifier locked.position. Le test exprime maintien de position voulu mais risque échec réel ; arbitrer contrat Studio et ne pas transformer mutation en réussite."
+  ],
+  "trainingApproved": false
+}

@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "id": "P056",
+  "request": "Retiens que les noms des scènes commencent par SC_, et lie cette convention au dossier Scenes.",
+  "requires": [],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "convention",
+      "action": "memory.write",
+      "input": {
+        "type": "convention",
+        "summary": "Les scènes commencent par SC_",
+        "body": "Utiliser SC_ pour le nom des scènes du projet de test.",
+        "importance": 3
+      },
+      "assertions": [],
+      "saveAs": "convention"
+    },
+    {
+      "id": "architecture",
+      "action": "memory.write",
+      "input": {
+        "type": "architecture",
+        "summary": "Les scènes sont rangées dans Scenes",
+        "body": "Convention propre à ce projet jetable.",
+        "importance": 3
+      },
+      "assertions": [],
+      "saveAs": "architecture"
+    },
+    {
+      "id": "link",
+      "action": "memory.link",
+      "input": {
+        "memoryId": {
+          "$ref": "convention.id"
+        },
+        "toMemoryId": {
+          "$ref": "architecture.id"
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "read",
+      "action": "memory.read",
+      "input": {
+        "memoryId": {
+          "$ref": "convention.id"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "memory.summary"
+          },
+          "op": "equal",
+          "expected": "Les scènes commencent par SC_"
+        },
+        {
+          "actual": {
+            "$ref": "memory.links"
+          },
+          "op": "includes",
+          "expected": {
+            "$ref": "architecture.id"
+          }
+        }
+      ],
+      "saveAs": "memory"
+    },
+    {
+      "id": "recall",
+      "action": "memory.recall",
+      "input": {
+        "query": "Les scènes commencent par SC_",
+        "limit": 100
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "recall.memories",
+            "find": {
+              "summary": "Les scènes commencent par SC_"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "convention.id"
+          }
+        }
+      ],
+      "saveAs": "recall"
+    },
+    {
+      "id": "context",
+      "action": "context.writeProjectCard",
+      "input": {
+        "title": "Noms de scènes",
+        "body": "Les scènes commencent par SC_.",
+        "active": true
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "card.title"
+          },
+          "op": "equal",
+          "expected": "Noms de scènes"
+        }
+      ],
+      "saveAs": "card"
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

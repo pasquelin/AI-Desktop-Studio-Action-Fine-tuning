@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "id": "P062",
+  "request": "Conserve Batch Witness, puis refuse le lot First/type invalide/Third sans ajouter aucun nœud.",
+  "requires": [],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-created",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "created"
+    },
+    {
+      "id": "add-batch-witness",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Batch Witness",
+        "positionX": 7,
+        "positionY": 2,
+        "positionZ": -4
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-batch-witness",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "beforeBatch",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "beforeBatch.documentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "created.documentId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "beforeBatch.nodes",
+            "find": {
+              "name": "Batch Witness"
+            },
+            "pick": "transform.position"
+          },
+          "op": "equal",
+          "expected": {
+            "x": 7,
+            "y": 2,
+            "z": -4
+          }
+        }
+      ]
+    },
+    {
+      "id": "batch",
+      "action": "studio.batch",
+      "input": {
+        "calls": "[{\"action\": \"node.add\", \"input\": {\"kind\": \"box\", \"name\": \"First\"}}, {\"action\": \"node.add\", \"input\": {\"kind\": \"invalid-bench-node\"}}, {\"action\": \"node.add\", \"input\": {\"kind\": \"box\", \"name\": \"Third\"}}]"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "batch.refused"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "batch",
+      "expectRefusal": {
+        "includes": "call 2:"
+      }
+    },
+    {
+      "id": "state-after-refusal",
+      "action": "scene.state",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "state.documentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "created.documentId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "state.nodes"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "beforeBatch.nodes"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "state.nodes"
+          },
+          "op": "length",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "state.nodes",
+            "find": {
+              "name": "Batch Witness"
+            },
+            "pick": "transform.position"
+          },
+          "op": "equal",
+          "expected": {
+            "x": 7,
+            "y": 2,
+            "z": -4
+          }
+        }
+      ],
+      "saveAs": "state"
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

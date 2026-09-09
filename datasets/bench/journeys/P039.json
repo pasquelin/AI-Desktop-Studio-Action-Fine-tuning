@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "id": "P039",
+  "request": "« Anime l’intensité de cet effet puis retire la clé choisie. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P039",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "bloom",
+      "action": "post.add",
+      "input": {
+        "effect": "bloom"
+      },
+      "saveAs": "bloom",
+      "assertions": []
+    },
+    {
+      "id": "initial",
+      "action": "post.state",
+      "input": {},
+      "saveAs": "initial",
+      "assertions": []
+    },
+    {
+      "id": "key",
+      "action": "post.addKeyframe",
+      "input": {
+        "effectId": {
+          "$ref": "initial.effects",
+          "find": {
+            "effect": "bloom"
+          },
+          "pick": "id"
+        },
+        "param": "strength",
+        "value": 1
+      },
+      "saveAs": "key",
+      "assertions": []
+    },
+    {
+      "id": "keyed",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "keyed",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "keyed.tracks"
+          },
+          "op": "length",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "keyed.tracks.0.keys"
+          },
+          "op": "equal",
+          "expected": [0]
+        },
+        {
+          "actual": {
+            "$ref": "keyed.tracks.0.target.post.param"
+          },
+          "op": "equal",
+          "expected": "strength"
+        }
+      ]
+    },
+    {
+      "id": "neighbour",
+      "action": "post.addKeyframe",
+      "input": {
+        "effectId": {
+          "$ref": "initial.effects",
+          "find": {
+            "effect": "bloom"
+          },
+          "pick": "id"
+        },
+        "param": "radius",
+        "value": 0.9
+      },
+      "saveAs": "neighbour",
+      "assertions": []
+    },
+    {
+      "id": "removeKey",
+      "action": "post.removeKeyframe",
+      "input": {
+        "effectId": {
+          "$ref": "initial.effects",
+          "find": {
+            "effect": "bloom"
+          },
+          "pick": "id"
+        },
+        "param": "strength"
+      },
+      "saveAs": "removeKey",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.tracks.0.target.post.param"
+          },
+          "op": "equal",
+          "expected": "strength"
+        },
+        {
+          "actual": {
+            "$ref": "result.tracks.0.keys"
+          },
+          "op": "equal",
+          "expected": []
+        },
+        {
+          "actual": {
+            "$ref": "result.tracks.1.target.post.param"
+          },
+          "op": "equal",
+          "expected": "radius"
+        },
+        {
+          "actual": {
+            "$ref": "result.tracks.1.keys"
+          },
+          "op": "equal",
+          "expected": [0]
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

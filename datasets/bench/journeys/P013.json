@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "P013",
+  "request": "« Prépare le runtime nécessaire, puis annule l’opération si je change d’avis. »",
+  "requires": [
+    "isolated-vm",
+    "motion-runtime-absent",
+    "runtime-install-authorized"
+  ],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "before",
+      "action": "ai.localState",
+      "input": {},
+      "saveAs": "before",
+      "assertions": []
+    },
+    {
+      "id": "install",
+      "action": "ai.manageLocalRuntime",
+      "input": {
+        "operation": "installRuntime",
+        "profile": "motion"
+      },
+      "saveAs": "install",
+      "assertions": []
+    },
+    {
+      "id": "cancel",
+      "action": "ai.manageLocalRuntime",
+      "input": {
+        "operation": "cancelRuntimeInstall",
+        "profile": "motion"
+      },
+      "saveAs": "cancel",
+      "assertions": []
+    },
+    {
+      "id": "after",
+      "action": "ai.localState",
+      "input": {},
+      "saveAs": "after",
+      "assertions": []
+    }
+  ],
+  "blockers": [
+    "Installation peut être synchrone ou déjà terminée ; le modèle de déclaration actuel ne lance pas deux actions concurrentes. Définir témoin de tâche réel et oracle état du moteur avant de prétendre tester une annulation en cours."
+  ],
+  "trainingApproved": false
+}

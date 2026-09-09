@@ -14,7 +14,10 @@ import { listLocalVmNames } from "../src/vm/tart.ts";
 import { runCheck } from "./run-check.ts";
 
 const { values } = parseArgs({
-  options: { scenario: { type: "boolean", default: false } },
+  options: {
+    scenario: { type: "boolean", default: false },
+    journey: { type: "string" },
+  },
 });
 const root = resolve(import.meta.dirname, "..");
 const state = stateDir(root);
@@ -59,7 +62,8 @@ await runCheck(
           "build",
           "--base",
           reference,
-          ...(values.scenario ? ["--scenario"] : []),
+          ...(values.scenario || values.journey ? ["--scenario"] : []),
+          ...(values.journey ? ["--journey", values.journey] : []),
         );
       },
     });

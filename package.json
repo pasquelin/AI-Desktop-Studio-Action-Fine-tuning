@@ -29,7 +29,14 @@
     "model:pull": "node tools/model.ts pull",
     "model:check": "node tools/model.ts check",
     "model:eval": "node tools/model.ts evaluate",
-    "scenarios:prepare": "node tools/prepare-scenarios.ts"
+    "scenarios:prepare": "node tools/prepare-scenarios.ts",
+    "scenarios:split": "node tools/prepare-splits.ts",
+    "scenarios:examples": "node tools/prepare-examples.ts",
+    "bench:run": "node tools/run-vm.ts --scenario",
+    "dataset:export": "node tools/export-approved.ts",
+    "bench:check": "node tools/check-bench.ts",
+    "fixtures:prepare": "node tools/prepare-media-fixtures.ts",
+    "prepare:bench": "npm run fixtures:prepare && npm run scenarios:prepare && npm run scenarios:examples && npm run scenarios:split && npm run bench:check"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",

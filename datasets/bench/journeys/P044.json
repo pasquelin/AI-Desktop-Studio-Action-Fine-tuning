@@ -1,0 +1,273 @@
+{
+  "version": 1,
+  "id": "P044",
+  "request": "Ajoute un saut au clavier (Espace) et à la manette (bouton sud), sans modifier la carte témoin.",
+  "requires": [],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "write-witness",
+      "action": "inputMap.write",
+      "input": {
+        "path": "Controls/witness.input.json",
+        "map": {
+          "version": 2,
+          "id": "witness",
+          "priority": 1,
+          "defaultActive": true,
+          "actions": [
+            {
+              "id": "jump",
+              "kind": "button",
+              "bindings": [
+                {
+                  "device": "keyboard",
+                  "code": "Space"
+                },
+                {
+                  "device": "gamepad",
+                  "control": "south"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "write-controls",
+      "action": "inputMap.write",
+      "input": {
+        "path": "Controls/hero.input.json",
+        "map": {
+          "version": 2,
+          "id": "hero",
+          "priority": 10,
+          "defaultActive": true,
+          "actions": [
+            {
+              "id": "jump",
+              "kind": "button",
+              "bindings": [
+                {
+                  "device": "keyboard",
+                  "code": "Space"
+                },
+                {
+                  "device": "gamepad",
+                  "control": "south"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-controls",
+      "action": "inputMap.read",
+      "input": {
+        "path": "Controls/hero.input.json"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "map"
+          },
+          "op": "equal",
+          "expected": {
+            "version": 2,
+            "id": "hero",
+            "priority": 10,
+            "defaultActive": true,
+            "actions": [
+              {
+                "id": "jump",
+                "kind": "button",
+                "bindings": [
+                  {
+                    "device": "keyboard",
+                    "code": "Space"
+                  },
+                  {
+                    "device": "gamepad",
+                    "control": "south"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "actual": {
+            "$file": {
+              "path": "Controls/hero.input.json",
+              "read": "json"
+            }
+          },
+          "op": "equal",
+          "expected": {
+            "version": 2,
+            "id": "hero",
+            "priority": 10,
+            "defaultActive": true,
+            "actions": [
+              {
+                "id": "jump",
+                "kind": "button",
+                "bindings": [
+                  {
+                    "device": "keyboard",
+                    "code": "Space"
+                  },
+                  {
+                    "device": "gamepad",
+                    "control": "south"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "saveAs": "map"
+    },
+    {
+      "id": "list-controls",
+      "action": "inputMaps.list",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "maps"
+          },
+          "op": "includes",
+          "expected": "Controls/hero.input.json"
+        }
+      ],
+      "saveAs": "maps"
+    },
+    {
+      "id": "read-witness",
+      "action": "inputMap.read",
+      "input": {
+        "path": "Controls/witness.input.json"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "witness"
+          },
+          "op": "equal",
+          "expected": {
+            "version": 2,
+            "id": "witness",
+            "priority": 1,
+            "defaultActive": true,
+            "actions": [
+              {
+                "id": "jump",
+                "kind": "button",
+                "bindings": [
+                  {
+                    "device": "keyboard",
+                    "code": "Space"
+                  },
+                  {
+                    "device": "gamepad",
+                    "control": "south"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "actual": {
+            "$file": {
+              "path": "Controls/witness.input.json",
+              "read": "json"
+            }
+          },
+          "op": "equal",
+          "expected": {
+            "version": 2,
+            "id": "witness",
+            "priority": 1,
+            "defaultActive": true,
+            "actions": [
+              {
+                "id": "jump",
+                "kind": "button",
+                "bindings": [
+                  {
+                    "device": "keyboard",
+                    "code": "Space"
+                  },
+                  {
+                    "device": "gamepad",
+                    "control": "south"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "saveAs": "witness"
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

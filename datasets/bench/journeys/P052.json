@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "id": "P052",
+  "request": "Enregistre uniquement Controls/hero.input.json dans le dépôt Git jetable.",
+  "requires": ["guest-git-identity"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "git-init",
+      "action": "git.init",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "init.kind"
+          },
+          "op": "equal",
+          "expected": "ready"
+        }
+      ],
+      "saveAs": "init"
+    },
+    {
+      "id": "seed-file",
+      "action": "inputMap.write",
+      "input": {
+        "path": "Controls/hero.input.json",
+        "map": {
+          "version": 2,
+          "id": "hero",
+          "priority": 10,
+          "defaultActive": true,
+          "actions": [
+            {
+              "id": "jump",
+              "kind": "button",
+              "bindings": [
+                {
+                  "device": "keyboard",
+                  "code": "Space"
+                },
+                {
+                  "device": "gamepad",
+                  "control": "south"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "stage",
+      "action": "git.stage",
+      "input": {
+        "paths": ["Controls/hero.input.json"]
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "staged.status.files",
+            "find": {
+              "path": "Controls/hero.input.json"
+            },
+            "pick": "stage"
+          },
+          "op": "equal",
+          "expected": "staged"
+        }
+      ],
+      "saveAs": "staged"
+    },
+    {
+      "id": "commit",
+      "action": "git.commit",
+      "input": {
+        "message": "bench: add only hero controls",
+        "amend": false
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "committed.kind"
+          },
+          "op": "equal",
+          "expected": "ready"
+        }
+      ],
+      "saveAs": "committed"
+    },
+    {
+      "id": "log",
+      "action": "git.log",
+      "input": {
+        "limit": 1
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "history.0.message"
+          },
+          "op": "equal",
+          "expected": "bench: add only hero controls"
+        }
+      ],
+      "saveAs": "history"
+    },
+    {
+      "id": "files-in-commit",
+      "action": "git.listCommitFiles",
+      "input": {
+        "hash": {
+          "$ref": "history.0.hash"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "commitFiles"
+          },
+          "op": "length",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "commitFiles.0.path"
+          },
+          "op": "equal",
+          "expected": "Controls/hero.input.json"
+        }
+      ],
+      "saveAs": "commitFiles"
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

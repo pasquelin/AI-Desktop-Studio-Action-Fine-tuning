@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "id": "P043",
+  "request": "« Rouvre le mouvement enregistré dans ce média. »",
+  "requires": ["isolated-vm", "local-character-motion-fixture"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P043",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "model",
+      "action": "node.addModel",
+      "input": {
+        "assetId": {
+          "$ref": "fixtures.characterAssetId"
+        },
+        "name": "Personnage"
+      },
+      "saveAs": "model",
+      "assertions": []
+    },
+    {
+      "id": "available",
+      "action": "animations.list",
+      "input": {
+        "nodeId": {
+          "$ref": "model.nodeId"
+        }
+      },
+      "saveAs": "available",
+      "assertions": []
+    },
+    {
+      "id": "reopen",
+      "action": "animation.reopenMotion",
+      "input": {
+        "nodeId": {
+          "$ref": "model.nodeId"
+        },
+        "assetId": {
+          "$ref": "fixtures.savedMotionAssetId"
+        }
+      },
+      "saveAs": "reopen",
+      "assertions": []
+    },
+    {
+      "id": "rig",
+      "action": "rig.state",
+      "input": {},
+      "saveAs": "rig",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "rig.motions"
+          },
+          "op": "exists"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Fixture de mouvement sauvegardé absente ; rig.state expose motions mais ne démontre pas à lui seul durée/canaux/pose retrouvés. Oracle de fenêtre personnage à compléter."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixtures"]
+}

@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "id": "P002",
+  "request": "« Trouve l’image du bateau et ouvre la bonne version. »",
+  "requires": ["isolated-vm", "boat-image-fixture"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "found",
+      "action": "files.search",
+      "input": {
+        "query": "bateau"
+      },
+      "saveAs": "found",
+      "assertions": []
+    },
+    {
+      "id": "facts",
+      "action": "file.facts",
+      "input": {
+        "path": {
+          "$ref": "found",
+          "find": {
+            "name": "bateau-final.png"
+          },
+          "pick": "path"
+        }
+      },
+      "saveAs": "facts",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "facts.kind"
+          },
+          "op": "equal",
+          "expected": "file"
+        }
+      ]
+    },
+    {
+      "id": "opened",
+      "action": "file.open",
+      "input": {
+        "path": {
+          "$ref": "found",
+          "find": {
+            "name": "bateau-final.png"
+          },
+          "pick": "path"
+        }
+      },
+      "saveAs": "opened",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "opened.opened"
+          },
+          "op": "equal",
+          "expected": "asset"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Le format actuel ne contient pas de commande de copie de fixture sur disque après création du projet ; injection et oracle de version visuelle requis. file.open image passe par le panneau média, pas un document natif."
+  ],
+  "trainingApproved": false
+}

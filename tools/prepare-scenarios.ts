@@ -1,10 +1,13 @@
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { sha256 } from "../src/catalogue/catalogue.ts";
 import { record } from "../src/json.ts";
 import { designCase } from "../src/scenarios/case-design.ts";
-import { parseInventory } from "../src/scenarios/inventory.ts";
+import {
+  parseInventory,
+  readScenarioSources,
+} from "../src/scenarios/inventory.ts";
 import { validateTemplates } from "../src/scenarios/locales.ts";
 import { cataloguePath } from "../src/studio/checkout.ts";
 import { runCheck } from "./run-check.ts";
@@ -28,12 +31,7 @@ const oracleReferences = (entries: BenchEntry[]) =>
   entries.map(({ rank, oracleExpression }) => ({ rank, oracleExpression }));
 await runCheck(
   async () => {
-    const input = join(root, "docs/scenarios");
-    const sources: Record<string, string> = {};
-    for (const file of (await readdir(input))
-      .filter((file) => file.endsWith(".md"))
-      .sort())
-      sources[file] = await readFile(join(input, file), "utf8");
+    const sources = await readScenarioSources(root);
     const inventory = parseInventory(sources);
     const sourceHashes = Object.fromEntries(
       Object.entries(sources).map(([file, text]) => [file, sha256(text)]),

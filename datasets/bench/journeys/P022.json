@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "id": "P022",
+  "request": "« Dessine une petite icône sur une grille puis agrandis le canevas. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Bench P022"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "grid",
+      "action": "canvas.setPixelArt",
+      "input": {
+        "enabled": true,
+        "columns": 8,
+        "rows": 8,
+        "cell": 4
+      },
+      "saveAs": "grid",
+      "assertions": []
+    },
+    {
+      "id": "draw",
+      "action": "canvas.drawPixels",
+      "input": {
+        "shape": "points",
+        "cells": ["1,1", "2,1", "1,2"],
+        "color": "#ff0000"
+      },
+      "saveAs": "draw",
+      "assertions": []
+    },
+    {
+      "id": "beforeResize",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "beforeResize",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "beforeResize.width"
+          },
+          "op": "equal",
+          "expected": 32
+        },
+        {
+          "actual": {
+            "$ref": "beforeResize.height"
+          },
+          "op": "equal",
+          "expected": 32
+        },
+        {
+          "actual": {
+            "$ref": "beforeResize.pixelArt.cell"
+          },
+          "op": "equal",
+          "expected": 4
+        }
+      ]
+    },
+    {
+      "id": "resize",
+      "action": "canvas.resize",
+      "input": {
+        "width": 64,
+        "height": 48,
+        "scalePixels": false
+      },
+      "saveAs": "resize",
+      "assertions": []
+    },
+    {
+      "id": "afterResize",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "afterResize",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "afterResize.width"
+          },
+          "op": "equal",
+          "expected": 64
+        },
+        {
+          "actual": {
+            "$ref": "afterResize.height"
+          },
+          "op": "equal",
+          "expected": 48
+        }
+      ]
+    },
+    {
+      "id": "save",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "createDocument.documentId"
+        }
+      },
+      "saveAs": "save",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "save.written"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Le lecteur canvas.state ne fournit pas les pixels : l’oracle indépendant des trois cellules rouges et de leur conservation sans mise à l’échelle doit décoder le fichier image ou le rendu avant validation métier."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

@@ -1,0 +1,211 @@
+{
+  "version": 1,
+  "id": "P047",
+  "request": "Ajoute Movement au cube Hero, règle sa vitesse à 3, puis retire uniquement Movement.",
+  "requires": [],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-created",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "created"
+    },
+    {
+      "id": "add-hero",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Hero"
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-hero",
+      "action": "scene.state",
+      "input": {},
+      "assertions": [],
+      "saveAs": "before"
+    },
+    {
+      "id": "attach-movement",
+      "action": "component.attach",
+      "input": {
+        "nodeId": {
+          "$ref": "before.nodes",
+          "find": {
+            "name": "Hero"
+          },
+          "pick": "id"
+        },
+        "type": "Movement"
+      },
+      "assertions": []
+    },
+    {
+      "id": "set-speed",
+      "action": "component.setProperties",
+      "input": {
+        "nodeId": {
+          "$ref": "before.nodes",
+          "find": {
+            "name": "Hero"
+          },
+          "pick": "id"
+        },
+        "type": "Movement",
+        "field": "speed",
+        "value": "3"
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-speed",
+      "action": "studio.describe",
+      "input": {
+        "ref": {
+          "$ref": "before.nodes",
+          "find": {
+            "name": "Hero"
+          },
+          "pick": "id"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "moved.components",
+            "find": {
+              "type": "Movement"
+            },
+            "pick": "properties"
+          },
+          "op": "equal",
+          "expected": {
+            "type": "Movement",
+            "axis": "y",
+            "speed": 3,
+            "distance": 2,
+            "mode": "pingPong"
+          }
+        }
+      ],
+      "saveAs": "moved"
+    },
+    {
+      "id": "detach-movement",
+      "action": "component.detach",
+      "input": {
+        "nodeId": {
+          "$ref": "before.nodes",
+          "find": {
+            "name": "Hero"
+          },
+          "pick": "id"
+        },
+        "type": "Movement"
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-detached",
+      "action": "studio.describe",
+      "input": {
+        "ref": {
+          "$ref": "before.nodes",
+          "find": {
+            "name": "Hero"
+          },
+          "pick": "id"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "detached.components"
+          },
+          "op": "length",
+          "expected": 0
+        },
+        {
+          "actual": {
+            "$ref": "detached.id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "before.nodes",
+            "find": {
+              "name": "Hero"
+            },
+            "pick": "id"
+          }
+        }
+      ],
+      "saveAs": "detached"
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

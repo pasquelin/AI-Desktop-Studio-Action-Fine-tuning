@@ -1,0 +1,255 @@
+{
+  "version": 1,
+  "id": "P035",
+  "request": "« Prépare un matériau et applique-le à cet objet. »",
+  "requires": ["isolated-vm", "local-media-fixtures"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "openTexture",
+      "action": "file.open",
+      "input": {
+        "path": "Fixtures/checker.png"
+      },
+      "saveAs": "openTexture",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "openTexture.opened"
+          },
+          "op": "equal",
+          "expected": "asset"
+        }
+      ]
+    },
+    {
+      "id": "findTexture",
+      "action": "assets.searchProjectCatalogue",
+      "input": {
+        "text": "checker",
+        "type": "image"
+      },
+      "saveAs": "findTexture",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "findTexture",
+            "find": {
+              "path": "Fixtures/checker.png"
+            },
+            "pick": "id"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "openMesh",
+      "action": "file.open",
+      "input": {
+        "path": "Fixtures/triangle.glb"
+      },
+      "saveAs": "openMesh",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "openMesh.opened"
+          },
+          "op": "equal",
+          "expected": "asset"
+        }
+      ]
+    },
+    {
+      "id": "findMesh",
+      "action": "assets.searchProjectCatalogue",
+      "input": {
+        "text": "triangle",
+        "type": "mesh"
+      },
+      "saveAs": "findMesh",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "findMesh",
+            "find": {
+              "path": "Fixtures/triangle.glb"
+            },
+            "pick": "id"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "materials",
+        "createDocument": true,
+        "title": "Bench P035"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "action": "material.setSurfaceSettings",
+      "input": {
+        "color": "#336699",
+        "roughness": 0.4,
+        "metalness": 0.2
+      },
+      "saveAs": "settings",
+      "assertions": []
+    },
+    {
+      "id": "channel",
+      "action": "material.setChannelImage",
+      "input": {
+        "channel": "baseColor",
+        "assetId": {
+          "$ref": "findTexture",
+          "find": {
+            "path": "Fixtures/checker.png"
+          },
+          "pick": "id"
+        }
+      },
+      "saveAs": "channel",
+      "assertions": []
+    },
+    {
+      "id": "material",
+      "action": "material.state",
+      "input": {},
+      "saveAs": "material",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "material.material.roughness"
+          },
+          "op": "equal",
+          "expected": 0.4
+        },
+        {
+          "actual": {
+            "$ref": "material.material.metalness"
+          },
+          "op": "equal",
+          "expected": 0.2
+        }
+      ]
+    },
+    {
+      "id": "saveMaterial",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "createDocument.documentId"
+        }
+      },
+      "saveAs": "saveMaterial",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "saveMaterial.written"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "scene",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Material Scene",
+        "template": "empty"
+      },
+      "saveAs": "scene",
+      "assertions": []
+    },
+    {
+      "id": "model",
+      "action": "node.addModel",
+      "input": {
+        "assetId": {
+          "$ref": "findMesh",
+          "find": {
+            "path": "Fixtures/triangle.glb"
+          },
+          "pick": "id"
+        },
+        "name": "Objet matériau"
+      },
+      "saveAs": "model",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "model.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "apply",
+      "action": "model.setMaterialDocument",
+      "input": {
+        "nodeId": {
+          "$ref": "model.nodeId"
+        },
+        "material": "Bench P035",
+        "slot": 0
+      },
+      "saveAs": "apply",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": []
+    }
+  ],
+  "blockers": [
+    "La copie des médias et leur adoption utilisent des fichiers réels et des identifiants retournés par Studio ; la vérification indépendante de liaison matériau/slot, disponibilité du modèle chargé et rendu reste à compléter."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

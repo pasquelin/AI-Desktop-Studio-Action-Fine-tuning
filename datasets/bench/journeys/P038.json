@@ -1,0 +1,200 @@
+{
+  "version": 1,
+  "id": "P038",
+  "request": "« Ajoute deux effets, change leur ordre et compare avant/après. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P038",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "bloom",
+      "action": "post.add",
+      "input": {
+        "effect": "bloom"
+      },
+      "saveAs": "bloom",
+      "assertions": []
+    },
+    {
+      "id": "vignette",
+      "action": "post.add",
+      "input": {
+        "effect": "vignette"
+      },
+      "saveAs": "vignette",
+      "assertions": []
+    },
+    {
+      "id": "initial",
+      "action": "post.state",
+      "input": {},
+      "saveAs": "initial",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "initial.effects"
+          },
+          "op": "length",
+          "expected": 2
+        }
+      ]
+    },
+    {
+      "id": "set",
+      "action": "post.set",
+      "input": {
+        "effectId": {
+          "$ref": "initial.effects",
+          "find": {
+            "effect": "bloom"
+          },
+          "pick": "id"
+        },
+        "param": "strength",
+        "value": 0.7
+      },
+      "saveAs": "set",
+      "assertions": []
+    },
+    {
+      "id": "move",
+      "action": "post.move",
+      "input": {
+        "effectId": {
+          "$ref": "initial.effects",
+          "find": {
+            "effect": "vignette"
+          },
+          "pick": "id"
+        },
+        "by": -1
+      },
+      "saveAs": "move",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "post.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.effects.0.effect"
+          },
+          "op": "equal",
+          "expected": "vignette"
+        },
+        {
+          "actual": {
+            "$ref": "result.effects.1.effect"
+          },
+          "op": "equal",
+          "expected": "bloom"
+        },
+        {
+          "actual": {
+            "$ref": "result.effects.1.params.strength"
+          },
+          "op": "equal",
+          "expected": 0.7
+        }
+      ]
+    },
+    {
+      "id": "off",
+      "action": "post.setWholeStackEnabled",
+      "input": {
+        "enabled": false
+      },
+      "saveAs": "off",
+      "assertions": []
+    },
+    {
+      "id": "disabled",
+      "action": "post.state",
+      "input": {},
+      "saveAs": "disabled",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "disabled.enabled"
+          },
+          "op": "equal",
+          "expected": false
+        }
+      ]
+    },
+    {
+      "id": "on",
+      "action": "post.setWholeStackEnabled",
+      "input": {
+        "enabled": true
+      },
+      "saveAs": "on",
+      "assertions": []
+    },
+    {
+      "id": "enabled",
+      "action": "post.state",
+      "input": {},
+      "saveAs": "enabled",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "enabled.enabled"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Comparaison visuelle avant/après à ajouter pour prouver le rendu non commutatif ; cette séquence vérifie l’ordre et l’activation du contrat."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

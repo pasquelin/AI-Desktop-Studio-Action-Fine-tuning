@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "id": "P029",
+  "request": "« Place la sphère deux mètres à droite du cube. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P029",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "cube",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Cube",
+        "positionX": 1,
+        "positionY": 1,
+        "positionZ": 1
+      },
+      "saveAs": "cube",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "cube.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "sphere",
+      "action": "node.add",
+      "input": {
+        "kind": "sphere",
+        "name": "Sphère"
+      },
+      "saveAs": "sphere",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "sphere.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "before",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "before",
+      "assertions": []
+    },
+    {
+      "id": "place",
+      "action": "node.transform",
+      "input": {
+        "nodeId": {
+          "$ref": "sphere.nodeId"
+        },
+        "positionX": 3,
+        "positionY": 1,
+        "positionZ": 1
+      },
+      "saveAs": "place",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.nodes",
+            "find": {
+              "name": "Sphère"
+            },
+            "pick": "transform.position"
+          },
+          "op": "equal",
+          "expected": {
+            "x": 3,
+            "y": 1,
+            "z": 1
+          }
+        },
+        {
+          "actual": {
+            "$ref": "result.nodes",
+            "find": {
+              "name": "Cube"
+            },
+            "pick": "transform.position"
+          },
+          "op": "equal",
+          "expected": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

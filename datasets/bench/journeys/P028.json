@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "id": "P028",
+  "request": "« Ajoute un cube nommé Repère puis appelle-le Socle. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P028",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "cube",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Repère"
+      },
+      "saveAs": "cube",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "cube.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "rename",
+      "action": "node.rename",
+      "input": {
+        "nodeId": {
+          "$ref": "cube.nodeId"
+        },
+        "name": "Socle"
+      },
+      "saveAs": "rename",
+      "assertions": []
+    },
+    {
+      "id": "move",
+      "action": "node.transform",
+      "input": {
+        "nodeId": {
+          "$ref": "cube.nodeId"
+        },
+        "positionX": 2,
+        "positionY": 1,
+        "positionZ": -3
+      },
+      "saveAs": "move",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.nodes"
+          },
+          "op": "length",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "result.nodes",
+            "find": {
+              "name": "Socle"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "cube.nodeId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "result.nodes",
+            "find": {
+              "name": "Socle"
+            },
+            "pick": "transform.position"
+          },
+          "op": "equal",
+          "expected": {
+            "x": 2,
+            "y": 1,
+            "z": -3
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "id": "P037",
+  "request": "« Enregistre ce style, renomme-le puis retire la copie. »",
+  "requires": ["isolated-vm", "empty-style-library"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "materials",
+        "createDocument": true,
+        "title": "Bench P037"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "action": "material.setSurfaceSettings",
+      "input": {
+        "roughness": 0.37,
+        "metalness": 0.21
+      },
+      "saveAs": "settings",
+      "assertions": []
+    },
+    {
+      "id": "before",
+      "action": "styles.list",
+      "input": {},
+      "saveAs": "before",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "before"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "saveStyle",
+      "action": "style.save",
+      "input": {
+        "name": "Bench Style"
+      },
+      "saveAs": "saveStyle",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "saveStyle"
+          },
+          "op": "length",
+          "expected": 1
+        }
+      ]
+    },
+    {
+      "id": "rename",
+      "action": "style.rename",
+      "input": {
+        "styleId": {
+          "$ref": "saveStyle",
+          "find": {
+            "name": "Bench Style"
+          },
+          "pick": "id"
+        },
+        "name": "Bench Renamed"
+      },
+      "saveAs": "rename",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "rename",
+            "find": {
+              "name": "Bench Renamed"
+            },
+            "pick": "values.roughness"
+          },
+          "op": "equal",
+          "expected": 0.37
+        }
+      ]
+    },
+    {
+      "id": "remove",
+      "action": "style.remove",
+      "input": {
+        "styleId": {
+          "$ref": "saveStyle",
+          "find": {
+            "name": "Bench Style"
+          },
+          "pick": "id"
+        }
+      },
+      "saveAs": "remove",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "remove"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "after",
+      "action": "styles.list",
+      "input": {},
+      "saveAs": "after",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "after"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

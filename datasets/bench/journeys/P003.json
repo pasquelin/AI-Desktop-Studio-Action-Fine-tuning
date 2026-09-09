@@ -1,0 +1,340 @@
+{
+  "version": 1,
+  "id": "P003",
+  "request": "Crée un projet Bench Project puis ferme-le et rouvre-le.",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Témoin",
+        "folder": ""
+      },
+      "saveAs": "image",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "image.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "resizeWitness",
+      "action": "canvas.resize",
+      "input": {
+        "width": 640,
+        "height": 360,
+        "scalePixels": false
+      },
+      "saveAs": "resizeWitness",
+      "assertions": []
+    },
+    {
+      "id": "witnessLayer",
+      "action": "layer.add",
+      "input": {
+        "kind": "text",
+        "name": "P003 témoin persistant",
+        "text": "P003 contenu vérifié",
+        "x": 37,
+        "y": 53
+      },
+      "saveAs": "witnessLayer",
+      "assertions": []
+    },
+    {
+      "id": "witnessBeforeSave",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "witnessBeforeSave",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "witnessBeforeSave.width"
+          },
+          "op": "equal",
+          "expected": 640
+        },
+        {
+          "actual": {
+            "$ref": "witnessBeforeSave.height"
+          },
+          "op": "equal",
+          "expected": 360
+        },
+        {
+          "actual": {
+            "$ref": "witnessBeforeSave.layers",
+            "find": {
+              "name": "P003 témoin persistant"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "P003 contenu vérifié"
+        },
+        {
+          "actual": {
+            "$ref": "witnessBeforeSave.layers",
+            "find": {
+              "name": "P003 témoin persistant"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "witnessLayer.layerId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "saved",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "image.documentId"
+        }
+      },
+      "saveAs": "saved",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "saved.written"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "docs",
+      "action": "documents.list",
+      "input": {},
+      "saveAs": "docs",
+      "assertions": []
+    },
+    {
+      "id": "before",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "before",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "before.width"
+          },
+          "op": "equal",
+          "expected": 640
+        },
+        {
+          "actual": {
+            "$ref": "before.height"
+          },
+          "op": "equal",
+          "expected": 360
+        },
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "P003 témoin persistant"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "P003 contenu vérifié"
+        },
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "P003 témoin persistant"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "witnessLayer.layerId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "before.documentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "image.documentId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "closeProject",
+      "action": "project.close",
+      "input": {},
+      "saveAs": "closeProject",
+      "assertions": []
+    },
+    {
+      "id": "closed",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "closed",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "closed.project"
+          },
+          "op": "equal",
+          "expected": null
+        },
+        {
+          "actual": {
+            "$ref": "closed.documents"
+          },
+          "op": "equal",
+          "expected": []
+        }
+      ]
+    },
+    {
+      "id": "reopenProject",
+      "action": "project.open",
+      "input": {
+        "path": {
+          "$ref": "project.path"
+        }
+      },
+      "saveAs": "reopenProject",
+      "assertions": []
+    },
+    {
+      "id": "reopenDocument",
+      "action": "document.open",
+      "input": {
+        "path": {
+          "$ref": "docs",
+          "find": {
+            "title": "Témoin"
+          },
+          "pick": "path"
+        }
+      },
+      "saveAs": "reopenDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "reopenDocument.documentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "image.documentId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "after",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "after",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "after.layers"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "before.layers"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "after.width"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "before.width"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "after.width"
+          },
+          "op": "equal",
+          "expected": 640
+        },
+        {
+          "actual": {
+            "$ref": "after.height"
+          },
+          "op": "equal",
+          "expected": 360
+        },
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "P003 témoin persistant"
+            },
+            "pick": "text"
+          },
+          "op": "equal",
+          "expected": "P003 contenu vérifié"
+        },
+        {
+          "actual": {
+            "$ref": "after.layers",
+            "find": {
+              "name": "P003 témoin persistant"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "witnessLayer.layerId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "after.documentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "image.documentId"
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false
+}

@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "id": "P040",
+  "request": "« Prépare le squelette du personnage et configure ses mains. »",
+  "requires": [
+    "isolated-vm",
+    "local-character-mesh-fixture",
+    "character-workbench-ready"
+  ],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "openCharacter",
+      "action": "file.open",
+      "input": {
+        "path": {
+          "$ref": "fixtures.characterPath"
+        }
+      },
+      "saveAs": "openCharacter",
+      "assertions": []
+    },
+    {
+      "id": "fit",
+      "action": "rig.fit",
+      "input": {},
+      "saveAs": "fit",
+      "assertions": []
+    },
+    {
+      "id": "fitted",
+      "action": "rig.state",
+      "input": {},
+      "saveAs": "fitted",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "fitted.rigged"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "hands",
+      "action": "rig.configureHands",
+      "input": {},
+      "saveAs": "hands",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "rig.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.rigged"
+          },
+          "op": "equal",
+          "expected": true
+        },
+        {
+          "actual": {
+            "$ref": "result.bones",
+            "find": {
+              "role": "LeftHand"
+            },
+            "pick": "name"
+          },
+          "op": "exists"
+        },
+        {
+          "actual": {
+            "$ref": "result.bones",
+            "find": {
+              "role": "RightHand"
+            },
+            "pick": "name"
+          },
+          "op": "exists"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Ouverture de fenêtre personnage et fin de mesure géométrique doivent être attestées par Studio ; rig.fit refuse tant que meshSample est absent. Fixture GLB et oracle de topologie/poids nécessaires."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixtures"]
+}

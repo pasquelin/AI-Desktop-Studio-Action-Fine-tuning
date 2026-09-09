@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "id": "P063",
+  "request": "Sauvegarde Bench Scene puis retrouve-la après redémarrage réel de Studio.",
+  "requires": ["restart-studio-process-preserving-profile"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-created",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "created"
+    },
+    {
+      "id": "cube",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Persisted Cube",
+        "positionX": 7,
+        "positionY": 2,
+        "positionZ": -4
+      },
+      "assertions": []
+    },
+    {
+      "id": "save",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "created.documentId"
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "list-documents",
+      "action": "documents.list",
+      "input": {},
+      "assertions": [],
+      "saveAs": "docs"
+    },
+    {
+      "id": "close",
+      "action": "project.close",
+      "input": {},
+      "assertions": []
+    },
+    {
+      "id": "open-project",
+      "action": "project.open",
+      "input": {
+        "path": {
+          "$ref": "projectPath"
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "open-document",
+      "action": "document.open",
+      "input": {
+        "path": {
+          "$ref": "docs",
+          "find": {
+            "title": "Bench Scene"
+          },
+          "pick": "path"
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-scene",
+      "action": "scene.state",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "scene.nodes",
+            "find": {
+              "name": "Persisted Cube"
+            },
+            "pick": "name"
+          },
+          "op": "equal",
+          "expected": "Persisted Cube"
+        },
+        {
+          "actual": {
+            "$ref": "scene.nodes",
+            "find": {
+              "name": "Persisted Cube"
+            },
+            "pick": "transform.position"
+          },
+          "op": "equal",
+          "expected": {
+            "x": 7,
+            "y": 2,
+            "z": -4
+          }
+        }
+      ],
+      "saveAs": "scene"
+    }
+  ],
+  "blockers": [
+    "A genuine stop/start of the Studio process must occur between close and open-project; closing a project is not a restart. Require persistent-byte hash and no replayed pending task after restart."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

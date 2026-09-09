@@ -16,6 +16,14 @@ it("refuses the guest scenario from an unrelated directory without writing proje
       join(directory, "scenario-consent.ts"),
       await readFile(resolve("src/vm/scenario-consent.ts")),
     );
+    await writeFile(
+      join(directory, "runner.ts"),
+      await readFile(resolve("src/scenarios/runner.ts")),
+    );
+    await writeFile(
+      join(directory, "client.mjs"),
+      await readFile(resolve("tools/vm/scenarios/client.mjs")),
+    );
     const result = spawnSync(
       process.execPath,
       [join(directory, "project.mjs")],
@@ -27,7 +35,9 @@ it("refuses the guest scenario from an unrelated directory without writing proje
       "untouched",
     );
     expect(await readdir(directory)).toEqual([
+      "client.mjs",
       "project.mjs",
+      "runner.ts",
       "scenario-consent.ts",
       "witness.txt",
     ]);

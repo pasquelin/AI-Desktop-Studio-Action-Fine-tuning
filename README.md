@@ -22,7 +22,7 @@
 
 ## Ce que fait ce dépôt
 
-Il prépare le terrain d’un assistant local pour AI Desktop Studio, **sans jamais télécharger ni entraîner de modèle**. Trois choses fonctionnent aujourd’hui :
+Il prépare le terrain d’un assistant local pour AI Desktop Studio, avec téléchargement explicite du modèle local, mais **sans entraînement exécuté**. Trois choses fonctionnent aujourd’hui :
 
 - **Extraire** le catalogue des actions de Studio depuis une révision précise, dans un bac à sable isolé du reste de l’application.
 - **Inventorier** les scénarios d’usage — 310 actions réparties en 26 familles — et signaler leur dérive quand Studio évolue.
@@ -162,7 +162,7 @@ Aucun partage de dossier, de presse-papiers ou de son. La copie de build est dé
 
 ## Modèles candidats
 
-Modèle principal candidat : **Qwen3.5-2B** ; comparaison : **Qwen3-1.7B**. La configuration ne télécharge rien. Révisions, formats et empreintes seront fixés avant l’inférence. Les dix langues configurées sont un échantillon initial, pas une couverture mondiale démontrée.
+Modèle principal candidat : **Qwen3.5-2B** ; comparaison : **Qwen3-1.7B**. La configuration ne télécharge rien. Le premier essai Ollama conserve le format et l’empreinte du modèle. Les quinze langues configurées sont couvertes par des brouillons relus par IA, pas par une validation mondiale démontrée.
 
 ## Documentation
 
@@ -206,3 +206,21 @@ La [stratégie multilingue](docs/multilingual-strategy.md) fixe les quinze langu
 `npm run scenarios:prepare` prépare les 5 165 cas et 63 parcours depuis les documents sources. Le résultat est consultable dans `artifacts/scenarios/README.md`. Les sources versionnables vivent dans `datasets/scenarios/` : variantes de paramètres, instructions et demandes des parcours en quinze langues, et références aux fixtures et contrôles du banc Studio. La génération refuse les doublons, actions sans cas, traductions absentes et paramètres de traduction perdus.
 
 **Ce sont des brouillons, pas des scénarios opérationnels ni des données approuvées pour l’entraînement.** Les traductions automatiques peuvent changer le sens malgré une structure valide. Il reste à relire chaque formulation, construire les dialogues des cas individuels, lier les ressources réelles, préciser les contrôles métier et vérifier l’exécution. Les verdicts de schéma concernent les paramètres internes des actions ; ils ne prouvent ni le contrat MCP ni le résultat métier. Les sorties générées sont remplaçables : modifier leurs sources, pas les fichiers produits.
+
+## Préparation des exemples et de LoRA
+
+- `npm run scenarios:examples` : variantes de requêtes et exemples précis, avec blocages explicites. Voir [les limites métier](docs/scenario-examples.md).
+- `npm run scenarios:split` : plan de séparation par familles, sans approbation automatique.
+- [Installation et configuration LoRA](training/README.md) : environnement isolé, configuration de premier essai et état de validation.
+
+Le dernier essai réel a créé et sauvegardé le projet, la scène et le cube, puis échoué à la réouverture. Aucune donnée n’est approuvée pour l’entraînement sur cette base.
+
+## Banc de validation avant entraînement
+
+`npm run bench:run` exécute le parcours de référence dans la VM avec le moteur commun et ses preuves. [Fonctionnement et couverture réellement exécutable](docs/test-bench.md). Les autres familles restent à raccorder ; aucune réussite métier n’est déduite des seuls schémas.
+
+## Préparation complète du banc
+
+`npm run prepare:bench` (ou `pnpm prepare:bench`) prépare les fichiers et vérifie les 63 parcours déclaratifs. Le rapport `artifacts/bench/preparation.json` distingue ceux qui peuvent être tentés de ceux qui attendent des fixtures ou des vérifications complémentaires. Ce nombre ne représente pas des tests réussis.
+
+Pour un parcours : `npm run bench:run -- --journey P003`. La VM et son observateur démarrent ensemble. Les exemples restent exclus de LoRA tant que la preuve réelle et la relecture sémantique ne sont pas acceptées. Voir [le banc avant entraînement](docs/test-bench.md).

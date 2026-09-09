@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "id": "P041",
+  "request": "« Ajoute une cible de main puis retire la contrainte. »",
+  "requires": [
+    "isolated-vm",
+    "local-rigged-character-fixture",
+    "character-workbench-ready"
+  ],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "openCharacter",
+      "action": "file.open",
+      "input": {
+        "path": {
+          "$ref": "fixtures.characterPath"
+        }
+      },
+      "saveAs": "openCharacter",
+      "assertions": []
+    },
+    {
+      "id": "before",
+      "action": "rig.state",
+      "input": {},
+      "saveAs": "before",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "before.rigged"
+          },
+          "op": "equal",
+          "expected": true
+        },
+        {
+          "actual": {
+            "$ref": "before.ik"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "socket",
+      "action": "socket.add",
+      "input": {
+        "bone": {
+          "$ref": "before.bones",
+          "find": {
+            "role": "LeftHand"
+          },
+          "pick": "name"
+        },
+        "name": "Bench Hand"
+      },
+      "saveAs": "socket",
+      "assertions": []
+    },
+    {
+      "id": "ik",
+      "action": "ik.add",
+      "input": {
+        "bone": {
+          "$ref": "before.bones",
+          "find": {
+            "role": "LeftHand"
+          },
+          "pick": "name"
+        }
+      },
+      "saveAs": "ik",
+      "assertions": []
+    },
+    {
+      "id": "created",
+      "action": "rig.state",
+      "input": {},
+      "saveAs": "created",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.ik"
+          },
+          "op": "length",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "created.sockets",
+            "find": {
+              "name": "Bench Hand"
+            },
+            "pick": "id"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "remove",
+      "action": "ik.remove",
+      "input": {
+        "chainId": {
+          "$ref": "created.ik.0.id"
+        }
+      },
+      "saveAs": "remove",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "rig.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.ik"
+          },
+          "op": "length",
+          "expected": 0
+        },
+        {
+          "actual": {
+            "$ref": "result.sockets",
+            "find": {
+              "name": "Bench Hand"
+            },
+            "pick": "id"
+          },
+          "op": "exists"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Le fournisseur de fixture GLB riggée et la disponibilité de sa fenêtre dédiée ne sont pas encore intégrés."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixtures"]
+}

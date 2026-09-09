@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "id": "P010",
+  "request": "« Prépare cette image et indique les paramètres et le coût avant de lancer. »",
+  "requires": ["isolated-vm", "installed-image-model-fixture"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Composition",
+        "folder": ""
+      },
+      "saveAs": "image",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "image.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "fields",
+      "action": "models.readGenerationModelFields",
+      "input": {
+        "modelId": {
+          "$ref": "fixture.modelId"
+        }
+      },
+      "saveAs": "fields",
+      "assertions": []
+    },
+    {
+      "id": "jobsBefore",
+      "action": "jobs.list",
+      "input": {},
+      "saveAs": "jobsBefore",
+      "assertions": []
+    },
+    {
+      "id": "prepare",
+      "action": "generator.prepare",
+      "input": {
+        "family": "image",
+        "modelId": {
+          "$ref": "fixture.modelId"
+        },
+        "parameters": {
+          "$ref": "fixture.parameters"
+        },
+        "operation": "img2img"
+      },
+      "saveAs": "prepare",
+      "assertions": []
+    },
+    {
+      "id": "armed",
+      "action": "generator.readArmedGeneration",
+      "input": {},
+      "saveAs": "armed",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "armed.modelId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "fixture.modelId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "armed.parameters"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "fixture.parameters"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cost",
+      "action": "cost.estimate",
+      "input": {
+        "modelId": {
+          "$ref": "armed.modelId"
+        },
+        "parameters": {
+          "$ref": "armed.parameters"
+        }
+      },
+      "saveAs": "cost",
+      "assertions": []
+    },
+    {
+      "id": "jobsAfter",
+      "action": "jobs.list",
+      "input": {},
+      "saveAs": "jobsAfter",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "jobsAfter"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "jobsBefore"
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Fixture de modèle installée et schéma provider non disponibles dans la VM de référence ; sélectionner et figer ce couple avant exécution.",
+    "Cost peut légitimement être null ; rapporter prix indisponible, ne pas fabriquer de montant. Oracle paramètres doit tenir compte des valeurs par défaut déclarées du modèle."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixture"]
+}

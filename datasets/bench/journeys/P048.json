@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "id": "P048",
+  "request": "Lance la scène vide, mets en pause, avance exactement un pas et lis les erreurs, puis arrête.",
+  "requires": ["runtime-ready-signal"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-created",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "created"
+    },
+    {
+      "id": "start",
+      "action": "play.start",
+      "input": {},
+      "assertions": [],
+      "saveAs": "started"
+    },
+    {
+      "id": "report",
+      "action": "runtime.report",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "running.state"
+          },
+          "op": "equal",
+          "expected": "playing"
+        }
+      ],
+      "saveAs": "running"
+    },
+    {
+      "id": "pause",
+      "action": "play.pause",
+      "input": {},
+      "assertions": [],
+      "saveAs": "paused"
+    },
+    {
+      "id": "step",
+      "action": "play.step",
+      "input": {
+        "steps": 1
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "stepped.steps"
+          },
+          "op": "equal",
+          "expected": 1
+        }
+      ],
+      "saveAs": "stepped"
+    },
+    {
+      "id": "errors",
+      "action": "runtime.errors",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "errors.errors"
+          },
+          "op": "length",
+          "expected": 0
+        }
+      ],
+      "saveAs": "errors"
+    },
+    {
+      "id": "stop",
+      "action": "play.stop",
+      "input": {},
+      "assertions": []
+    },
+    {
+      "id": "stopped",
+      "action": "runtime.report",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "stopped.state"
+          },
+          "op": "equal",
+          "expected": "edit"
+        }
+      ],
+      "saveAs": "stopped"
+    }
+  ],
+  "blockers": [
+    "play.start explicitly returns before runtime readiness; the harness must wait on its readiness signal, not insert a sleep or assume immediate play."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

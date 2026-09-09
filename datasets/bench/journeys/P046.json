@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "id": "P046",
+  "request": "Crée deux instances du préfab CubePrefab dans une scène de jeu vide.",
+  "requires": [],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-sourceScene",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Prefab Source",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "sourceScene.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "sourceScene"
+    },
+    {
+      "id": "source-cube",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Prefab Cube"
+      },
+      "assertions": []
+    },
+    {
+      "id": "define-prefab",
+      "action": "prefab.define",
+      "input": {
+        "name": "CubePrefab",
+        "document": {
+          "$ref": "sourceScene.documentId"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "prefab.ref"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "prefab"
+    },
+    {
+      "id": "create-gameScene",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Game Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "gameScene.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "gameScene"
+    },
+    {
+      "id": "first-instance",
+      "action": "prefab.instantiate",
+      "input": {
+        "prefab": {
+          "$ref": "prefab.ref"
+        },
+        "positionX": -2
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "first.nodes"
+          },
+          "op": "equal",
+          "expected": 1
+        }
+      ],
+      "saveAs": "first"
+    },
+    {
+      "id": "second-instance",
+      "action": "prefab.instantiate",
+      "input": {
+        "prefab": {
+          "$ref": "prefab.ref"
+        },
+        "positionX": 2
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "second.nodes"
+          },
+          "op": "equal",
+          "expected": 1
+        }
+      ],
+      "saveAs": "second"
+    },
+    {
+      "id": "read-instances",
+      "action": "scene.state",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "instances.nodes"
+          },
+          "op": "length",
+          "expected": 2
+        }
+      ],
+      "saveAs": "instances"
+    }
+  ],
+  "blockers": [
+    "Two instances are specified, but distinct-id/shared-reference assertions and playable template composition require an extended oracle; count alone is insufficient."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

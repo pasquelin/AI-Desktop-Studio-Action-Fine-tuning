@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "id": "P016",
+  "request": "« Montre les changements puis synchronise ceux que j’ai choisis. »",
+  "requires": [
+    "isolated-vm",
+    "cloud-sync-fixture",
+    "cloud-test-account",
+    "cloud-push-authorized"
+  ],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "action": "cloud.previewSync",
+      "input": {
+        "assetIds": {
+          "$ref": "fixture.selectedAssetIds"
+        },
+        "policy": "push"
+      },
+      "saveAs": "plan",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "plan.summary.conflict"
+          },
+          "op": "equal",
+          "expected": 0
+        },
+        {
+          "actual": {
+            "$ref": "plan.summary.pull"
+          },
+          "op": "equal",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "id": "push",
+      "action": "cloud.push",
+      "input": {
+        "assetIds": {
+          "$ref": "fixture.selectedAssetIds"
+        }
+      },
+      "saveAs": "push",
+      "assertions": []
+    },
+    {
+      "id": "after",
+      "action": "cloud.previewSync",
+      "input": {
+        "assetIds": {
+          "$ref": "fixture.selectedAssetIds"
+        },
+        "policy": "push"
+      },
+      "saveAs": "after",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "after.summary.push"
+          },
+          "op": "equal",
+          "expected": 0
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Binding compte/IDs/oracle cloud requis. Refuser si conflit ou action hors sélection. Ce sous-parcours prépare push seul ; variante pull exige vrais remoteAssetIds, pas les IDs locaux."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixture"]
+}

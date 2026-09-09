@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "id": "P017",
+  "request": "« Trouve des références publiques similaires à ce média. »",
+  "requires": [
+    "isolated-vm",
+    "published-asset-fixture",
+    "cloud-network-authorized"
+  ],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "feed",
+      "action": "cloud.explorePublicFeed",
+      "input": {
+        "type": "image",
+        "pageSize": 10
+      },
+      "saveAs": "feed",
+      "assertions": []
+    },
+    {
+      "id": "similar",
+      "action": "cloud.findSimilarPublished",
+      "input": {
+        "assetId": {
+          "$ref": "fixture.publishedAssetId"
+        }
+      },
+      "saveAs": "similar",
+      "assertions": []
+    }
+  ],
+  "blockers": [
+    "Fixture publique et structure de page provider à vérifier ; zéro résultat est légitime, pas un succès de pertinence. Aucun ID supposé ni publication automatique."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixture"]
+}

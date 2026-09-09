@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "id": "P008",
+  "request": "« Exporte une copie dans le format demandé. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "image",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "image",
+        "createDocument": true,
+        "title": "Export témoin",
+        "folder": ""
+      },
+      "saveAs": "image",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "image.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "shape",
+      "action": "layer.add",
+      "input": {
+        "kind": "shape",
+        "name": "Carré",
+        "shape": "rectangle",
+        "width": 32,
+        "height": 32,
+        "fill": "#2244ff",
+        "x": 8,
+        "y": 8
+      },
+      "saveAs": "shape",
+      "assertions": []
+    },
+    {
+      "id": "saved",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "image.documentId"
+        }
+      },
+      "saveAs": "saved",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "saved.written"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "before",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "before",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Carré"
+            },
+            "pick": "id"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "shape.layerId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "before.layers",
+            "find": {
+              "name": "Carré"
+            },
+            "pick": "kind"
+          },
+          "op": "equal",
+          "expected": "shape"
+        }
+      ]
+    },
+    {
+      "id": "export",
+      "action": "document.export",
+      "input": {
+        "folder": "Export"
+      },
+      "saveAs": "export",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "export"
+          },
+          "op": "equal",
+          "expected": "Export"
+        }
+      ]
+    },
+    {
+      "id": "exportFiles",
+      "action": "files.list",
+      "input": {
+        "folder": "Export"
+      },
+      "saveAs": "exportFiles",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "exportFiles"
+          },
+          "op": "length",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "exportFiles",
+            "find": {
+              "name": "Export témoin.png"
+            },
+            "pick": "kind"
+          },
+          "op": "equal",
+          "expected": "file"
+        }
+      ]
+    },
+    {
+      "id": "after",
+      "action": "canvas.state",
+      "input": {},
+      "saveAs": "after",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "after.layers"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "before.layers"
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Oracle PNG décodable, dimensions et pixels témoins non exprimable par les quatre assertions actuelles ; le simple fichier présent ne suffit pas."
+  ],
+  "trainingApproved": false
+}

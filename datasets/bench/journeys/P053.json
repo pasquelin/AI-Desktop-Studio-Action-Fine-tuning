@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "id": "P053",
+  "request": "Annule une fusion en conflit dans le dépôt jetable sans perdre la version locale.",
+  "requires": ["local-bare-remote-conflict-fixture"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "open-fixture",
+      "action": "project.open",
+      "input": {
+        "path": {
+          "$ref": "projectPath"
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "branches",
+      "action": "git.branches",
+      "input": {},
+      "assertions": [],
+      "saveAs": "branches"
+    },
+    {
+      "id": "conflict-status",
+      "action": "git.status",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "conflict.status.files",
+            "find": {
+              "path": "conflict.txt"
+            },
+            "pick": "stage"
+          },
+          "op": "equal",
+          "expected": "conflicted"
+        }
+      ],
+      "saveAs": "conflict"
+    },
+    {
+      "id": "diff",
+      "action": "git.diff",
+      "input": {
+        "path": "conflict.txt"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "diff"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "diff"
+    },
+    {
+      "id": "abort",
+      "action": "git.abortMerge",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "aborted.kind"
+          },
+          "op": "equal",
+          "expected": "ready"
+        }
+      ],
+      "saveAs": "aborted"
+    }
+  ],
+  "blockers": [
+    "Provision a local bare remote and two throwaway clones with conflicting commits in conflict.txt, all under sandbox. Capture original HEAD/content and verify exact restoration; no real remote allowed."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "id": "P050",
+  "request": "Ajoute un passage vers Next Scene à une seconde, puis supprime uniquement ce passage.",
+  "requires": ["running-game-ready"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-nextScene",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Next Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "nextScene.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "nextScene"
+    },
+    {
+      "id": "save-next",
+      "action": "document.save",
+      "input": {
+        "documentId": {
+          "$ref": "nextScene.documentId"
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "create-currentScene",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Current Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "currentScene.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "currentScene"
+    },
+    {
+      "id": "cue",
+      "action": "timeline.addSceneCue",
+      "input": {
+        "list": "transitions",
+        "at": 1000000,
+        "what": "cut",
+        "scene": {
+          "$ref": "nextScene.documentId"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "cue.id"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "cue"
+    },
+    {
+      "id": "request-scene",
+      "action": "play.loadScene",
+      "input": {
+        "scene": {
+          "$ref": "nextScene.documentId"
+        },
+        "fade": 0
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "asked.asked"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "nextScene.documentId"
+          }
+        }
+      ],
+      "saveAs": "asked"
+    },
+    {
+      "id": "remove-cue",
+      "action": "timeline.removeSceneCue",
+      "input": {
+        "list": "transitions",
+        "id": {
+          "$ref": "cue.id"
+        }
+      },
+      "assertions": []
+    }
+  ],
+  "blockers": [
+    "Requires a started ready game and an independent timeline reader confirming target, timestamp and neighbouring cue preservation."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

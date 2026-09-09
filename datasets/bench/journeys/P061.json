@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "id": "P061",
+  "request": "Trouve les actions pour modifier Movement et explique les champs de ce composant.",
+  "requires": [],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-created",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "created"
+    },
+    {
+      "id": "add-discovery-witness",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Discovery Witness",
+        "positionX": 7
+      },
+      "assertions": []
+    },
+    {
+      "id": "find",
+      "action": "actions.find",
+      "input": {
+        "query": "component.setProperties"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "found",
+            "find": {
+              "name": "component.setProperties"
+            },
+            "pick": "name"
+          },
+          "op": "equal",
+          "expected": "component.setProperties"
+        }
+      ],
+      "saveAs": "found"
+    },
+    {
+      "id": "describe",
+      "action": "studio.describe",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "description.available.components"
+          },
+          "op": "includes",
+          "expected": "Movement"
+        },
+        {
+          "actual": {
+            "$ref": "description.scene"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "created.documentId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "description.nodes",
+            "find": {
+              "name": "Discovery Witness"
+            },
+            "pick": "name"
+          },
+          "op": "equal",
+          "expected": "Discovery Witness"
+        }
+      ],
+      "saveAs": "description"
+    },
+    {
+      "id": "docs",
+      "action": "studio.docs",
+      "input": {
+        "topic": "Movement"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "docs.topic"
+          },
+          "op": "equal",
+          "expected": "Movement"
+        },
+        {
+          "actual": {
+            "$ref": "docs.fields",
+            "find": {
+              "key": "speed"
+            },
+            "pick": "key"
+          },
+          "op": "equal",
+          "expected": "speed"
+        }
+      ],
+      "saveAs": "docs"
+    }
+  ],
+  "blockers": [],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

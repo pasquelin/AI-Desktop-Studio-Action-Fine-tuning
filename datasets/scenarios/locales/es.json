@@ -4,26 +4,32 @@
   "model": "qwen3.5:2b",
   "status": "machine-draft-unreviewed",
   "templates": {
-    "T001": "Nominal minimal : solicitar {action} en un entorno válido, proporcionar únicamente los parámetros obligatorios; verificar el resultado descrito anteriormente con un lector de negocio independiente.",
+    "T001": "Caso nominal mínimo: solicitar {action} en un estado inicial válido y proporcionar solo los parámetros obligatorios; verificar el resultado descrito arriba mediante una lectura independiente del estado de la aplicación.",
     "T002": "Nominal completo: llenar todos los parámetros compatibles, comparar cada uno con el resultado; no combinar opciones mutuamente excluyentes sin consultar al handler.",
-    "T003": "Campo desconocido en el fil MCP: verificar el rechazo previsto por additionalProperties=false; distinguir este rechazo de la normalización del motor interno.",
+    "T003": "Campo desconocido en la solicitud MCP: verificar el rechazo previsto por additionalProperties=false; distinguirlo de la normalización del motor interno.",
     "T004": "Error del ejecutor: inyectar un error determinístico del puerto correspondiente; respuesta explícita, ninguna declaración de éxito y ninguna mutación lateral.",
-    "T005": "Retorno perdido o solicitud repetida: observar los efectos antes de una posible reintentos; no confundir repeticible con idempotente, no duplicar un efecto no solicitado.",
-    "T006": "Estado concurrente: modificar la objetivo o cerrar el documento entre lectura y acción; leer o rechazar explícitamente, sin actuar sobre otro objeto.",
+    "T005": "Respuesta perdida o solicitud repetida: observar los efectos antes de reintentar; no confundir repetibilidad con idempotencia ni duplicar un efecto no solicitado.",
+    "T006": "Cambio de estado concurrente: modificar el objetivo o cerrar el documento entre la lectura y la acción; volver a leer o rechazar explícitamente, sin actuar sobre otro objeto.",
     "T007": "Solicitud cancelada antes de ejecución: no iniciar la acción; probar separadamente una cancelación tardía, que no garantiza la cancelación de un efecto ya realizado.",
-    "T008": "Parámetro {field} ausente: verificar el rechazo o la aclaración antes del llamado útil, según el contrato.",
-    "T009": "Parámetro {field} con null y tipo incompatible: verificar la validación del fil MCP, y luego, por separado, la del handler; resultado sin efecto parcial no previsto.",
+    "T008": "Parámetro {field} ausente: comprobar el rechazo o la solicitud de aclaración antes de la llamada efectiva, según el contrato.",
+    "T009": "Parámetro {field} con null y un tipo incompatible: comprobar la validación de la solicitud MCP y, por separado, la del handler; verificar que no haya efectos parciales imprevistos.",
     "T010": "Opción de {field}: {value}; fixture compatible, verificar precisamente la rama de negocio correspondiente.",
     "T011": "Opción desconocida de {field}: verificar el rechazo, no hay selección silenciosa de una opción vecina.",
     "T012": "Texto {field}: vacío, espacios, acentos, Unicode, nombre largo y caracteres de puntuación; verificar la validación y conservación según la semántica del campo.",
     "T013": "Parámetro {field} ausente: verificar el valor por defecto real o la conservación del valor actual; no inventar uno nuevo.",
     "T014": "Valor de {field}: cero, negativo, fraccionario y muy grande pero finito; verificar unidad, precisión y restricciones de negocio, sin presuponer que todas son válidas.",
     "T015": "Lista {field}: vacía, singleton, varios elementos, duplicados y un elemento inválido; verificar el orden, deduplicación y atomicidad realmente previstos.",
-    "T016": "Booléen {field}: verdadero luego falso con estado inicial opuesto; verificar los dos efectos y no tratar falsos como un parámetro ausente.",
+    "T016": "Booleano {field}: verdadero y después falso, cada uno con el estado inicial opuesto; verificar ambos efectos y no tratar falso como un parámetro ausente.",
     "T017": "Objetivo {field}: identificador válido, ausente, obsoleto, otro documento/proyecto y dos nombres idénticos; resolver el identificador real, aclarar la ambigüedad, proteger el objetivo vecino.",
     "T018": "Consentimiento: acuerdo, rechazo, ausencia de respuesta y modificación de la solicitud después del acuerdo; verificar el mecanismo real de confirmación antes de efectos sensibles, sin inventar un campo consent.",
     "T019": "Preparación o restricción dinámica faltante: probar cada rama del callback del handler; el marcador runtimeFunction del catálogo no revela estas ramas.",
     "T020": "Contexto ausente o incompatible: ninguna superficie activa, documento de otro tipo, objetivo cerrado; verificar la precondición real y una explicación útil.",
-    "T021": "Borde {bound} de {field} = {value}: valor exacto y valores de ambos lados; verificar el rechazo o clamp según el contrato real, y el resultado efectivamente almacenado."
+    "T021": "Límite {bound} de {field} = {value}: valor exacto y valores a ambos lados; verificar el rechazo o el ajuste al límite según el contrato real y comprobar el resultado almacenado."
+  },
+  "review": {
+    "method": "assistant-semantic-review-against-french-source",
+    "reviewedEntries": 21,
+    "nativeReview": false,
+    "executionVerified": false
   }
 }

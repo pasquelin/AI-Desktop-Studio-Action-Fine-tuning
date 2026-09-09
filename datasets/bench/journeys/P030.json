@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "id": "P030",
+  "request": "« Attache les roues au véhicule puis déplace l’ensemble. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P030",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "vehicle",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Véhicule"
+      },
+      "saveAs": "vehicle",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "vehicle.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "left",
+      "action": "node.add",
+      "input": {
+        "kind": "cylinder",
+        "name": "Roue gauche",
+        "positionX": -1
+      },
+      "saveAs": "left",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "left.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "right",
+      "action": "node.add",
+      "input": {
+        "kind": "cylinder",
+        "name": "Roue droite",
+        "positionX": 1
+      },
+      "saveAs": "right",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "right.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "parentLeft",
+      "action": "node.reparent",
+      "input": {
+        "nodeId": {
+          "$ref": "left.nodeId"
+        },
+        "parentId": {
+          "$ref": "vehicle.nodeId"
+        }
+      },
+      "saveAs": "parentLeft",
+      "assertions": []
+    },
+    {
+      "id": "parentRight",
+      "action": "node.reparent",
+      "input": {
+        "nodeId": {
+          "$ref": "right.nodeId"
+        },
+        "parentId": {
+          "$ref": "vehicle.nodeId"
+        }
+      },
+      "saveAs": "parentRight",
+      "assertions": []
+    },
+    {
+      "id": "move",
+      "action": "node.transform",
+      "input": {
+        "nodeId": {
+          "$ref": "vehicle.nodeId"
+        },
+        "positionX": 3
+      },
+      "saveAs": "move",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.nodes",
+            "find": {
+              "name": "Roue gauche"
+            },
+            "pick": "parentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "vehicle.nodeId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "result.nodes",
+            "find": {
+              "name": "Roue droite"
+            },
+            "pick": "parentId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "vehicle.nodeId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "result.nodes",
+            "find": {
+              "name": "Véhicule"
+            },
+            "pick": "transform.position.x"
+          },
+          "op": "equal",
+          "expected": 3
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Le lecteur expose les poses locales ; compléter l’oracle matriciel indépendant des poses mondiales des roues après déplacement parent."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

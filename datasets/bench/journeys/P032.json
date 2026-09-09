@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "id": "P032",
+  "request": "« Crée un travelling qui vise le personnage. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P032",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "target",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Personnage témoin",
+        "positionY": 1
+      },
+      "saveAs": "target",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "target.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "camera",
+      "action": "node.add",
+      "input": {
+        "kind": "camera",
+        "name": "Caméra travelling",
+        "positionZ": 5
+      },
+      "saveAs": "camera",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "camera.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "shot",
+      "action": "camera.addShot",
+      "input": {
+        "nodeId": {
+          "$ref": "camera.nodeId"
+        },
+        "startSeconds": 0,
+        "durationSeconds": 3
+      },
+      "saveAs": "shot",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "shot.shotId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "rail",
+      "action": "camera.createAndBindPath",
+      "input": {
+        "shotId": {
+          "$ref": "shot.shotId"
+        }
+      },
+      "saveAs": "rail",
+      "assertions": []
+    },
+    {
+      "id": "aim",
+      "action": "camera.aimShotAt",
+      "input": {
+        "shotId": {
+          "$ref": "shot.shotId"
+        },
+        "targetId": {
+          "$ref": "target.nodeId"
+        }
+      },
+      "saveAs": "aim",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.shots",
+            "find": {
+              "id": {
+                "$ref": "shot.shotId"
+              }
+            },
+            "pick": "target.nodeId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "target.nodeId"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "result.shots",
+            "find": {
+              "id": {
+                "$ref": "shot.shotId"
+              }
+            },
+            "pick": "duration"
+          },
+          "op": "equal",
+          "expected": 3000000
+        },
+        {
+          "actual": {
+            "$ref": "result.shots",
+            "find": {
+              "id": {
+                "$ref": "shot.shotId"
+              }
+            },
+            "pick": "motion"
+          },
+          "op": "exists"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Le chemin créé et la visée sont contrôlés structurellement ; vérifier le trajet et l’orientation aux instants 0, 1,5 et 3 secondes dans un oracle du moteur caméra."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

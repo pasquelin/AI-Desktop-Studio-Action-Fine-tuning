@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "id": "P033",
+  "request": "« Éclaire la scène et ajoute une brume légère. »",
+  "requires": ["isolated-vm"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P033",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "object",
+      "action": "node.add",
+      "input": {
+        "kind": "box",
+        "name": "Témoin"
+      },
+      "saveAs": "object",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "object.nodeId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "light",
+      "action": "world.setSceneLighting",
+      "input": {
+        "kind": "studio",
+        "intensity": 1.5
+      },
+      "saveAs": "light",
+      "assertions": []
+    },
+    {
+      "id": "fog",
+      "action": "world.setFog",
+      "input": {
+        "kind": "exp2",
+        "color": "#8899aa",
+        "density": 0.02
+      },
+      "saveAs": "fog",
+      "assertions": []
+    },
+    {
+      "id": "tone",
+      "action": "world.setToneMapping",
+      "input": {
+        "toneMapping": "aces",
+        "exposure": 1.2
+      },
+      "saveAs": "tone",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.world.envIntensity"
+          },
+          "op": "equal",
+          "expected": 1.5
+        },
+        {
+          "actual": {
+            "$ref": "result.world.fog.kind"
+          },
+          "op": "equal",
+          "expected": "exp2"
+        },
+        {
+          "actual": {
+            "$ref": "result.world.fog.density"
+          },
+          "op": "equal",
+          "expected": 0.02
+        },
+        {
+          "actual": {
+            "$ref": "result.world.exposure"
+          },
+          "op": "equal",
+          "expected": 1.2
+        }
+      ]
+    },
+    {
+      "id": "capture",
+      "action": "scene.capture",
+      "input": {
+        "quality": "view"
+      },
+      "saveAs": "capture",
+      "assertions": []
+    }
+  ],
+  "blockers": [
+    "La capture MCP est un résultat image et non un JSON générique ; le banc doit conserver et comparer les pixels avec tolérance, après barrière de rendu."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

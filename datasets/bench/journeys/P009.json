@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "id": "P009",
+  "request": "« Choisis un modèle installé adapté à ma demande. »",
+  "requires": ["isolated-vm", "installed-image-model-fixture"],
+  "steps": [
+    {
+      "id": "project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "project",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        }
+      ]
+    },
+    {
+      "id": "local",
+      "action": "ai.localState",
+      "input": {},
+      "saveAs": "local",
+      "assertions": []
+    },
+    {
+      "id": "models",
+      "action": "models.search",
+      "input": {
+        "family": "image"
+      },
+      "saveAs": "models",
+      "assertions": []
+    },
+    {
+      "id": "select",
+      "action": "models.select",
+      "input": {
+        "family": "image",
+        "modelId": {
+          "$ref": "models",
+          "find": {
+            "id": {
+              "$ref": "fixture.modelId"
+            }
+          },
+          "pick": "id"
+        }
+      },
+      "saveAs": "select",
+      "assertions": []
+    },
+    {
+      "id": "state",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "state",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "state.armedModels.image/txt2img"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "fixture.modelId"
+          }
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Fixture de modèle installée et schéma provider non disponibles dans la VM de référence ; sélectionner et figer ce couple avant exécution."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixture"]
+}

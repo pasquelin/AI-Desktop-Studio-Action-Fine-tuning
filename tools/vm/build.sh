@@ -3,6 +3,8 @@ set -euo pipefail
 [[ "$(uname -s)" == Darwin && "$(sysctl -n hw.model)" == VirtualMac* ]] || { echo 'Refusing non-VM host'; exit 1; }
 [[ "$(cat "$HOME/studio-vm/prepared")" == studio-vm-v1 ]] || exit 1
 export CI=1
+export GIT_AUTHOR_NAME="Studio Test" GIT_AUTHOR_EMAIL="studio-test@example.invalid"
+export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME" GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 export PATH="/opt/homebrew/opt/node@24/bin:/opt/homebrew/bin:$PATH"
 results="$HOME/studio-vm/results"
 mkdir -p "$results"

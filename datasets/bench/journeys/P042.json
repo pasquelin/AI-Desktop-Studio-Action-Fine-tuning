@@ -1,0 +1,211 @@
+{
+  "version": 1,
+  "id": "P042",
+  "request": "« Ajoute un mouvement et ajuste une pose au bon instant. »",
+  "requires": ["isolated-vm", "local-animated-character-fixture"],
+  "steps": [
+    {
+      "id": "createProject",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "saveAs": "createProject",
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "createDocument",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench P042",
+        "template": "empty"
+      },
+      "saveAs": "createDocument",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "createDocument.documentId"
+          },
+          "op": "exists"
+        }
+      ]
+    },
+    {
+      "id": "model",
+      "action": "node.addModel",
+      "input": {
+        "assetId": {
+          "$ref": "fixtures.characterAssetId"
+        },
+        "name": "Personnage"
+      },
+      "saveAs": "model",
+      "assertions": []
+    },
+    {
+      "id": "animations",
+      "action": "animations.list",
+      "input": {
+        "nodeId": {
+          "$ref": "model.nodeId"
+        }
+      },
+      "saveAs": "animations",
+      "assertions": []
+    },
+    {
+      "id": "block",
+      "action": "animation.addBlock",
+      "input": {
+        "nodeId": {
+          "$ref": "model.nodeId"
+        },
+        "source": "embedded",
+        "clipName": {
+          "$ref": "fixtures.embeddedClipName"
+        }
+      },
+      "saveAs": "block",
+      "assertions": []
+    },
+    {
+      "id": "laid",
+      "action": "animations.list",
+      "input": {
+        "nodeId": {
+          "$ref": "model.nodeId"
+        }
+      },
+      "saveAs": "laid",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "laid.lanes"
+          },
+          "op": "length",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "laid.lanes.0.clips"
+          },
+          "op": "length",
+          "expected": 1
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "action": "animation.setBlockSettings",
+      "input": {
+        "nodeId": {
+          "$ref": "model.nodeId"
+        },
+        "clipId": {
+          "$ref": "laid.lanes.0.clips.0.id"
+        },
+        "startSeconds": 1,
+        "speed": 1,
+        "loop": false,
+        "fadeSeconds": 0
+      },
+      "saveAs": "settings",
+      "assertions": []
+    },
+    {
+      "id": "keys",
+      "action": "key.writePoseKeys",
+      "input": {
+        "nodeId": {
+          "$ref": "model.nodeId"
+        },
+        "timeSeconds": 2,
+        "property": "position"
+      },
+      "saveAs": "keys",
+      "assertions": []
+    },
+    {
+      "id": "tracks",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "tracks",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "tracks.tracks"
+          },
+          "op": "length",
+          "expected": 1
+        },
+        {
+          "actual": {
+            "$ref": "tracks.tracks.0.target.property"
+          },
+          "op": "equal",
+          "expected": "position"
+        },
+        {
+          "actual": {
+            "$ref": "tracks.tracks.0.target.nodeId"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "model.nodeId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "moveKey",
+      "action": "key.move",
+      "input": {
+        "trackId": {
+          "$ref": "tracks.tracks.0.id"
+        },
+        "fromSeconds": 2,
+        "toSeconds": 3
+      },
+      "saveAs": "moveKey",
+      "assertions": []
+    },
+    {
+      "id": "result",
+      "action": "scene.state",
+      "input": {},
+      "saveAs": "result",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "result.tracks.0.keys"
+          },
+          "op": "equal",
+          "expected": [3000000]
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Fournisseur de GLB animé requis. Vérifier que tracks contient exactement le canal position demandé avant de cibler tracks.0 ; oracle pose finale et canaux voisins à compléter."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": ["fixtures"]
+}

@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "id": "P059",
+  "request": "Ouvre le panneau Historique, vérifie son état, ferme-le puis passe en plein écran.",
+  "requires": ["guest-window-state-reader"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-created",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "created"
+    },
+    {
+      "id": "open-panel",
+      "action": "panel.open",
+      "input": {
+        "panel": "history"
+      },
+      "assertions": []
+    },
+    {
+      "id": "list-open",
+      "action": "panels.list",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "opened",
+            "find": {
+              "id": "history"
+            },
+            "pick": "open"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "opened"
+    },
+    {
+      "id": "close-panel",
+      "action": "panel.close",
+      "input": {
+        "panel": "history"
+      },
+      "assertions": []
+    },
+    {
+      "id": "list-closed",
+      "action": "panels.list",
+      "input": {},
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "closed",
+            "find": {
+              "id": "history"
+            },
+            "pick": "open"
+          },
+          "op": "equal",
+          "expected": false
+        }
+      ],
+      "saveAs": "closed"
+    },
+    {
+      "id": "fullscreen",
+      "action": "window.fullScreen",
+      "input": {},
+      "assertions": []
+    }
+  ],
+  "blockers": [
+    "A window state reader must capture initial full-screen state, verify the toggle and restore it; the MCP command itself returns no independent window state."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}

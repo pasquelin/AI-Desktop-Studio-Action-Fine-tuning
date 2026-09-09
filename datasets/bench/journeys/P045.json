@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "id": "P045",
+  "request": "Écris et relis le graphe Hero avec un état Idle puis vérifie son adaptation sur le personnage.",
+  "requires": ["rigged-character-with-measured-bundled-idle"],
+  "steps": [
+    {
+      "id": "create-project",
+      "action": "project.create",
+      "input": {
+        "name": "Bench Project",
+        "folder": {
+          "$ref": "sandbox"
+        }
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$file": {
+              "path": {
+                "$ref": "projectPath"
+              },
+              "read": "exists"
+            }
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ],
+      "saveAs": "project"
+    },
+    {
+      "id": "verify-project-target",
+      "action": "studio.state",
+      "input": {},
+      "saveAs": "projectState",
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "projectState.project.path"
+          },
+          "op": "equal",
+          "expected": {
+            "$ref": "projectPath"
+          }
+        },
+        {
+          "actual": {
+            "$ref": "projectState.projectKnown"
+          },
+          "op": "equal",
+          "expected": true
+        }
+      ]
+    },
+    {
+      "id": "create-created",
+      "action": "workspace.open",
+      "input": {
+        "workspace": "3d",
+        "createDocument": true,
+        "title": "Bench Scene",
+        "template": "empty"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "created.documentId"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "created"
+    },
+    {
+      "id": "write-graph",
+      "action": "animationGraph.write",
+      "input": {
+        "path": "Animations/hero.anim.json",
+        "graph": {
+          "version": 1,
+          "id": "hero",
+          "parameters": [],
+          "layers": [
+            {
+              "id": "base",
+              "part": "all",
+              "initial": "idle",
+              "states": [
+                {
+                  "id": "idle",
+                  "source": {
+                    "kind": "bundled",
+                    "name": "Idle"
+                  },
+                  "loop": true,
+                  "speed": 1,
+                  "rootMotion": "inPlace"
+                }
+              ],
+              "transitions": []
+            }
+          ]
+        }
+      },
+      "assertions": []
+    },
+    {
+      "id": "read-graph",
+      "action": "animationGraph.read",
+      "input": {
+        "path": "Animations/hero.anim.json"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "graph"
+          },
+          "op": "equal",
+          "expected": {
+            "version": 1,
+            "id": "hero",
+            "parameters": [],
+            "layers": [
+              {
+                "id": "base",
+                "part": "all",
+                "initial": "idle",
+                "states": [
+                  {
+                    "id": "idle",
+                    "source": {
+                      "kind": "bundled",
+                      "name": "Idle"
+                    },
+                    "loop": true,
+                    "speed": 1,
+                    "rootMotion": "inPlace"
+                  }
+                ],
+                "transitions": []
+              }
+            ]
+          }
+        }
+      ],
+      "saveAs": "graph"
+    },
+    {
+      "id": "find-character",
+      "action": "scene.state",
+      "input": {},
+      "assertions": [],
+      "saveAs": "riggedScene"
+    },
+    {
+      "id": "retarget-status",
+      "action": "animation.retargetStatus",
+      "input": {
+        "nodeId": {
+          "$ref": "riggedScene.nodes",
+          "find": {
+            "name": "Hero"
+          },
+          "pick": "id"
+        },
+        "source": "bundled",
+        "name": "Idle"
+      },
+      "assertions": [
+        {
+          "actual": {
+            "$ref": "fit"
+          },
+          "op": "exists"
+        }
+      ],
+      "saveAs": "fit"
+    }
+  ],
+  "blockers": [
+    "A rigged Hero and bundled Idle with measured retargeting must be imported by a fixture; an empty scene does not provide them."
+  ],
+  "trainingApproved": false,
+  "requiredBindings": []
+}
