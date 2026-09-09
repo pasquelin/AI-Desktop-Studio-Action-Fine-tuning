@@ -1,17 +1,20 @@
-import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { execGit, readCheckoutState } from "../studio/checkout.ts";
 import { sha256 } from "./catalogue.ts";
 
 export function inspectSource(root: string, expectedRevision?: string) {
-  const git = (...args: string[]) =>
-    execFileSync("git", ["-C", root, ...args], { encoding: "utf8" }).trim();
-  const revision = git("rev-parse", "HEAD");
+  const { revision, dirty } = readCheckoutState(root);
   if (expectedRevision !== undefined && revision !== expectedRevision)
     throw new Error("Unexpected Studio revision.");
-  if (git("status", "--porcelain"))
-    throw new Error("Studio checkout must be clean before export.");
-  const files = git("ls-files", "-z", "src/shared", "src/main/mcp/tools.ts")
+  if (dirty) throw new Error("Studio checkout must be clean before export.");
+  const files = execGit(
+    root,
+    "ls-files",
+    "-z",
+    "src/shared",
+    "src/main/mcp/tools.ts",
+  )
     .split("\0")
     .filter(Boolean)
     .sort();

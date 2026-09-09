@@ -1,16 +1,11 @@
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { Ajv } from "ajv";
 import { sha256 } from "../src/catalogue/catalogue.ts";
 import { assertFresh, inspectSource } from "../src/catalogue/source.ts";
+import { readStudioLink } from "../src/studio/checkout.ts";
 import { runCheck } from "./run-check.ts";
 
 const ajv = new Ajv({ strict: true });
-const linkValid = ajv.compile<{ sourceRoot: string; output: string }>({
-  type: "object",
-  required: ["sourceRoot", "output"],
-  additionalProperties: false,
-  properties: { sourceRoot: { type: "string" }, output: { type: "string" } },
-});
 const catalogueValid = ajv.compile<{
   appRevision: string;
   sourceHashes: Record<string, string>;
@@ -25,15 +20,12 @@ const catalogueValid = ajv.compile<{
   },
 });
 
-const configured = existsSync(".studio-source.json");
+let linked = false;
 await runCheck(
   () => {
-    if (configured) {
-      const link: unknown = JSON.parse(
-        readFileSync(".studio-source.json", "utf8"),
-      );
-      if (!linkValid(link))
-        throw new Error("Invalid local Studio source configuration.");
+    const link = readStudioLink(".studio-source.json");
+    if (link) {
+      linked = true;
       const saved: unknown = JSON.parse(readFileSync(link.output, "utf8"));
       if (!catalogueValid(saved)) throw new Error("Invalid catalogue export.");
       const { catalogueHash, ...body } = saved;
@@ -43,8 +35,9 @@ await runCheck(
     }
     return [];
   },
-  configured
-    ? "Catalogue matches the current clean Studio revision and source files."
-    : "Studio source not configured: freshness check not run (foundation-only validation).",
+  () =>
+    linked
+      ? "Catalogue matches the current clean Studio revision and source files."
+      : "Studio source not configured: freshness check not run (foundation-only validation).",
   "Catalogue freshness check failed.",
 );

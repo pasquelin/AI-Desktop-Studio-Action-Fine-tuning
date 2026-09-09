@@ -55,3 +55,5 @@ Consulter [le contrat et les résultats de l’export](docs/export.md).
 Consulter [le cadrage de l’environnement VM](docs/vm-environment.md) : conception prête, automatisation à implémenter.
 
 Les [scripts VM et leur mode d’emploi](docs/vm-usage.md) préparent une référence et construisent Studio dans une copie jetable. Recette réelle encore à effectuer.
+
+Consulter [l’inventaire complet des scénarios](docs/scenarios/README.md) : actions MCP, demandes existantes et cas candidats, sans exécution.
