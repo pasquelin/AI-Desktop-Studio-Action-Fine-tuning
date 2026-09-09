@@ -2,7 +2,7 @@
 
 Compagnon de préparation et d’évaluation d’un assistant local multilingue pour AI Desktop Studio.
 
-**État : fondation du dépôt.** Linter, typage, tests et contrôles de configuration fonctionnent sans modèle. L’export du catalogue, les parcours dans l’application et l’entraînement ne sont pas encore implémentés.
+**État : fondation du dépôt.** Linter, typage, tests et contrôles de configuration fonctionnent sans modèle. L’export automatique du catalogue est disponible. Les parcours dans l’application et l’entraînement ne sont pas encore implémentés.
 
 ## Démarrage
 
@@ -23,6 +23,8 @@ L’installation initiale nécessite Internet ; la validation utilise ensuite le
 | `npm run test:watch` | Tests pendant le développement |
 | `npm run config:check` | Validation de la configuration |
 | `npm run repo:check` | Noms, types et tailles des fichiers candidats Git |
+| `npm run catalogue:export -- --source CHEMIN` | Export complet depuis Studio |
+| `npm run catalogue:check` | Contrôle de fraîcheur du catalogue configuré |
 
 Les scripts se lancent aussi avec `npm run` ; les installations et mises à jour utilisent pnpm et son unique lockfile. Si le lanceur pnpm local est indisponible : `npx --yes pnpm@12.3.4 install --frozen-lockfile --ignore-scripts`.
 
@@ -47,3 +49,9 @@ La licence du code n’est pas choisie : paquet privé `UNLICENSED`. Apache 2.0 
 ## Organisation Git
 
 `develop` accueille le travail courant dans ce dossier. `main` est réservée aux versions à déployer. Aucun worktree supplémentaire.
+
+Consulter [le contrat et les résultats de l’export](docs/export.md).
+
+Consulter [le cadrage de l’environnement VM](docs/vm-environment.md) : conception prête, automatisation à implémenter.
+
+Les [scripts VM et leur mode d’emploi](docs/vm-usage.md) préparent une référence et construisent Studio dans une copie jetable. Recette réelle encore à effectuer.

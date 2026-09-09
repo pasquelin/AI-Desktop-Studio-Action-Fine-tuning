@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { validatePilot } from "../src/config/validate-pilot.ts";
 import { runCheck } from "./run-check.ts";
 
-runCheck(
+await runCheck(
   () => {
     const path =
       process.argv[2] ?? new URL("../configs/pilot.json", import.meta.url);

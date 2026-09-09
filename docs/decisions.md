@@ -14,3 +14,5 @@ Sources : [Qwen3.5-2B](https://huggingface.co/Qwen/Qwen3.5-2B), [Qwen3-1.7B](htt
 Le moteur de tests est verrouillé sur Vitest 3.2.7 avec Vite 6.4.3. La première tentative Vitest 5 / Vite 8 perdait son composant Rolldown lors de `npm ci` ; la combinaison retenue a été vérifiée après réinstallation propre.
 
 Organisation Git demandée : deux branches locales, `main` et `develop`. Le travail quotidien reste sur `develop` dans le dossier principal ; `main` est réservée aux versions à déployer. Les anciens worktrees de cadrage sont retirés après archivage vérifié de leurs documents hors dépôt. Cette règle prévaut sur les anciens plans mentionnant une branche par lot.
+
+Lot suivant autorisé et réalisé : export seul, depuis le registre complet, sans scénarios. Le contrôle de fraîcheur est inclus dans la validation locale configurée. Voir `export.md` pour le périmètre exact et la distinction entre export et exécution.

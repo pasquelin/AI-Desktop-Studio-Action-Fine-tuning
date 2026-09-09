@@ -21,3 +21,5 @@ datasets/private/
 *.onnx
 *.log
 *.tsbuildinfo
+
+.studio-source.json
