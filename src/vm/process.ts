@@ -37,10 +37,20 @@ export function command(
       active.delete(child);
       clearTimeout(timer);
       if (code === 0) resolve(output.trim());
-      else reject(new Error(`${executable} failed (${code ?? "terminated"})`));
+      else
+        reject(
+          new Error(
+            `${executable} failed (${code ?? "terminated"})${output ? `\n${output.slice(-6000)}` : ""}`,
+          ),
+        );
     });
   });
 }
 export function quote(value: string): string {
   return `'${value.replaceAll("'", "'\\''")}'`;
+}
+
+/** Quote a value for OpenSSH's `-o` parser, which re-splits option values on spaces. */
+export function sshConfigValue(value: string): string {
+  return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
 }

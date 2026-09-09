@@ -1,8 +1,12 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { cycle, type Operations } from "../src/vm/lifecycle.ts";
-import { validateOwnership } from "../src/vm/ownership.ts";
-import { command, quote } from "../src/vm/process.ts";
+import {
+  isPreparedReference,
+  type VmRecord,
+  validateOwnership,
+} from "../src/vm/ownership.ts";
+import { command, quote, sshConfigValue } from "../src/vm/process.ts";
 
 function fixture(fail?: string) {
   const events: string[] = [];
@@ -127,5 +131,34 @@ describe("VM ownership", () => {
         "/state",
       ),
     ).toThrow();
+  });
+});
+
+describe("VM reference selection", () => {
+  const base: VmRecord = {
+    name: "studio-ft-00000000-0000-4000-8000-000000000000",
+    owner: "/repo",
+    mode: "prepare",
+    status: "ready",
+    key: "/state/key",
+  };
+  it("accepts only a prepared reference left ready", () => {
+    expect(isPreparedReference(base)).toBe(true);
+    expect(isPreparedReference({ ...base, status: "created" })).toBe(false);
+    expect(isPreparedReference({ ...base, status: "build-passed" })).toBe(
+      false,
+    );
+    expect(isPreparedReference({ ...base, mode: "build" })).toBe(false);
+  });
+});
+
+describe("SSH option quoting", () => {
+  it("wraps a value the option parser would otherwise split on spaces", () => {
+    expect(sshConfigValue("/AI Desktop Studio/known_hosts")).toBe(
+      '"/AI Desktop Studio/known_hosts"',
+    );
+  });
+  it("escapes quotes and backslashes rather than ending the value", () => {
+    expect(sshConfigValue('a"b\\c')).toBe('"a\\"b\\\\c"');
   });
 });

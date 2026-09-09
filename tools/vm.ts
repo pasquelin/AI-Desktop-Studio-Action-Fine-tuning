@@ -1,5 +1,6 @@
 import { type ChildProcess, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
+import { once } from "node:events";
 import {
   mkdir,
   readdir,
@@ -9,18 +10,27 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 import { parseArgs } from "node:util";
 import { cycle } from "../src/vm/lifecycle.ts";
 import {
   isManagedName,
+  isPreparedReference,
+  readRecord,
+  stateDir,
   VM_PREFIX,
   type VmRecord,
-  validateOwnership,
 } from "../src/vm/ownership.ts";
-import { cancelActiveCommands, command, quote } from "../src/vm/process.ts";
+import {
+  cancelActiveCommands,
+  command,
+  quote,
+  sshConfigValue,
+} from "../src/vm/process.ts";
+import { listLocalVmNames } from "../src/vm/tart.ts";
 
 const root = resolve(import.meta.dirname, "..");
-const state = join(root, "artifacts", "vm");
+const state = stateDir(root);
 const { positionals, values } = parseArgs({
   allowPositionals: true,
   options: {
@@ -30,14 +40,7 @@ const { positionals, values } = parseArgs({
   },
 });
 const mode = positionals[0];
-async function owned(name: string) {
-  // Guard before joining the name into a path; validateOwnership only sees parsed data.
-  if (!isManagedName(name)) throw new Error("Refusing an unmanaged VM name");
-  const record = JSON.parse(
-    await readFile(join(state, name, "record.json"), "utf8"),
-  );
-  return validateOwnership(record, name, root, state);
-}
+const owned = (name: string) => readRecord(name, root, state);
 async function main() {
   if (!["prepare", "build", "cleanup", "check"].includes(mode ?? ""))
     throw new Error(
@@ -52,9 +55,7 @@ async function main() {
     );
   if (mode === "check") {
     console.log(await command("tart", ["--version"]));
-    console.log(
-      await command("tart", ["list", "--source", "local", "--quiet"]),
-    );
+    console.log((await listLocalVmNames()).join("\n"));
     return;
   }
   const lock = join(state, "active.lock");
@@ -70,7 +71,8 @@ async function main() {
     if (mode === "cleanup") {
       const name = values.name ?? "";
       const previous = await owned(name);
-      await command("tart", ["stop", name]);
+      // A copy left stopped is a normal cleanup input; delete reports a missing VM.
+      await command("tart", ["stop", name]).catch(() => {});
       await command("tart", ["delete", name]);
       await writeFile(
         join(state, name, "record.json"),
@@ -93,15 +95,10 @@ async function main() {
     }
     const reference =
       mode === "build" ? await owned(values.base ?? "") : undefined;
-    if (
-      reference &&
-      (reference.status !== "ready" || reference.mode !== "prepare")
-    )
+    if (reference && !isPreparedReference(reference))
       throw new Error("Base is not a prepared reference");
     const source = reference?.name ?? values.source ?? "";
-    const locals = (
-      await command("tart", ["list", "--source", "local", "--quiet"])
-    ).split("\n");
+    const locals = await listLocalVmNames();
     if (!source || !locals.includes(source))
       throw new Error(
         "Source VM must already exist locally; no implicit image download",
@@ -147,9 +144,9 @@ async function main() {
       "-o",
       "IdentitiesOnly=yes",
       "-o",
-      `UserKnownHostsFile=${join(dir, "known_hosts")}`,
+      `UserKnownHostsFile=${sshConfigValue(join(dir, "known_hosts"))}`,
     ];
-    const ssh = (script: string, password = false) =>
+    const ssh = (script: string, password = false, timeout = 3_600_000) =>
       command(
         "ssh",
         [
@@ -164,7 +161,25 @@ async function main() {
           `admin@${ip}`,
           `/bin/bash -lc ${quote(script)}`,
         ],
-        { interactive: password, timeout: 3_600_000 },
+        { interactive: password, timeout },
+      );
+    // Transfer over the isolated connection; no host folder mounts or credentials in the guest.
+    const transfer = (from: string, to: string, recursive = false) =>
+      command(
+        "scp",
+        [
+          ...transport,
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "StrictHostKeyChecking=yes",
+          "-i",
+          key,
+          ...(recursive ? ["-r"] : []),
+          from,
+          to,
+        ],
+        { timeout: 600_000 },
       );
     const provision = async () => {
       await command("ssh-keygen", [
@@ -247,34 +262,22 @@ async function main() {
         record.revision,
       ]);
       await ssh("mkdir -p ~/studio-vm/source");
-      // Transfer over the isolated connection; no host folder mounts or credentials in the guest.
-      await command(
-        "scp",
-        [
-          ...transport,
-          "-o",
-          "BatchMode=yes",
-          "-o",
-          "StrictHostKeyChecking=yes",
-          "-i",
-          key,
-          archive,
-          `admin@${ip}:studio-vm/source.tar`,
-        ],
-        { timeout: 600_000 },
-      );
+      await transfer(archive, `admin@${ip}:studio-vm/source.tar`);
       await ssh(
         "tar -xf ~/studio-vm/source.tar -C ~/studio-vm/source && rm ~/studio-vm/source.tar",
       );
       await rm(archive);
       await rm(checkout, { recursive: true });
-      console.log(
-        await ssh(await readFile(join(root, "tools/vm/build.sh"), "utf8")),
-      );
-      await writeFile(
-        join(dir, "build.json"),
-        await ssh("cat ~/studio-vm/results/build.json"),
-      );
+      try {
+        console.log(
+          await ssh(await readFile(join(root, "tools/vm/build.sh"), "utf8")),
+        );
+      } finally {
+        // Reports and logs are what a failed build leaves behind; fetch them either way.
+        await transfer(`admin@${ip}:studio-vm/results`, dir, true).catch(
+          () => {},
+        );
+      }
     };
     try {
       await cycle(
@@ -311,7 +314,7 @@ async function main() {
                 ip = "";
               }
               if (/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ip)) return;
-              await new Promise((resolve) => setTimeout(resolve, 2000));
+              await delay(2000);
             }
             throw new Error("VM did not obtain an IP address");
           },
@@ -321,8 +324,15 @@ async function main() {
             if (interrupted) throw new Error("Interrupted");
           },
           stop: async () => {
-            await command("tart", ["stop", name]);
-            vm?.kill("SIGTERM");
+            if (ip) {
+              // SSH disconnects when macOS shuts down; allow the guest to flush its disk first.
+              await ssh("sync; sudo shutdown -h now", false, 30_000).catch(
+                () => {},
+              );
+              if (vm?.exitCode === null)
+                await Promise.race([once(vm, "exit"), delay(30_000)]);
+            }
+            if (vm?.exitCode === null) await command("tart", ["stop", name]);
           },
           remove: async () => {
             await owned(name);

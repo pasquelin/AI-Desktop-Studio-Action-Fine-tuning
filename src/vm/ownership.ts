@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 export const VM_STATUSES = [
   "created",
@@ -45,4 +46,29 @@ export function validateOwnership(
   )
     throw new Error("Unexpected VM key path");
   return record as unknown as VmRecord;
+}
+
+/** Single definition of where this repository keeps its VM records and keys. */
+export function stateDir(root: string): string {
+  return join(root, "artifacts", "vm");
+}
+
+/** Read and validate a record; the name is checked before it is joined into a path. */
+export async function readRecord(
+  name: string,
+  root: string,
+  state: string,
+): Promise<VmRecord> {
+  if (!isManagedName(name)) throw new Error("Refusing an unmanaged VM name");
+  return validateOwnership(
+    JSON.parse(await readFile(join(state, name, "record.json"), "utf8")),
+    name,
+    root,
+    state,
+  );
+}
+
+/** A base usable by `vm build`: prepared by this repository and left ready. */
+export function isPreparedReference(record: VmRecord): boolean {
+  return record.mode === "prepare" && record.status === "ready";
 }

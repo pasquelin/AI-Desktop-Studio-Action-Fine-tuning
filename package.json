@@ -17,11 +17,12 @@
     "test:watch": "vitest",
     "config:check": "node tools/check-config.ts",
     "repo:check": "node tools/check-repository.ts",
-    "validate": "npm run lint && npm run typecheck && npm test && npm run config:check && npm run repo:check && npm run catalogue:check && npm run freshness:check",
+    "validate": "npm run lint && npm run typecheck && npm test && npm run config:check && npm run repo:check && npm run freshness:check && npm run catalogue:check",
     "catalogue:export": "node tools/export-catalogue.ts",
     "catalogue:check": "node tools/check-catalogue.ts",
     "vm": "node tools/vm.ts",
-    "freshness:check": "node tools/check-freshness.ts"
+    "freshness:check": "node tools/check-freshness.ts",
+    "vm:run": "node tools/run-vm.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",
