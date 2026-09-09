@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "phase": "foundation",
+  "network": "disabled",
+  "languages": ["en", "fr", "es", "de", "pt", "ar", "hi", "zh", "ja", "ko"],
+  "models": [
+    {
+      "id": "Qwen/Qwen3.5-2B",
+      "role": "primary",
+      "license": "Apache-2.0",
+      "status": "candidate"
+    },
+    {
+      "id": "Qwen/Qwen3-1.7B",
+      "role": "comparison",
+      "license": "Apache-2.0",
+      "status": "candidate"
+    }
+  ],
+  "actions": [
+    "actions.find",
+    "studio.state",
+    "documents.list",
+    "document.open",
+    "document.activate",
+    "document.rename",
+    "document.save",
+    "scene.state",
+    "node.add",
+    "node.rename",
+    "node.transform",
+    "node.setVisible",
+    "node.setMeshMaterial",
+    "node.remove",
+    "canvas.state",
+    "layer.add",
+    "layer.remove",
+    "layer.select",
+    "layer.rename",
+    "layer.setOpacityBlendAndVisibility",
+    "layer.transform",
+    "layer.duplicate",
+    "layer.reorderInStack",
+    "layer.editTextLayer",
+    "layer.group",
+    "layer.ungroup"
+  ],
+  "limits": {
+    "maxTurns": 12,
+    "timeoutMs": 60000
+  }
+}

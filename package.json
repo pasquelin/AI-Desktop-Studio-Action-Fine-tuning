@@ -1,0 +1,30 @@
+{
+  "name": "ai-desktop-studio-action-fine-tuning",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=24.8.0 <25",
+    "npm": ">=11 <12"
+  },
+  "packageManager": "pnpm@12.3.4",
+  "scripts": {
+    "lint": "biome check --error-on-warnings .",
+    "format": "biome check --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "config:check": "node tools/check-config.ts",
+    "repo:check": "node tools/check-repository.ts",
+    "validate": "npm run lint && npm run typecheck && npm test && npm run config:check && npm run repo:check"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.12",
+    "@types/node": "24.13.3",
+    "ajv": "8.20.0",
+    "typescript": "7.0.2",
+    "vite": "6.4.3",
+    "vitest": "3.2.7"
+  }
+}
