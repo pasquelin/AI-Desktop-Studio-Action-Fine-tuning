@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "socket.remove/001",
+  "source": "rig.md",
+  "specification": "Nominal minimal : demander « Retirer un point d’attache » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["socket.remove"]
+}

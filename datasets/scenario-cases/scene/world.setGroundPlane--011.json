@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setGroundPlane/011",
+  "source": "scene.md",
+  "specification": "Booléen visible : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["world.setGroundPlane"]
+}

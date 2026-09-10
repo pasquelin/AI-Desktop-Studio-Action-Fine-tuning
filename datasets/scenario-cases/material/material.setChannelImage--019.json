@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setChannelImage/019",
+  "source": "material.md",
+  "specification": "Option inconnue de channel : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["material.setChannelImage"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.open/031",
+  "source": "shell.md",
+  "specification": "Option de section : \"git\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["settings.open"]
+}

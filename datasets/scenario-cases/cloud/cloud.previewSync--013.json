@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.previewSync/013",
+  "source": "cloud.md",
+  "specification": "Paramètre policy avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["cloud.previewSync"]
+}

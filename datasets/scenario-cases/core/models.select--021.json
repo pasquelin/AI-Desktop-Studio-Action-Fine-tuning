@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "models.select/021",
+  "source": "core.md",
+  "specification": "Option inconnue de family : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["models.select"]
+}

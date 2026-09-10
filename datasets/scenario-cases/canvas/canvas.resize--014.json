@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.resize/014",
+  "source": "canvas.md",
+  "specification": "Paramètre scalePixels avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["canvas.resize"]
+}

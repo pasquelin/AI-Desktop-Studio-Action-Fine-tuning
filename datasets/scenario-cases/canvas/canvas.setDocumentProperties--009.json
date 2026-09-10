@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.setDocumentProperties/009",
+  "source": "canvas.md",
+  "specification": "Paramètre dpi absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["canvas.setDocumentProperties"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.transform/028",
+  "source": "scene.md",
+  "specification": "Paramètre rotationZ absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["node.transform"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setPreviewEnvironment/012",
+  "source": "material.md",
+  "specification": "Option de kind : \"skybox\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["material.setPreviewEnvironment"]
+}

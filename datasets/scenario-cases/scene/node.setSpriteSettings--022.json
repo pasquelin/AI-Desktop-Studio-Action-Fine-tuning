@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setSpriteSettings/022",
+  "source": "scene.md",
+  "specification": "Texte map : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["node.setSpriteSettings"]
+}

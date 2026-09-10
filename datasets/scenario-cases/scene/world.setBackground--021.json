@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setBackground/021",
+  "source": "scene.md",
+  "specification": "Borne max de blur = 1 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["world.setBackground"]
+}

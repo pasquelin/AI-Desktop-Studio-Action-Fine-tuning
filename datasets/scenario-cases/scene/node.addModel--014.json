@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.addModel/014",
+  "source": "scene.md",
+  "specification": "Texte name : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["node.addModel"]
+}

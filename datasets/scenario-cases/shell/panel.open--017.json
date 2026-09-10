@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "panel.open/017",
+  "source": "shell.md",
+  "specification": "Option de panel : \"guiTree\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["panel.open"]
+}

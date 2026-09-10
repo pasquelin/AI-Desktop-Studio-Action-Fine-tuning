@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "clip.trim/013",
+  "source": "montage.md",
+  "specification": "Paramètre edge avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["clip.trim"]
+}

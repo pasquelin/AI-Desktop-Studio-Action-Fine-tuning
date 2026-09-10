@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setSceneLighting/021",
+  "source": "scene.md",
+  "specification": "Paramètre intensity absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["world.setSceneLighting"]
+}

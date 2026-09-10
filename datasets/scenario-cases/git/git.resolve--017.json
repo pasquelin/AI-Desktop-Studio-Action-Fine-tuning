@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.resolve/017",
+  "source": "git.md",
+  "specification": "Option inconnue de side : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["git.resolve"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "component.detach/010",
+  "source": "game.md",
+  "specification": "Paramètre nodeId avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["component.detach"]
+}

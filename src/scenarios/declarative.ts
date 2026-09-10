@@ -3,6 +3,10 @@ import { Ajv } from 'ajv'
 import { record } from '../json.ts'
 import { benchReadiness } from './capabilities.ts'
 import { declarativeScenarioSchema } from './declarative-schema.ts'
+import { ScenarioFailure } from './failure.ts'
+
+export { failureCode, ScenarioFailure } from './failure.ts'
+
 import { runScenario, type ScenarioReport } from './runner.ts'
 
 export interface Assertion {
@@ -159,10 +163,19 @@ export async function assertObservation(
       break
   }
   if (!passed)
-    throw new Error(`Assertion ${check.op} failed: ${JSON.stringify({ actual, expected })}`)
+    throw new ScenarioFailure(
+      'assertion',
+      `Assertion ${check.op} failed: ${JSON.stringify({ actual, expected })}`,
+    )
   if (check.saveAs) bindings[check.saveAs] = structuredClone(actual)
 }
-export class ActionRefusal extends Error {}
+/** Studio refused the action; the cause travels with it, never inferred from the wording. */
+export class ActionRefusal extends ScenarioFailure {
+  constructor(message: string) {
+    super('refusal', message)
+    this.name = 'ActionRefusal'
+  }
+}
 
 export interface ScenarioAdapter {
   availableRequirements?: string[]
@@ -214,7 +227,8 @@ export async function executeDeclarative(
           refused = true
           result = { refused: true, message: error.message }
         }
-        if (step.expectRefusal && !refused) throw new Error('Expected refusal did not occur')
+        if (step.expectRefusal && !refused)
+          throw new ScenarioFailure('assertion', 'Expected refusal did not occur')
         if (step.saveAs) bindings[step.saveAs] = result
         for (const check of step.assertions)
           await assertObservation(check, bindings, adapter.readFile)

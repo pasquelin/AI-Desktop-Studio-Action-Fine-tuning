@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "asset.update/008",
+  "source": "asset.md",
+  "specification": "Paramètre assetId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["asset.update"]
+}

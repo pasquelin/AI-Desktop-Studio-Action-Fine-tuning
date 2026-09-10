@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.drawPixels/012",
+  "source": "canvas.md",
+  "specification": "Option de shape : \"line\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["canvas.drawPixels"]
+}

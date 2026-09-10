@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setTextSettings/001",
+  "source": "scene.md",
+  "specification": "Nominal minimal : demander « Régler un texte 3D » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["node.setTextSettings"]
+}

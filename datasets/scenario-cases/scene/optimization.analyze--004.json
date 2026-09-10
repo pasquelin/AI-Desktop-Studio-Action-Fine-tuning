@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "optimization.analyze/004",
+  "source": "scene.md",
+  "specification": "Échec de l’exécuteur : injecter une erreur déterministe du port concerné ; réponse explicite, aucune annonce de réussite et aucune mutation collatérale.",
+  "tags": ["optimization.analyze"]
+}

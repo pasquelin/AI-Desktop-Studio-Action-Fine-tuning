@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "prefab.define/013",
+  "source": "assembly.md",
+  "specification": "Texte document : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["prefab.define"]
+}

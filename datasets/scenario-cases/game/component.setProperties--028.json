@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "component.setProperties/028",
+  "source": "game.md",
+  "specification": "Option de type : \"CharacterController\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["component.setProperties"]
+}

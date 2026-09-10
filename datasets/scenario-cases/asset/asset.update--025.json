@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "asset.update/025",
+  "source": "asset.md",
+  "specification": "Option de type : \"skybox\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["asset.update"]
+}

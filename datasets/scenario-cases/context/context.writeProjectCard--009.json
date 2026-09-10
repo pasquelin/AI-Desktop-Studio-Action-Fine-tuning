@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "context.writeProjectCard/009",
+  "source": "context.md",
+  "specification": "Préparation ou contrainte dynamique manquante : tester chaque branche du callback du handler ; le marqueur runtimeFunction du catalogue ne révèle pas ces branches.",
+  "tags": ["context.writeProjectCard"]
+}

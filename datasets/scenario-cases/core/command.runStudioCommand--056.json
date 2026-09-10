@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "command.runStudioCommand/056",
+  "source": "core.md",
+  "specification": "Option de command : \"scene.display\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["command.runStudioCommand"]
+}

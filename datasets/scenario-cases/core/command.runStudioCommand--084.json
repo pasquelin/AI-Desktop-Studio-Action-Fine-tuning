@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "command.runStudioCommand/084",
+  "source": "core.md",
+  "specification": "Option de command : \"sequence.exportEdl\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["command.runStudioCommand"]
+}

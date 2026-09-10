@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.move/013",
+  "source": "post.md",
+  "specification": "Paramètre effectId avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["post.move"]
+}

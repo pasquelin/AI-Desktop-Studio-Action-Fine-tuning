@@ -3,6 +3,7 @@ import { Header, MainContainer, pages } from './components/layout.tsx'
 import { Button } from './components/primitives.tsx'
 import { Live } from './views/live.tsx'
 import { Overview } from './views/overview.tsx'
+import { Qa } from './views/qa.tsx'
 import { Reports } from './views/reports.tsx'
 import { Scenarios } from './views/scenarios.tsx'
 
@@ -67,14 +68,24 @@ export function App() {
             />
           </div>
         )}
-        {page === 'scenarios' ? null : page === 'reports' ? (
-          <Reports key={hash} params={params} />
-        ) : page === 'overview' ? (
-          <Overview />
-        ) : (
-          <Live />
-        )}
+        <CurrentPage page={page} hash={hash} params={params} />
       </MainContainer>
     </div>
   )
+}
+
+function CurrentPage({
+  page,
+  hash,
+  params,
+}: {
+  page: string
+  hash: string
+  params: URLSearchParams
+}) {
+  if (page === 'scenarios') return null
+  if (page === 'reports') return <Reports key={hash} params={params} />
+  if (page === 'qa') return <Qa key={hash} params={params} />
+  if (page === 'overview') return <Overview />
+  return <Live />
 }

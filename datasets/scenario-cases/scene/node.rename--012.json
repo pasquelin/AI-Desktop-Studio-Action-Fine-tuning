@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.rename/012",
+  "source": "scene.md",
+  "specification": "Cible nodeId : identifiant valide, absent, obsolète, autre document/projet et deux noms identiques ; résoudre l’identifiant réel, clarifier l’ambiguïté, protéger la cible voisine.",
+  "tags": ["node.rename"]
+}

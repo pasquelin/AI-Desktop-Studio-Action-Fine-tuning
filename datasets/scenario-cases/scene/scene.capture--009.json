@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "scene.capture/009",
+  "source": "scene.md",
+  "specification": "Paramètre quality absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["scene.capture"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "models.search/010",
+  "source": "core.md",
+  "specification": "Texte query : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["models.search"]
+}

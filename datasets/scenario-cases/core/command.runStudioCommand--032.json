@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "command.runStudioCommand/032",
+  "source": "core.md",
+  "specification": "Option de command : \"explorer.redo\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["command.runStudioCommand"]
+}

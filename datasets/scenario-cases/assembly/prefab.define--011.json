@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "prefab.define/011",
+  "source": "assembly.md",
+  "specification": "Paramètre document absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["prefab.define"]
+}

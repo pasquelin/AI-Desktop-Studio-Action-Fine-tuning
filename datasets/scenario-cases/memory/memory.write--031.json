@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "memory.write/031",
+  "source": "memory.md",
+  "specification": "Texte file : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["memory.write"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.add/028",
+  "source": "scene.md",
+  "specification": "Option de kind : \"directional\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["node.add"]
+}

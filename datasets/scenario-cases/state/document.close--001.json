@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.close/001",
+  "source": "state.md",
+  "specification": "Nominal minimal : demander « Fermer un document » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["document.close"]
+}

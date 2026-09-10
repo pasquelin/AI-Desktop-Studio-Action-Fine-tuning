@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.open/010",
+  "source": "shell.md",
+  "specification": "Option de section : \"general\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["settings.open"]
+}

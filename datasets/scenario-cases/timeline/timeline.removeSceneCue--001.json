@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "timeline.removeSceneCue/001",
+  "source": "timeline.md",
+  "specification": "Nominal minimal : demander « Retirer un repère de la timeline » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["timeline.removeSceneCue"]
+}

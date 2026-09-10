@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "window.fullScreen/001",
+  "source": "shell.md",
+  "specification": "Nominal minimal : demander « Basculer le plein écran » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["window.fullScreen"]
+}

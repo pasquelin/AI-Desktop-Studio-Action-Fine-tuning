@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "accounts.rename/011",
+  "source": "settings.md",
+  "specification": "Texte accountId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["accounts.rename"]
+}

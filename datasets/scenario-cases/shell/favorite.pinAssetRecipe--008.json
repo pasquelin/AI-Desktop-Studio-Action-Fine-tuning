@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "favorite.pinAssetRecipe/008",
+  "source": "shell.md",
+  "specification": "Paramètre assetId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["favorite.pinAssetRecipe"]
+}

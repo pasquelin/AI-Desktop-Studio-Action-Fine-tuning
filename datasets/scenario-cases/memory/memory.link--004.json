@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "memory.link/004",
+  "source": "memory.md",
+  "specification": "Échec de l’exécuteur : injecter une erreur déterministe du port concerné ; réponse explicite, aucune annonce de réussite et aucune mutation collatérale.",
+  "tags": ["memory.link"]
+}

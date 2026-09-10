@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "studio.docs/001",
+  "source": "studio.md",
+  "specification": "Nominal minimal : demander « Lire les réglages documentés d’un composant ou d’un script » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["studio.docs"]
+}

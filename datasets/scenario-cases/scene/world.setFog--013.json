@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setFog/013",
+  "source": "scene.md",
+  "specification": "Option de kind : \"exp2\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["world.setFog"]
+}

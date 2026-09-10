@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.add/016",
+  "source": "scene.md",
+  "specification": "Option de kind : \"icosahedron\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["node.add"]
+}

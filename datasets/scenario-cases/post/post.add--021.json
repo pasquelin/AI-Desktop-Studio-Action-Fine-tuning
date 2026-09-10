@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.add/021",
+  "source": "post.md",
+  "specification": "Option de effect : \"heatHaze\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["post.add"]
+}

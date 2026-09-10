@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "style.rename/009",
+  "source": "material.md",
+  "specification": "Paramètre styleId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["style.rename"]
+}

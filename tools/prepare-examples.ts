@@ -1,14 +1,13 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { sha256 } from '../src/catalogue/catalogue.ts'
 import { record } from '../src/json.ts'
 import {
   type BenchExample,
   compileCaseExample,
   compileJourneyExample,
 } from '../src/scenarios/examples.ts'
-import { parseInventory, readScenarioSources } from '../src/scenarios/inventory.ts'
+import { inventorySourceHashes, readInventory } from '../src/scenarios/inventory.ts'
 import { cataloguePath } from '../src/studio/checkout.ts'
 import { runCheck } from './run-check.ts'
 
@@ -18,8 +17,8 @@ async function readJson(path: string): Promise<unknown> {
 }
 await runCheck(
   async () => {
-    const sources = await readScenarioSources(root)
-    const inventory = parseInventory(sources)
+    const inventory = await readInventory(root)
+    const { sources } = inventory
     const catalogue = await readJson(cataloguePath(root))
     if (
       !record(catalogue) ||
@@ -106,9 +105,7 @@ await runCheck(
       trainingApproved: 0,
       studioExecutionVerified: 0,
       catalogueRevision: catalogue.appRevision,
-      sourceHashes: Object.fromEntries(
-        Object.entries(sources).map(([file, text]) => [file, sha256(text)]),
-      ),
+      sourceHashes: inventorySourceHashes(sources, inventory.cases),
       benchSnapshotHashes: Object.fromEntries(bench.map(item => [item.source, item.sourceHash])),
       files: [...files, 'journeys.jsonl'],
     }

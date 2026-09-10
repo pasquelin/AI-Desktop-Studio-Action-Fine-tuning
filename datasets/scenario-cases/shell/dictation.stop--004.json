@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "dictation.stop/004",
+  "source": "shell.md",
+  "specification": "Échec de l’exécuteur : injecter une erreur déterministe du port concerné ; réponse explicite, aucune annonce de réussite et aucune mutation collatérale.",
+  "tags": ["dictation.stop"]
+}

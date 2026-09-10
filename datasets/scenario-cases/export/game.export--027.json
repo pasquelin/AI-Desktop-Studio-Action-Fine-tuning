@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/027",
+  "source": "export.md",
+  "specification": "Option inconnue de geometrySimplification : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["game.export"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.editTextLayer/046",
+  "source": "canvas.md",
+  "specification": "Option de fontSource : \"embedded\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["layer.editTextLayer"]
+}

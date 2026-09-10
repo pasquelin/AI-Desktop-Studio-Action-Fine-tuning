@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setToneMapping/014",
+  "source": "scene.md",
+  "specification": "Option de toneMapping : \"cineon\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["world.setToneMapping"]
+}

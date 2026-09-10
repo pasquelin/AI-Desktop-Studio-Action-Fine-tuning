@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "help.openStudioWindow/011",
+  "source": "shell.md",
+  "specification": "Option de page : \"licences\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["help.openStudioWindow"]
+}

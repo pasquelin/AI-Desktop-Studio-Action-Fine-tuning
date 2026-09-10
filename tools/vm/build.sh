@@ -14,6 +14,12 @@ manager=$(node -p 'JSON.parse(require("node:fs").readFileSync("package.json","ut
 [[ "$manager" =~ ^pnpm@[0-9]+\.[0-9]+\.[0-9]+(\+sha[0-9]+\.[a-f0-9]+)?$ ]] || { echo 'Unsupported package manager'; exit 1; }
 # pnpm honors the project's declared packageManager; lockfile changes are refused.
 command -v node-gyp >/dev/null || npm install --global --prefix /opt/homebrew node-gyp@13.0.2
+# SSH sessions default to 256 descriptors, below pnpm's parallel import needs.
+open_files=$(ulimit -Sn)
+if [[ "$open_files" != unlimited ]] && (( open_files < 8192 )); then
+  ulimit -Sn 8192
+fi
+echo "[VM] Limite de fichiers ouverts : $(ulimit -Sn)"
 echo "[Étape] Installation des dépendances dans la VM"
 # Keep each test installation independent of the reference image package cache.
 pnpm install --frozen-lockfile --store-dir "$HOME/studio-vm/dependency-store" --package-import-method=copy
@@ -48,11 +54,15 @@ PROFILE
 node -e 'require("electron")'
 env -u CI node scripts/dev-app-identity.mjs
 echo "[Étape] Ouverture de Studio et contrôle de son interface"
-node node_modules/electron/cli.js . --user-data-dir="$HOME/studio-vm/profile" --remote-debugging-port=9333 > "$results/startup.log" 2>&1 &
+# The launch contract lives in studio-launch.mjs; the session reset reopens Studio the same way.
+studio_argv=()
+while IFS= read -r argument; do studio_argv+=("$argument"); done < <(node studio-launch.ts --argv "$HOME/studio-vm/profile")
+(( ${#studio_argv[@]} >= 4 )) || { echo 'Studio launch arguments unavailable'; exit 1; }
+node "${studio_argv[@]}" > "$results/startup.log" 2>&1 &
 app_pid=$!
 tail -n +1 -F "$results/startup.log" &
 log_pid=$!
-trap 'kill "$app_pid" "$log_pid" 2>/dev/null || true' EXIT
+trap 'kill "$log_pid" 2>/dev/null || true; if [[ "${STUDIO_FT_SESSION:-0}" != 1 ]]; then kill "$app_pid" 2>/dev/null || true; fi' EXIT
 node .ft-startup.mjs
 
 if [[ "${STUDIO_FT_SCENARIO:-0}" == 1 ]]; then

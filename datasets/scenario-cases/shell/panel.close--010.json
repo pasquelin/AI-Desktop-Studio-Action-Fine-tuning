@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "panel.close/010",
+  "source": "shell.md",
+  "specification": "Option de panel : \"generator\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["panel.close"]
+}

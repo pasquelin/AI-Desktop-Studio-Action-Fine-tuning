@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setViewportOptions/023",
+  "source": "material.md",
+  "specification": "Booléen probes : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["skybox.setViewportOptions"]
+}

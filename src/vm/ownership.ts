@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { RANDOM_ID_PATTERN } from '../scenarios/identity.ts'
 
 const VM_STATUSES = ['created', 'ready', 'build-passed', 'failed-retained', 'removed'] as const
 type VmStatus = (typeof VM_STATUSES)[number]
@@ -12,7 +13,7 @@ export interface VmRecord {
   key: string
 }
 export const VM_PREFIX = 'studio-ft-'
-const MANAGED_NAME = new RegExp(`^${VM_PREFIX}[a-f0-9-]{36}$`)
+const MANAGED_NAME = new RegExp(`^${VM_PREFIX}${RANDOM_ID_PATTERN}$`)
 
 export function isManagedName(value: string): boolean {
   return MANAGED_NAME.test(value)

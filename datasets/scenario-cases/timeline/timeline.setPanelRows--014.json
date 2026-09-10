@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "timeline.setPanelRows/014",
+  "source": "timeline.md",
+  "specification": "Option de template : \"gameplay\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["timeline.setPanelRows"]
+}

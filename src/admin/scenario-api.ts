@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
+import { localJson } from '../http.ts'
 import { record } from '../json.ts'
 import type { ScenarioEntry } from './scenario-repository.ts'
 import { ScenarioRepository, ScenarioRepositoryError } from './scenario-repository.ts'
@@ -6,13 +7,9 @@ import { ScenarioRepository, ScenarioRepositoryError } from './scenario-reposito
 const PREFIX = '/api/scenarios'
 const BODY_LIMIT = 1_048_576
 
-/** Mutations are JSON-only and must come from the local observer origin. */
+/** This router also answers PUT, so it checks the origin and the type without fixing the method. */
 function assertLocalJson(request: IncomingMessage): void {
-  if (
-    request.headers.origin !== `http://${request.headers.host}` ||
-    !request.headers['content-type']?.startsWith('application/json')
-  )
-    throw new ScenarioRepositoryError(403, 'Local JSON request required')
+  if (!localJson(request)) throw new ScenarioRepositoryError(403, 'Local JSON request required')
 }
 
 async function readJsonBody(request: IncomingMessage): Promise<unknown> {
@@ -32,7 +29,11 @@ async function read(
   search: URLSearchParams,
 ): Promise<unknown> {
   if (id) return repo.detail(id)
+  const kind = search.get('kind')
+  if (kind !== null && kind !== 'case' && kind !== 'journey')
+    throw new ScenarioRepositoryError(400, 'Invalid scenario kind')
   return repo.list({
+    ...(kind ? { kind } : {}),
     query: search.get('query') ?? '',
     offset: Number(search.get('offset') ?? 0),
     limit: Number(search.get('limit') ?? 100),

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.applyTemplate/013",
+  "source": "assembly.md",
+  "specification": "Option inconnue de template : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["game.applyTemplate"]
+}

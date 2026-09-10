@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "target.select/011",
+  "source": "target.md",
+  "specification": "Texte aimId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["target.select"]
+}

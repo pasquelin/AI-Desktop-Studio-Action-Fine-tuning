@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "memory.write/020",
+  "source": "memory.md",
+  "specification": "Option inconnue de type : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["memory.write"]
+}

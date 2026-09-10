@@ -1,8 +1,12 @@
 import type { MouseEventHandler, ReactNode } from 'react'
-import { Link } from './primitives.tsx'
-export const LIVE_LABEL = 'Live'
+import { Section } from './section.tsx'
+
+export { Section } from './section.tsx'
+
+export const LIVE_LABEL = 'Entraînement'
 export const pages = [
   ['live', LIVE_LABEL],
+  ['qa', 'Debug / QA'],
   ['scenarios', 'Scénarios'],
   ['reports', 'Rapports'],
   ['overview', 'Vue d’ensemble'],
@@ -18,40 +22,34 @@ export function Header({
 }) {
   const links = pages.map(([id, label]) => (
     <li key={id}>
-      <Link
-        primary
+      <a
         href={
           id === 'live' ? '/' : id === 'scenarios' ? (scenarioHref ?? '/#scenarios') : `/#${id}`
         }
         onClick={id === 'live' ? onHome : undefined}
         aria-current={page === id ? 'page' : undefined}
-        className={page === id ? 'btn-active underline' : ''}
+        className={page === id ? 'btn btn-primary' : undefined}
       >
         {label}
-      </Link>
+      </a>
     </li>
   ))
   return (
-    <header className="navbar shrink-0 flex-nowrap justify-between gap-3 p-0">
-      <a href="/" onClick={onHome} className="flex min-w-0 shrink-0 items-center gap-2">
-        <img src="/admin/logo.svg" alt="" className="size-12 shrink-0 sm:size-16" />
-        <div>
-          <p className="text-body font-semibold sm:text-base">AI Desktop Studio</p>
-          <p className="text-xs text-muted">Action Fine-tuning</p>
-        </div>
-      </a>
-      <nav aria-label="Navigation principale" className="ml-auto hidden sm:block">
-        <ul className="menu menu-horizontal flex-nowrap gap-2 p-0">{links}</ul>
-      </nav>
-      <details className="dropdown dropdown-end ml-auto sm:hidden" key={page}>
-        <summary className="btn btn-primary btn-sm">Menu</summary>
-        <ul
-          aria-label="Navigation principale"
-          className="menu dropdown-content z-10 w-52 gap-2 rounded-box border border-neutral bg-base-200 p-2"
-        >
+    <header className="navbar shrink-0 gap-3 rounded-box bg-base-200 p-3">
+      <div className="min-w-0 shrink-0">
+        <a href="/" onClick={onHome} className="flex min-w-0 shrink-0 items-center gap-2">
+          <img src="/admin/logo.svg" alt="" className="size-12 shrink-0 sm:size-16" />
+          <div>
+            <p className="text-body font-semibold sm:text-base">AI Desktop Studio</p>
+            <p className="text-xs text-muted">Action Fine-tuning</p>
+          </div>
+        </a>
+      </div>
+      <nav aria-label="Navigation principale" className="min-w-0 flex-1 overflow-x-auto">
+        <ul className="menu menu-horizontal w-max min-w-full flex-nowrap justify-end gap-2 p-0">
           {links}
         </ul>
-      </details>
+      </nav>
     </header>
   )
 }
@@ -109,26 +107,21 @@ export function Panel({
   footer?: ReactNode
 }) {
   return (
-    <section className="card min-h-0 min-w-0 border border-neutral bg-base-200">
-      <div className="card-body min-h-0 gap-3 p-3">
-        <div className="flex shrink-0 flex-wrap items-center gap-2">
-          <h2 className="card-title text-sm">{title}</h2>
-        </div>
-        <div className="min-h-0 flex-1 overflow-auto">{children}</div>
-        {footer && <div className="card-actions shrink-0 items-center">{footer}</div>}
-      </div>
-    </section>
+    <Section title={title} footer={footer} fill scroll>
+      {children}
+    </Section>
   )
 }
+
 export function Stack({ children }: { children: ReactNode }) {
   return <div className="flex min-w-0 flex-col gap-3">{children}</div>
 }
 
 export function ContentPanel({ children }: { children: ReactNode }) {
   return (
-    <section className="card min-h-64 min-w-0 flex-1 overflow-auto border border-neutral bg-base-200">
-      <div className="card-body p-3">{children}</div>
-    </section>
+    <Section fill scroll>
+      {children}
+    </Section>
   )
 }
 

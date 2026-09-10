@@ -9,7 +9,8 @@ import {
   snapshotsRoute,
 } from '../src/admin/observer-routes.ts'
 import { handleScenarioRequest } from '../src/admin/scenario-api.ts'
-import { executionApi } from '../src/execution/api.ts'
+import { qaApi } from '../src/qa/api.ts'
+import { trainingApi } from '../src/training/api.ts'
 import { stateDir } from '../src/vm/ownership.ts'
 import { indexPage } from './build-admin.ts'
 
@@ -35,7 +36,15 @@ const homeRoute: Route = async (request, response, target, projectRoot) => {
 
 const routes: Route[] = [runsRoute, adminRoute, homeRoute, snapshotsRoute, logsRoute]
 
-const handleExecution = executionApi(root)
+const handleTraining = trainingApi(root)
+const handleQa = qaApi(root)
+async function applicationRoute(
+  request: import('node:http').IncomingMessage,
+  response: import('node:http').ServerResponse,
+) {
+  for (const handle of [handleTraining, handleQa]) if (await handle(request, response)) return true
+  return handleScenarioRequest(request, response, root)
+}
 const server = createServer(async (request, response) => {
   try {
     response.setHeader('Cache-Control', 'no-store')
@@ -55,8 +64,7 @@ const server = createServer(async (request, response) => {
         .end(JSON.stringify({ service: 'studio-vm-observer', root }))
       return
     }
-    if (await handleExecution(request, response)) return
-    if (await handleScenarioRequest(request, response, root)) return
+    if (await applicationRoute(request, response)) return
     const target = new URL(request.url ?? '/', 'http://localhost')
     for (const route of routes) if (await route(request, response, target, root)) return
     response.writeHead(request.method === 'GET' ? 404 : 405).end()

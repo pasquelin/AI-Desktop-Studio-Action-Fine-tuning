@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setSceneLighting/020",
+  "source": "scene.md",
+  "specification": "Texte sky : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["world.setSceneLighting"]
+}

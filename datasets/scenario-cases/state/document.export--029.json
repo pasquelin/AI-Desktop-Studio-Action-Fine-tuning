@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.export/029",
+  "source": "state.md",
+  "specification": "Option de target : \"unity\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["document.export"]
+}

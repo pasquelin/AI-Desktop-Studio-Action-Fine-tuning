@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "generator.prepare/025",
+  "source": "core.md",
+  "specification": "Cible modelId : identifiant valide, absent, obsolète, autre document/projet et deux noms identiques ; résoudre l’identifiant réel, clarifier l’ambiguïté, protéger la cible voisine.",
+  "tags": ["generator.prepare"]
+}

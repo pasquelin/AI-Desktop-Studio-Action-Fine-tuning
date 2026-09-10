@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "command.runStudioCommand/022",
+  "source": "core.md",
+  "specification": "Option de command : \"window.fullScreen\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["command.runStudioCommand"]
+}

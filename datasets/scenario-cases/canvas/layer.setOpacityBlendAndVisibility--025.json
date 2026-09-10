@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.setOpacityBlendAndVisibility/025",
+  "source": "canvas.md",
+  "specification": "Option de blend : \"multiply\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["layer.setOpacityBlendAndVisibility"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.group/012",
+  "source": "canvas.md",
+  "specification": "Liste layerIds : vide, singleton, plusieurs éléments, doublons et un élément invalide ; vérifier ordre, déduplication et atomicité réellement prévus.",
+  "tags": ["layer.group"]
+}

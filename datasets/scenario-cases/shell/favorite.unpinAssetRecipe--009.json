@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "favorite.unpinAssetRecipe/009",
+  "source": "shell.md",
+  "specification": "Paramètre favoriteId avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["favorite.unpinAssetRecipe"]
+}

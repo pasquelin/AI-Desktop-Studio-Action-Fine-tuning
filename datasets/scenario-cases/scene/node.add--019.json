@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.add/019",
+  "source": "scene.md",
+  "specification": "Option de kind : \"plane\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["node.add"]
+}

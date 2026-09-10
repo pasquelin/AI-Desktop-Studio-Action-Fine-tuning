@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.setCameraStackMode/018",
+  "source": "post.md",
+  "specification": "Option inconnue de mode : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["post.setCameraStackMode"]
+}

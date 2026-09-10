@@ -55,6 +55,14 @@ describe('scenario source administration', () => {
     expect(all.total).toBe(2)
     expect(all.items.filter(item => item.kind === 'case')).toHaveLength(1)
     expect((await repo.list({ query: 'P001' })).total).toBe(1)
+    expect((await repo.list({ kind: 'journey', limit: 1 })).items.map(item => item.id)).toEqual([
+      'P001',
+    ])
+    expect((await repo.list({ kind: 'case', limit: 1 })).items.map(item => item.id)).toEqual([
+      'scene.state/1',
+    ])
+    expect((await repo.list({ kind: 'case', offset: 1 })).total).toBe(1)
+    expect((await repo.list({ kind: 'case', offset: 1 })).items).toHaveLength(0)
   })
   it('changes exact scenario hash and rejects a stale editor', async () => {
     const { repo } = await fixture()
@@ -122,7 +130,10 @@ describe('scenario source administration', () => {
     await expect(repo.updateCase(old.id, old.revision, 'Old edit')).rejects.toMatchObject({
       status: 409,
     })
-    await expect(repo.updateCase(old.id, updated.revision, 'bad | cell')).rejects.toThrow()
+    // The Markdown round trip is gone: a bar is ordinary text now, a line break still is not.
+    const bar = await repo.updateCase(old.id, updated.revision, 'Read A | B state')
+    expect(bar.title).toBe('Read A | B state')
+    await expect(repo.updateCase(old.id, bar.revision, 'two\nlines')).rejects.toThrow()
   })
   it('rejects a stale manifest after source edits', async () => {
     const { repo, root } = await fixture()
@@ -194,4 +205,19 @@ describe('scenario source administration', () => {
     step.assertions[0] = { actual: { $ref: 'unknown' }, op: 'exists' }
     await expect(repo.update('P001', current.revision, invalid)).rejects.toThrow('Unknown binding')
   })
+})
+
+it('refreshes cached pages after external edits, additions and deletions without restarting', async () => {
+  const { repo, root } = await fixture()
+  expect((await repo.list({ kind: 'case' })).items[0]?.title).toBe('Read state')
+  await writeFile(join(root, 'docs/scenarios/cases.md'), '| `scene.state/1` | Read other |\n')
+  expect((await repo.list({ kind: 'case' })).items[0]?.title).toBe('Read other')
+  expect((await repo.list({ kind: 'journey' })).total).toBe(1)
+  await writeFile(join(root, 'datasets/bench/journeys/P002.json'), JSON.stringify(plan('P002')))
+  expect((await repo.list({ kind: 'journey' })).total).toBe(2)
+  await rm(join(root, 'datasets/bench/journeys/P002.json'))
+  expect((await repo.list({ kind: 'journey' })).total).toBe(1)
+  const current = await repo.detail('P001')
+  await repo.setActive(current.id, current.revision, true)
+  expect((await repo.list({ kind: 'journey' })).items[0]?.active).toBe(true)
 })

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "sequence.seek/009",
+  "source": "montage.md",
+  "specification": "Paramètre time absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["sequence.seek"]
+}

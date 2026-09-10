@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setGroundPlane/009",
+  "source": "scene.md",
+  "specification": "Paramètre visible absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["world.setGroundPlane"]
+}

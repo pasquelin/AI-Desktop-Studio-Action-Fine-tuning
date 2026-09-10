@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.resolve/015",
+  "source": "git.md",
+  "specification": "Option de side : \"ours\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["git.resolve"]
+}

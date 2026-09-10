@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.setDocumentProperties/017",
+  "source": "canvas.md",
+  "specification": "Option inconnue de colorMode : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["canvas.setDocumentProperties"]
+}

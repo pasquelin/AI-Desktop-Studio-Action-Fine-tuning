@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "target.select/009",
+  "source": "target.md",
+  "specification": "Paramètre aimId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["target.select"]
+}

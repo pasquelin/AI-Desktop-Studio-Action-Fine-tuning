@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "guide.add/012",
+  "source": "canvas.md",
+  "specification": "Option de axis : \"y\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["guide.add"]
+}

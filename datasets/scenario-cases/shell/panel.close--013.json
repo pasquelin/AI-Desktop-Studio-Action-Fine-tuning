@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "panel.close/013",
+  "source": "shell.md",
+  "specification": "Option de panel : \"assistant\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["panel.close"]
+}

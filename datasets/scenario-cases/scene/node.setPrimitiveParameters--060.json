@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setPrimitiveParameters/060",
+  "source": "scene.md",
+  "specification": "Paramètre tubularSegments avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["node.setPrimitiveParameters"]
+}

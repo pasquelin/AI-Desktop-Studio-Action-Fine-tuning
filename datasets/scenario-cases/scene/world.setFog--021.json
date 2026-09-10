@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setFog/021",
+  "source": "scene.md",
+  "specification": "Paramètre far avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["world.setFog"]
+}

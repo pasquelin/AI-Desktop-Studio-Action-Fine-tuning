@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.write/021",
+  "source": "settings.md",
+  "specification": "Option de settings : \"shortcuts\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["settings.write"]
+}

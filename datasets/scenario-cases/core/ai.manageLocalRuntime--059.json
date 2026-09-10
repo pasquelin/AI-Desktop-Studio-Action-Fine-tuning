@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "ai.manageLocalRuntime/059",
+  "source": "core.md",
+  "specification": "Option de role : \"vectorization/vectorize\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["ai.manageLocalRuntime"]
+}

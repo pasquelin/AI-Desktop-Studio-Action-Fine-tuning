@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "channel.setMuteSoloLock/008",
+  "source": "rig.md",
+  "specification": "Contexte absent ou incompatible : aucune surface active, document d’un autre type, cible fermée ; vérifier la précondition réelle et une explication exploitable.",
+  "tags": ["channel.setMuteSoloLock"]
+}

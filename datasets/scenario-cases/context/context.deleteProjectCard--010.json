@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "context.deleteProjectCard/010",
+  "source": "context.md",
+  "specification": "Paramètre cardId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["context.deleteProjectCard"]
+}

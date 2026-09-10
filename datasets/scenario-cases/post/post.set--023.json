@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.set/023",
+  "source": "post.md",
+  "specification": "Texte text : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["post.set"]
+}

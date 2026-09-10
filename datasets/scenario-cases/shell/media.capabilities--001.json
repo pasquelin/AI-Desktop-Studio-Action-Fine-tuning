@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "media.capabilities/001",
+  "source": "shell.md",
+  "specification": "Nominal minimal : demander « Savoir ce que le studio sait décoder » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["media.capabilities"]
+}

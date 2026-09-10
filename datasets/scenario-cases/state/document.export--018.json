@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.export/018",
+  "source": "state.md",
+  "specification": "Option de format : \"ply\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["document.export"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "guide.add/016",
+  "source": "canvas.md",
+  "specification": "Valeur de position : zéro, négative, fractionnaire et très grande mais finie ; vérifier unité, précision et contraintes métier, sans présumer qu’elles sont toutes valides.",
+  "tags": ["guide.add"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "usage.report/013",
+  "source": "job.md",
+  "specification": "Option inconnue de days : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["usage.report"]
+}

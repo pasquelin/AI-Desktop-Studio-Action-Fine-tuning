@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "files.trash/012",
+  "source": "file.md",
+  "specification": "Liste paths : vide, singleton, plusieurs éléments, doublons et un élément invalide ; vérifier ordre, déduplication et atomicité réellement prévus.",
+  "tags": ["files.trash"]
+}

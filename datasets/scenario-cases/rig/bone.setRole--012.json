@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "bone.setRole/012",
+  "source": "rig.md",
+  "specification": "Paramètre role absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["bone.setRole"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.tag/011",
+  "source": "git.md",
+  "specification": "Paramètre commit absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["git.tag"]
+}

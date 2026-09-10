@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.addRemote/008",
+  "source": "git.md",
+  "specification": "Paramètre name absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["git.addRemote"]
+}

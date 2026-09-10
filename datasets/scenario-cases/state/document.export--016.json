@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.export/016",
+  "source": "state.md",
+  "specification": "Option de format : \"usdz\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["document.export"]
+}

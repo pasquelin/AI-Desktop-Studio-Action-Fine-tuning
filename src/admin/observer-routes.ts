@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { join } from 'node:path'
+import { jsonReply } from '../http.ts'
 import { latestRun, logChunk } from '../vm/logs.ts'
 import { listSnapshots, readSnapshot } from '../vm/snapshots.ts'
 import { RunRepository } from './run-repository.ts'
@@ -11,10 +12,6 @@ export type Route = (
   url: URL,
   root: string,
 ) => Promise<boolean>
-
-const json = (response: ServerResponse, value: unknown, status = 200) => {
-  response.writeHead(status, { 'Content-Type': 'application/json' }).end(JSON.stringify(value))
-}
 
 /** Recorded evidence of past runs: the listing, one report, and its log by offset. */
 export const runsRoute: Route = async (request, response, url, root) => {
@@ -29,7 +26,7 @@ export const runsRoute: Route = async (request, response, url, root) => {
     response.end(
       JSON.stringify(await logChunk(root, id, Number(url.searchParams.get('offset') ?? 0))),
     )
-  else json(response, { error: 'Rapport introuvable' }, 404)
+  else jsonReply(response, 404, { error: 'Rapport introuvable' })
   return true
 }
 
@@ -59,7 +56,7 @@ export const adminRoute: Route = async (request, response, url, root) => {
 export const snapshotsRoute: Route = async (_request, response, url, root) => {
   if (url.pathname !== '/snapshots' && url.pathname !== '/snapshot') return false
   try {
-    if (url.pathname === '/snapshots') json(response, await listSnapshots(root))
+    if (url.pathname === '/snapshots') jsonReply(response, 200, await listSnapshots(root))
     else {
       const bytes = await readSnapshot(
         root,
@@ -82,7 +79,7 @@ export const logsRoute: Route = async (_request, response, url, root) => {
     const offset =
       url.searchParams.get('run') === run?.name ? Number(url.searchParams.get('offset') ?? 0) : 0
     const chunk = run ? await logChunk(root, run.name, offset) : undefined
-    json(response, { run: run?.name, status: run?.status, ...chunk })
+    jsonReply(response, 200, { run: run?.name, status: run?.status, ...chunk })
   } catch {
     response
       .writeHead(503, { 'Content-Type': 'text/plain; charset=utf-8' })

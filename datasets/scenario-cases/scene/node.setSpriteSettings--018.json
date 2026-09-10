@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setSpriteSettings/018",
+  "source": "scene.md",
+  "specification": "Borne min de opacity = 0 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["node.setSpriteSettings"]
+}

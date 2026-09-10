@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "auth.state/001",
+  "source": "shell.md",
+  "specification": "Nominal minimal : demander « Savoir si le studio est connecté » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["auth.state"]
+}

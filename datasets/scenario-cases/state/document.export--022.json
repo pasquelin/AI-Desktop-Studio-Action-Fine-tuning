@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.export/022",
+  "source": "state.md",
+  "specification": "Paramètre scope avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["document.export"]
+}

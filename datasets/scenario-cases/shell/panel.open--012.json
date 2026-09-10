@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "panel.open/012",
+  "source": "shell.md",
+  "specification": "Option de panel : \"explorer\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["panel.open"]
+}

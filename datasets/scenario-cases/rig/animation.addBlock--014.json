@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.addBlock/014",
+  "source": "rig.md",
+  "specification": "Paramètre source avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["animation.addBlock"]
+}

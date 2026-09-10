@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setPrimitiveParameters/056",
+  "source": "scene.md",
+  "specification": "Paramètre widthSegments avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["node.setPrimitiveParameters"]
+}

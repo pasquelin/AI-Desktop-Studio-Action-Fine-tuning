@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.export/032",
+  "source": "state.md",
+  "specification": "Option de target : \"raw\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["document.export"]
+}

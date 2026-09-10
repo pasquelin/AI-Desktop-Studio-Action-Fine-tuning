@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "media.indexFileInPlace/008",
+  "source": "shell.md",
+  "specification": "Paramètre path absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["media.indexFileInPlace"]
+}

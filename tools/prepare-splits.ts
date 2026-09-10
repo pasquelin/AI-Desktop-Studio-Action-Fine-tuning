@@ -1,17 +1,15 @@
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { parseInventory } from '../src/scenarios/inventory.ts'
+import { parseInventory, readScenarioSources } from '../src/scenarios/inventory.ts'
 import { assertDisjoint, splitFor } from '../src/scenarios/split.ts'
 import { runCheck } from './run-check.ts'
 
 const root = join(import.meta.dirname, '..')
 await runCheck(
   async () => {
-    const source = join(root, 'docs/scenarios')
-    const documents: Record<string, string> = {}
-    for (const file of (await readdir(source)).filter(file => file.endsWith('.md')))
-      documents[file] = await readFile(join(source, file), 'utf8')
-    const inventory = parseInventory(documents)
+    // Splits key on the case identity and its action, which no canonical edit can change:
+    // the authored Markdown alone decides them.
+    const inventory = parseInventory(await readScenarioSources(root))
     const seed = 'studio-semantic-split-v1'
     const rows = inventory.cases.map(item => ({
       id: item.id,

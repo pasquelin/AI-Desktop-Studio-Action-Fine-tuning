@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "key.writePoseKeys/025",
+  "source": "rig.md",
+  "specification": "Option de property : \"fov\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["key.writePoseKeys"]
+}

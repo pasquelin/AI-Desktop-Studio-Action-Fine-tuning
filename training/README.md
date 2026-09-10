@@ -16,3 +16,29 @@ L'entraînement est désactivé dans la configuration. Aucun fichier `train.json
 Le plan `artifacts/dataset/split-plan.json` garde toutes les traductions et variantes d'une action dans la même partition (70/15/15 approximatifs, déterministes). C'est un choix conservateur qui évalue aussi la généralisation à des actions non entraînées. Les parcours mêlant plusieurs actions restent à attribuer après examen des recouvrements ; les 34 demandes déjà mesurées ne sont pas un test inédit.
 
 Référence : https://github.com/ml-explore/mlx-lm/blob/main/mlx_lm/LORA.md
+
+## Lanceur avec contrôle des preuves
+
+Le lanceur réutilise exactement les contrôles de `export-approved` : sources actuelles,
+relecture sémantique, conversations liées aux rapports VM et séparation des partitions.
+Les trois partitions doivent contenir des exemples approuvés. Un dossier de poids local
+avec configuration et fichiers safetensors est requis ; ce contrôle de présence ne remplace
+pas la vérification de compatibilité effectuée par MLX au chargement.
+
+Préparer une configuration sans lancer de calcul :
+
+```sh
+node tools/train-lora.ts --bundle chemin/reviewed.json --manifest chemin/current.json --model chemin/modele-mlx
+```
+
+Lancer effectivement l’adaptation avec les mêmes contrôles :
+
+```sh
+node tools/train-lora.ts --bundle chemin/reviewed.json --manifest chemin/current.json --model chemin/modele-mlx --run
+```
+
+Chaque préparation conserve la configuration, la provenance et le résultat dans
+`rapports/entrainement/`. Les adaptateurs sont placés dans `artifacts/training/`. La fin du calcul est enregistrée comme
+`completed-not-evaluated` : elle ne signifie pas que le modèle est meilleur ni validé.
+La comparaison avant/après et la promotion restent à raccorder. Aucun nouvel essai VM
+ou entraînement ne se relance automatiquement après un échec métier.

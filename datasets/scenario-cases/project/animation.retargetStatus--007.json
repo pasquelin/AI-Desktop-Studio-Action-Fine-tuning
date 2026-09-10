@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.retargetStatus/007",
+  "source": "project.md",
+  "specification": "Demande annulée avant exécution : ne pas lancer l’action ; tester séparément une annulation tardive, qui ne garantit pas l’annulation d’un effet déjà réalisé.",
+  "tags": ["animation.retargetStatus"]
+}

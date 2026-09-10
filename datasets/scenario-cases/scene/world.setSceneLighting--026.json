@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setSceneLighting/026",
+  "source": "scene.md",
+  "specification": "Paramètre rotation absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["world.setSceneLighting"]
+}

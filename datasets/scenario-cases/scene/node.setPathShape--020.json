@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setPathShape/020",
+  "source": "scene.md",
+  "specification": "Booléen closed : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["node.setPathShape"]
+}

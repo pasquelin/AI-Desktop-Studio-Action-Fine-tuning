@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.setBlockSettings/046",
+  "source": "rig.md",
+  "specification": "Option de part : \"upper\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["animation.setBlockSettings"]
+}

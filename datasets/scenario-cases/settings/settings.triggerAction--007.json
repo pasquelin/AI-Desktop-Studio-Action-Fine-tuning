@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.triggerAction/007",
+  "source": "settings.md",
+  "specification": "Demande annulée avant exécution : ne pas lancer l’action ; tester séparément une annulation tardive, qui ne garantit pas l’annulation d’un effet déjà réalisé.",
+  "tags": ["settings.triggerAction"]
+}

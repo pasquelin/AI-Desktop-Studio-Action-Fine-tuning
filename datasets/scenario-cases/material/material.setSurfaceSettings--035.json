@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setSurfaceSettings/035",
+  "source": "material.md",
+  "specification": "Borne max de metalnessMin = 1 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["material.setSurfaceSettings"]
+}

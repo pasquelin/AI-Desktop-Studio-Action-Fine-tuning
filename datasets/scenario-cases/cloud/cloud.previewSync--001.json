@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.previewSync/001",
+  "source": "cloud.md",
+  "specification": "Nominal minimal : demander « Prévoir ce qu’une synchronisation ferait » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["cloud.previewSync"]
+}

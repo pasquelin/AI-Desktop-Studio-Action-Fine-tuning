@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "optimization.exclude/009",
+  "source": "scene.md",
+  "specification": "Paramètre nodeIds absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["optimization.exclude"]
+}

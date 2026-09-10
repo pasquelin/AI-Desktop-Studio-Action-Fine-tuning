@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setPreviewDisplay/025",
+  "source": "material.md",
+  "specification": "Paramètre shape absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["material.setPreviewDisplay"]
+}

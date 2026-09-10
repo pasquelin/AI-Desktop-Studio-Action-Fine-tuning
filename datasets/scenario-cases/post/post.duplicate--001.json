@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.duplicate/001",
+  "source": "post.md",
+  "specification": "Nominal minimal : demander « Dupliquer un effet de post-traitement » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["post.duplicate"]
+}

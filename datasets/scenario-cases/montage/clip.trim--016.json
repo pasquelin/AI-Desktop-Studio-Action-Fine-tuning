@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "clip.trim/016",
+  "source": "montage.md",
+  "specification": "Option inconnue de edge : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["clip.trim"]
+}

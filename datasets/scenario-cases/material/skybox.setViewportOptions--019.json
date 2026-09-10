@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setViewportOptions/019",
+  "source": "material.md",
+  "specification": "Borne min de fieldOfView = 50 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["skybox.setViewportOptions"]
+}

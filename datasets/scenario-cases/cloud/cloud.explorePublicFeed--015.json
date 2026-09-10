@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.explorePublicFeed/015",
+  "source": "cloud.md",
+  "specification": "Option de type : \"animation\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["cloud.explorePublicFeed"]
+}

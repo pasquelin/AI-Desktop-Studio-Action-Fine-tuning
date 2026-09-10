@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "timeline.setPanelRows/001",
+  "source": "timeline.md",
+  "specification": "Nominal minimal : demander « Choisir ce que la timeline offre » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["timeline.setPanelRows"]
+}

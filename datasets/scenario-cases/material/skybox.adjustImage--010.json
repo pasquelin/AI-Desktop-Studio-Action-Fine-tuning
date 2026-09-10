@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.adjustImage/010",
+  "source": "material.md",
+  "specification": "Paramètre exposure avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["skybox.adjustImage"]
+}

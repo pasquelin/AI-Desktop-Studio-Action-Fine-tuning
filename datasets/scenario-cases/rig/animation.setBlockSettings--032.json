@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.setBlockSettings/032",
+  "source": "rig.md",
+  "specification": "Paramètre fadeSeconds absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["animation.setBlockSettings"]
+}

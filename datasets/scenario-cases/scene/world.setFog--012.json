@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setFog/012",
+  "source": "scene.md",
+  "specification": "Option de kind : \"linear\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["world.setFog"]
+}

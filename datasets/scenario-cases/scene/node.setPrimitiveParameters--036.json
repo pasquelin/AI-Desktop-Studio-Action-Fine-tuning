@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setPrimitiveParameters/036",
+  "source": "scene.md",
+  "specification": "Borne min de radiusBottom = 0 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["node.setPrimitiveParameters"]
+}

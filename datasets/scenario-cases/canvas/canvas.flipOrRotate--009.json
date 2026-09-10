@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.flipOrRotate/009",
+  "source": "canvas.md",
+  "specification": "Paramètre turn absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["canvas.flipOrRotate"]
+}

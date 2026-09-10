@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "key.writePoseKeys/016",
+  "source": "rig.md",
+  "specification": "Paramètre timeSeconds absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["key.writePoseKeys"]
+}

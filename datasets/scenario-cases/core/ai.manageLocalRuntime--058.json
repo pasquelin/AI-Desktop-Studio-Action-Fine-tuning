@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "ai.manageLocalRuntime/058",
+  "source": "core.md",
+  "specification": "Option de role : \"background-removal/cutout\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["ai.manageLocalRuntime"]
+}

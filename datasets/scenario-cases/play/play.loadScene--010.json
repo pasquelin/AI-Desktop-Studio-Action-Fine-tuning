@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "play.loadScene/010",
+  "source": "play.md",
+  "specification": "Texte scene : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["play.loadScene"]
+}

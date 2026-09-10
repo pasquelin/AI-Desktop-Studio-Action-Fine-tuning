@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "usage.report/010",
+  "source": "job.md",
+  "specification": "Option de days : 7 ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["usage.report"]
+}

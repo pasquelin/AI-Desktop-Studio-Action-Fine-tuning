@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "channel.setMuteSoloLock/015",
+  "source": "rig.md",
+  "specification": "Paramètre solo absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["channel.setMuteSoloLock"]
+}

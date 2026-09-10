@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "assets.counts/006",
+  "source": "asset.md",
+  "specification": "État concurrent : modifier la cible ou fermer le document entre lecture et action ; relire ou refuser explicitement, sans agir sur un autre objet.",
+  "tags": ["assets.counts"]
+}

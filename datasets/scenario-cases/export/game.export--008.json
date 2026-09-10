@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/008",
+  "source": "export.md",
+  "specification": "Préparation ou contrainte dynamique manquante : tester chaque branche du callback du handler ; le marqueur runtimeFunction du catalogue ne révèle pas ces branches.",
+  "tags": ["game.export"]
+}

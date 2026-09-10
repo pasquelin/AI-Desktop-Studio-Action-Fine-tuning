@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setLightSettings/039",
+  "source": "scene.md",
+  "specification": "Borne max de angle = 1.5707963267948966 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["node.setLightSettings"]
+}

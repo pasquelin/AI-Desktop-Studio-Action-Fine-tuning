@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "track.setMuteSoloLockHeight/020",
+  "source": "montage.md",
+  "specification": "Booléen locked : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["track.setMuteSoloLockHeight"]
+}

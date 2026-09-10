@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "media.indexFileInPlace/010",
+  "source": "shell.md",
+  "specification": "Texte path : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["media.indexFileInPlace"]
+}

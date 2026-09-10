@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "asset.update/018",
+  "source": "asset.md",
+  "specification": "Liste tags : vide, singleton, plusieurs éléments, doublons et un élément invalide ; vérifier ordre, déduplication et atomicité réellement prévus.",
+  "tags": ["asset.update"]
+}

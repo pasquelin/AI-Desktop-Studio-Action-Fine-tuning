@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "usage.report/008",
+  "source": "job.md",
+  "specification": "Paramètre days absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["usage.report"]
+}

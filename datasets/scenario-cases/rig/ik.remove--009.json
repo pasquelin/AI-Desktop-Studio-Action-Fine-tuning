@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "ik.remove/009",
+  "source": "rig.md",
+  "specification": "Paramètre chainId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["ik.remove"]
+}

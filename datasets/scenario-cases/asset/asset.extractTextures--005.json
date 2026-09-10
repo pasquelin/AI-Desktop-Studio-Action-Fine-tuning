@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "asset.extractTextures/005",
+  "source": "asset.md",
+  "specification": "Retour perdu ou requête répétée : observer les effets avant une éventuelle relance ; ne pas confondre répétable avec idempotent, ne pas dupliquer un effet non demandé.",
+  "tags": ["asset.extractTextures"]
+}

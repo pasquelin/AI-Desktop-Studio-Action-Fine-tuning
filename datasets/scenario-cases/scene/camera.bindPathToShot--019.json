@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "camera.bindPathToShot/019",
+  "source": "scene.md",
+  "specification": "Paramètre to absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["camera.bindPathToShot"]
+}

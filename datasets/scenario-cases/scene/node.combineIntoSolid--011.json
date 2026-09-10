@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.combineIntoSolid/011",
+  "source": "scene.md",
+  "specification": "Texte nodeIds : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["node.combineIntoSolid"]
+}

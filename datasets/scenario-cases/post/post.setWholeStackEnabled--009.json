@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.setWholeStackEnabled/009",
+  "source": "post.md",
+  "specification": "Paramètre cameraId absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["post.setWholeStackEnabled"]
+}

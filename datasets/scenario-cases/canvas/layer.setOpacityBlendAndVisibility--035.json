@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.setOpacityBlendAndVisibility/035",
+  "source": "canvas.md",
+  "specification": "Option de blend : \"exclusion\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["layer.setOpacityBlendAndVisibility"]
+}

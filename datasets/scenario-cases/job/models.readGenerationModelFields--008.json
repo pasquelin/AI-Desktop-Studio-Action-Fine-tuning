@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "models.readGenerationModelFields/008",
+  "source": "job.md",
+  "specification": "Paramètre modelId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["models.readGenerationModelFields"]
+}

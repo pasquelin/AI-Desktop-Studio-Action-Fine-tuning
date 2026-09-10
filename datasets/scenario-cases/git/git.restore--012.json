@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.restore/012",
+  "source": "git.md",
+  "specification": "Liste paths : vide, singleton, plusieurs éléments, doublons et un élément invalide ; vérifier ordre, déduplication et atomicité réellement prévus.",
+  "tags": ["git.restore"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "camera.aimShotAt/022",
+  "source": "scene.md",
+  "specification": "Paramètre atZ absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["camera.aimShotAt"]
+}

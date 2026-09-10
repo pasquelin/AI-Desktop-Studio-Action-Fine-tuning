@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "project.create/015",
+  "source": "file.md",
+  "specification": "Cible folder : identifiant valide, absent, obsolète, autre document/projet et deux noms identiques ; résoudre l’identifiant réel, clarifier l’ambiguïté, protéger la cible voisine.",
+  "tags": ["project.create"]
+}

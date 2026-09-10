@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.retargetStatus/016",
+  "source": "project.md",
+  "specification": "Option de source : \"bundled\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["animation.retargetStatus"]
+}

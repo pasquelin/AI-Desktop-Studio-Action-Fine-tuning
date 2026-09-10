@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "clip.gain/016",
+  "source": "montage.md",
+  "specification": "Borne max de gain = 12 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["clip.gain"]
+}

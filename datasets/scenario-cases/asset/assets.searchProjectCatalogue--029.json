@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "assets.searchProjectCatalogue/029",
+  "source": "asset.md",
+  "specification": "Paramètre offset absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["assets.searchProjectCatalogue"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "channel.setMuteSoloLock/011",
+  "source": "rig.md",
+  "specification": "Texte trackId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["channel.setMuteSoloLock"]
+}

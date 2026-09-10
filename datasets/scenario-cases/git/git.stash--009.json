@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.stash/009",
+  "source": "git.md",
+  "specification": "Paramètre message absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["git.stash"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "folder.new/008",
+  "source": "file.md",
+  "specification": "Paramètre folder absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["folder.new"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "guide.add/013",
+  "source": "canvas.md",
+  "specification": "Option inconnue de axis : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["guide.add"]
+}

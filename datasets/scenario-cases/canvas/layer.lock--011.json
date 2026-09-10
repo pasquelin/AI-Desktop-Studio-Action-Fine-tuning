@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.lock/011",
+  "source": "canvas.md",
+  "specification": "Texte layerId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["layer.lock"]
+}

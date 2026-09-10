@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "files.list/011",
+  "source": "file.md",
+  "specification": "Paramètre hidden absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["files.list"]
+}

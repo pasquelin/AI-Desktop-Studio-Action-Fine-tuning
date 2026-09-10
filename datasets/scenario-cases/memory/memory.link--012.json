@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "memory.link/012",
+  "source": "memory.md",
+  "specification": "Texte memoryId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["memory.link"]
+}

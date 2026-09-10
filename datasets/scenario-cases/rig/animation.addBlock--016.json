@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.addBlock/016",
+  "source": "rig.md",
+  "specification": "Option de source : \"bundled\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["animation.addBlock"]
+}

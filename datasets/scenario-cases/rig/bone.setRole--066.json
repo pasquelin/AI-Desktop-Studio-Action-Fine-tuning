@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "bone.setRole/066",
+  "source": "rig.md",
+  "specification": "Option inconnue de role : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["bone.setRole"]
+}

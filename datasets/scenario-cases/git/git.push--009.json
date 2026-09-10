@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.push/009",
+  "source": "git.md",
+  "specification": "Paramètre setUpstream absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["git.push"]
+}

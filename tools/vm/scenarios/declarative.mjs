@@ -2,15 +2,69 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { mkdir, readFile, realpath, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
+import { createInterface } from 'node:readline'
 import {
   ActionRefusal,
   BENCH_REQUIREMENTS,
   executeDeclarative,
+  failureCode,
   makeConversationDraft,
   makeInputValidator,
   parseScenario,
+  ScenarioFailure,
 } from './bench.mjs'
 import { ClientRefusal, call, connect, results, sandbox, source, within } from './client.mjs'
+
+/**
+ * The question goes up this process's stdout and the answer comes back down its stdin: one
+ * connection carries both directions, and nothing is written to disk to be polled for.
+ * A late answer names the request it belongs to, so it is dropped rather than mistaken for the
+ * answer to the request that followed.
+ */
+function createModelClient() {
+  // The host owns the chain of budgets and passes the one the guest must honour: it has to
+  // still be listening when the host gives up, so the host's reason is the one kept. A second
+  // copy of the value here would be free to drift away from that guarantee.
+  const budget = Number(process.env.STUDIO_FT_MODEL_WAIT_MS)
+  assert.ok(Number.isFinite(budget) && budget > 0, 'Budget de réponse modèle absent')
+  const waiting = new Map()
+  createInterface({ input: process.stdin }).on('line', line => {
+    let answer
+    try {
+      answer = JSON.parse(line)
+    } catch {
+      return /* Unstructured host output is not an answer. */
+    }
+    waiting.get(answer?.modelRequestId)?.(answer)
+  })
+  // Listening must not by itself keep the process alive once the journey is over.
+  process.stdin.unref()
+  return {
+    proposeAction: (_model, context) => {
+      const modelRequestId = crypto.randomUUID()
+      return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+          waiting.delete(modelRequestId)
+          reject(new ScenarioFailure('timeout', 'Model response timed out'))
+        }, budget)
+        waiting.set(modelRequestId, answer => {
+          clearTimeout(timer)
+          waiting.delete(modelRequestId)
+          // The host already decided why it failed; re-deciding here from the wording would be
+          // a second opinion on the same event.
+          if (answer.error)
+            reject(
+              answer.code
+                ? new ScenarioFailure(answer.code, answer.error)
+                : new Error(answer.error),
+            )
+          else resolve(answer.result)
+        })
+        console.log(`[ModelRequest] ${JSON.stringify({ modelRequestId, context })}`)
+      })
+    },
+  }
+}
 
 async function main() {
   const observations = []
@@ -39,6 +93,10 @@ async function main() {
   const catalogue = parsed('scenario-catalogue.json')
   const media = parsed('seed-media.json')
   const projectPath = join(sandbox, 'Bench Project')
+  const qa = provenance.qa
+  if (qa) await import('./.ft-reset-session.mjs')
+  const history = []
+  const modelClient = qa ? createModelClient() : null
   await connect()
   const report = await executeDeclarative(
     scenario,
@@ -48,7 +106,31 @@ async function main() {
       validateInput: makeInputValidator(catalogue.mcpTools),
       call: async (action, input, options) => {
         try {
+          if (qa) {
+            const tool = catalogue.mcpTools.find(tool => tool.name === action.replace('.', '_'))
+            assert.ok(tool, 'Action absente du catalogue')
+            const proposal = await modelClient.proposeAction(qa.model, {
+              request: scenario.request,
+              tools: [tool],
+              history: history.slice(-8),
+              instruction: `Étape guidée du scénario. Effectue cette opération avec les valeurs demandées : ${JSON.stringify(input)}. Ne change ni destination ni identifiant.`,
+            })
+            observations.push({
+              stepId: options.stepId,
+              modelProposal: proposal,
+              requestedAction: action,
+              requestedInput: input,
+            })
+            // The host's proposalOf already rejects any action outside the single tool sent, so
+            // only the arguments are open here; the scenario's own assertions stay unchanged.
+            input = proposal.input
+          }
           const result = await call(action, input, options)
+          if (qa)
+            history.push({
+              role: 'user',
+              content: JSON.stringify({ action, input, result }).slice(0, 3000),
+            })
           if (action === 'project.create' && scenario.requires.includes('local-media-fixtures')) {
             assert.equal(result.path, projectPath)
             const destination = join(projectPath, 'Fixtures')
@@ -92,7 +174,7 @@ async function main() {
       persist: async report => {
         console.log(`[Étape] ${scenario.id}: ${report.steps.at(-1)?.label ?? 'préparation'}`)
         let conversationEvidence = []
-        if (report.status === 'passed' && !scenario.steps.some(step => step.expectRefusal)) {
+        if (!qa && report.status === 'passed' && !scenario.steps.some(step => step.expectRefusal)) {
           const { draft, link } = makeConversationDraft(
             scenario,
             report,
@@ -105,7 +187,17 @@ async function main() {
         }
         await writeFile(
           join(results, 'scenario.json'),
-          JSON.stringify({ ...report, provenance, observations, conversationEvidence }, null, 2),
+          JSON.stringify(
+            {
+              ...report,
+              ...(qa ? { kind: 'guided-model-qa', modelUsed: true, model: qa.model } : {}),
+              provenance,
+              observations,
+              conversationEvidence,
+            },
+            null,
+            2,
+          ),
         )
       },
     },
@@ -128,6 +220,7 @@ await main().catch(async error => {
         ...previous,
         status: 'failed',
         preparationError: String(error),
+        ...(failureCode(error) ? { preparationErrorCode: failureCode(error) } : {}),
         conversationEvidence: [],
       },
       null,

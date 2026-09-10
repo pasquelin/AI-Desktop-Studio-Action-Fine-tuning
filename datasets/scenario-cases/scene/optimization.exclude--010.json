@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "optimization.exclude/010",
+  "source": "scene.md",
+  "specification": "Paramètre nodeIds avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["optimization.exclude"]
+}

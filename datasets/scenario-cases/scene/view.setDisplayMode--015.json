@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "view.setDisplayMode/015",
+  "source": "scene.md",
+  "specification": "Option de mode : \"material\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["view.setDisplayMode"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.setEffectEnabled/008",
+  "source": "post.md",
+  "specification": "Contexte absent ou incompatible : aucune surface active, document d’un autre type, cible fermée ; vérifier la précondition réelle et une explication exploitable.",
+  "tags": ["post.setEffectEnabled"]
+}

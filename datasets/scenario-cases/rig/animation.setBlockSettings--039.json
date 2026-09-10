@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.setBlockSettings/039",
+  "source": "rig.md",
+  "specification": "Option de rootMotion : \"inPlace\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["animation.setBlockSettings"]
+}

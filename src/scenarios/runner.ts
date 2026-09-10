@@ -1,3 +1,5 @@
+import { failureCode } from './failure.ts'
+
 export type ScenarioStep = {
   id: string
   label: string
@@ -8,6 +10,8 @@ type StepResult = {
   label: string
   status: 'passed' | 'failed' | 'blocked'
   error?: string
+  /** The cause the failure declared; absent when it declared none. */
+  errorCode?: string
 }
 export type ScenarioReport = {
   schemaVersion: 1
@@ -49,11 +53,13 @@ export async function runScenario(
         report.steps.push({ id: step.id, label: step.label, status: 'passed' })
       } catch (error) {
         failed = true
+        const code = failureCode(error)
         report.steps.push({
           id: step.id,
           label: step.label,
           status: 'failed',
           error: String(error),
+          ...(code ? { errorCode: code } : {}),
         })
       }
     }

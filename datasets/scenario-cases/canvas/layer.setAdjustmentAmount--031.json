@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.setAdjustmentAmount/031",
+  "source": "canvas.md",
+  "specification": "Borne max de temperature = 1 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["layer.setAdjustmentAmount"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "models.select/024",
+  "source": "core.md",
+  "specification": "Texte modelId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["models.select"]
+}

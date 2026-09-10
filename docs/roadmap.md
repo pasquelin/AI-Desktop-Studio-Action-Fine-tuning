@@ -12,3 +12,7 @@
 Prochain lot, sur accord : cadrer l’isolation et préparer les parcours. L’export est disponible ; aucun replay n’est annoncé disponible aujourd’hui.
 
 Le [plan initial](superpowers/plans/2026-09-09-pilote-assistant-local.md) reste une référence ; les [décisions actuelles](decisions.md) précisent les changements.
+
+## QA locale guidée
+
+Deux pages partagent le suivi VM. Le démarrage prépare uniquement la session, la sélection Ollama et le lancement des scénarios restent explicites. Les campagnes produisent un rapport agrégé et des preuves par tentative. Tous les cas de conception ne sont pas exécutables : leurs prérequis restent à compléter. Une QA en planification libre demanderait des consignes par étape et des oracles indépendants supplémentaires ; elle n’est pas simulée par la QA guidée.

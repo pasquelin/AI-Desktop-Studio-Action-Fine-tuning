@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.log/010",
+  "source": "git.md",
+  "specification": "Paramètre skip absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["git.log"]
+}

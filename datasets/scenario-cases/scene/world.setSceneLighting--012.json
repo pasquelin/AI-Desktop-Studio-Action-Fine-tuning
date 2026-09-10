@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setSceneLighting/012",
+  "source": "scene.md",
+  "specification": "Option de kind : \"skybox\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["world.setSceneLighting"]
+}

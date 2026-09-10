@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.browseAccountLibrary/025",
+  "source": "cloud.md",
+  "specification": "Paramètre cursor absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["cloud.browseAccountLibrary"]
+}

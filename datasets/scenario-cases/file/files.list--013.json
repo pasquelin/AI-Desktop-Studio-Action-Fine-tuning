@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "files.list/013",
+  "source": "file.md",
+  "specification": "Booléen hidden : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["files.list"]
+}

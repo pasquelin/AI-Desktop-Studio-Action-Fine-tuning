@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.previewSync/011",
+  "source": "cloud.md",
+  "specification": "Liste assetIds : vide, singleton, plusieurs éléments, doublons et un élément invalide ; vérifier ordre, déduplication et atomicité réellement prévus.",
+  "tags": ["cloud.previewSync"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.open/020",
+  "source": "shell.md",
+  "specification": "Option de section : \"ai.skybox\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["settings.open"]
+}

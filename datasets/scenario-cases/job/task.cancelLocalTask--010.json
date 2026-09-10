@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "task.cancelLocalTask/010",
+  "source": "job.md",
+  "specification": "Texte taskId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["task.cancelLocalTask"]
+}

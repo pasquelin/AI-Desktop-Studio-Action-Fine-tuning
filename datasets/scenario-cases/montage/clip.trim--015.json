@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "clip.trim/015",
+  "source": "montage.md",
+  "specification": "Option de edge : \"out\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["clip.trim"]
+}

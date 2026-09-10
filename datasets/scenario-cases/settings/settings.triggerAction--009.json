@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.triggerAction/009",
+  "source": "settings.md",
+  "specification": "Paramètre action absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["settings.triggerAction"]
+}

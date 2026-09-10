@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "camera.createAndBindPath/009",
+  "source": "scene.md",
+  "specification": "Paramètre shotId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["camera.createAndBindPath"]
+}

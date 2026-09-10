@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "memory.write/027",
+  "source": "memory.md",
+  "specification": "Paramètre importance absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["memory.write"]
+}

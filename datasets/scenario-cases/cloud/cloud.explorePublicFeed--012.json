@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.explorePublicFeed/012",
+  "source": "cloud.md",
+  "specification": "Option de type : \"audio\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["cloud.explorePublicFeed"]
+}

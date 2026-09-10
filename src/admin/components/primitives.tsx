@@ -1,4 +1,5 @@
-import { type ComponentProps, type ReactNode, useEffect, useId, useRef } from 'react'
+import { type ComponentProps, type ReactNode, useEffect, useId, useMemo, useRef } from 'react'
+import { Section } from './section.tsx'
 
 /** One appearance for every action, whether it acts on the page or navigates away. */
 const actionClass = (primary: boolean, extra: string) =>
@@ -18,29 +19,48 @@ export function Link({
 }: ComponentProps<'a'> & { primary?: boolean }) {
   return <a className={actionClass(primary, className)} {...props} />
 }
+const badgeStates: Record<string, string> = {
+  passed: 'badge-success',
+  failed: 'badge-error',
+  error: 'badge-error',
+  blocked: 'badge-warning',
+  cancelled: 'badge-warning',
+  draft: 'badge-warning',
+  missing: 'badge-warning',
+  'not-tested': 'badge-warning',
+  running: 'badge-info',
+  starting: 'badge-info',
+  ready: 'badge-info',
+}
 export function Badge({
   children,
-  error = false,
-  soft = false,
+  status = 'idle',
+  size = 'xl',
+  className = '',
   ...props
-}: ComponentProps<'span'> & {
-  error?: boolean
-  soft?: boolean
-}) {
+}: ComponentProps<'span'> & { status?: string; size?: 'xs' | 'xl' }) {
   return (
     <span
       {...props}
-      className={`badge ${error ? 'badge-error' : 'badge-outline'} ${soft ? 'badge-soft' : ''}`}
+      className={`badge ${size === 'xs' ? 'badge-xs' : 'badge-xl'} badge-outline ${badgeStates[status] ?? ''} ${className}`}
     >
       {children}
     </span>
   )
 }
-export function Notice({ children, error = false }: { children: ReactNode; error?: boolean }) {
+export function Notice({
+  children,
+  error = false,
+  warning = false,
+}: {
+  children: ReactNode
+  error?: boolean
+  warning?: boolean
+}) {
   return children ? (
     <div
       role={error ? 'alert' : 'status'}
-      className={`alert alert-soft text-sm ${error ? 'alert-error' : ''}`}
+      className={`alert alert-soft text-sm ${error ? 'alert-error' : warning ? 'alert-warning' : 'alert-info'}`}
     >
       <span>{children}</span>
     </div>
@@ -142,21 +162,22 @@ export function Tabs({
     </div>
   )
 }
+/** A collapsed panel still renders its children; serialise once per distinct value, not per render. */
 export function Code({ value }: { value: unknown }) {
+  const text = useMemo(
+    () =>
+      typeof value === 'string' ? value : (JSON.stringify(value, null, 2) ?? 'Non enregistré'),
+    [value],
+  )
   return (
-    <pre className="overflow-auto whitespace-pre-wrap break-words font-mono text-xs">
-      {typeof value === 'string' ? value : (JSON.stringify(value, null, 2) ?? 'Non enregistré')}
-    </pre>
+    <pre className="overflow-auto whitespace-pre-wrap break-words font-mono text-xs">{text}</pre>
   )
 }
 export function Inspect({ label, value }: { label: string; value: unknown }) {
   return (
-    <details className="collapse collapse-arrow bg-base-100">
-      <summary className="collapse-title font-medium">{label}</summary>
-      <div className="collapse-content">
-        <Code value={value} />
-      </div>
-    </details>
+    <Section title={label} collapsible inset>
+      <Code value={value} />
+    </Section>
   )
 }
 export function Preview({

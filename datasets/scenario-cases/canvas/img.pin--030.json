@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "img.pin/030",
+  "source": "canvas.md",
+  "specification": "Texte commentId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["img.pin"]
+}

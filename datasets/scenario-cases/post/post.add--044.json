@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.add/044",
+  "source": "post.md",
+  "specification": "Option inconnue de effect : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["post.add"]
+}

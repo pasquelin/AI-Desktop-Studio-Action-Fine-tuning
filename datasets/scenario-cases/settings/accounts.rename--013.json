@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "accounts.rename/013",
+  "source": "settings.md",
+  "specification": "Paramètre name avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["accounts.rename"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "context.writeProjectCard/020",
+  "source": "context.md",
+  "specification": "Booléen active : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["context.writeProjectCard"]
+}

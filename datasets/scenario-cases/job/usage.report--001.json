@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "usage.report/001",
+  "source": "job.md",
+  "specification": "Nominal minimal : demander « Lire le rapport de consommation » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["usage.report"]
+}

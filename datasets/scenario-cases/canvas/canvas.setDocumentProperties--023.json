@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.setDocumentProperties/023",
+  "source": "canvas.md",
+  "specification": "Option inconnue de bitDepth : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["canvas.setDocumentProperties"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "dictation.stop/008",
+  "source": "shell.md",
+  "specification": "Paramètre discard absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["dictation.stop"]
+}

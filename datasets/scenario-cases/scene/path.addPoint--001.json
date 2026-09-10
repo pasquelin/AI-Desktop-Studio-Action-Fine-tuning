@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "path.addPoint/001",
+  "source": "scene.md",
+  "specification": "Nominal minimal : demander « Ajouter un point à un chemin » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["path.addPoint"]
+}

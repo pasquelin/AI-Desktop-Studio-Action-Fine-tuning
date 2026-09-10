@@ -71,7 +71,7 @@ it.each(['/', '/#', '/#unknown', '/#?q=cube', '/#live'])(
     )
     vi.stubGlobal('requestAnimationFrame', () => 0)
     render(createElement(App))
-    expect(screen.getByRole('heading', { name: 'Live' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Entraînement' })).toBeTruthy()
     expect(screen.getByRole('heading', { name: 'Studio dans la VM' })).toBeTruthy()
     expect(screen.getByRole('heading', { name: 'Déroulé et journaux' })).toBeTruthy()
     expect(screen.queryByRole('heading', { name: 'Vue d’ensemble' })).toBeNull()
@@ -82,7 +82,7 @@ it('keeps statistics available only through their explicit route', () => {
   vi.stubGlobal('fetch', () => new Promise(() => {}))
   render(createElement(App))
   expect(screen.getByRole('heading', { name: 'Vue d’ensemble' })).toBeTruthy()
-  expect(screen.queryByRole('heading', { name: 'Live' })).toBeNull()
+  expect(screen.queryByRole('heading', { name: 'Entraînement' })).toBeNull()
 })
 
 it('returns home without a hash or a document reload and retains a scenario filter', async () => {
@@ -99,13 +99,13 @@ it('returns home without a hash or a document reload and retains a scenario filt
   render(createElement(App))
   const input = screen.getByLabelText('Rechercher les scénarios')
   fireEvent.change(input, { target: { value: 'brouillon' } })
-  const home = screen.getAllByRole('link', { name: 'Live' })[0]
+  const home = screen.getAllByRole('link', { name: 'Entraînement' })[0]
   expect(home?.getAttribute('href')).toBe('/')
   if (!home) throw new Error('Missing home link')
   fireEvent.click(home)
   expect(location.pathname).toBe('/')
   expect(location.hash).toBe('')
-  expect(screen.getByRole('heading', { name: 'Live' })).toBeTruthy()
+  expect(screen.getByRole('heading', { name: 'Entraînement' })).toBeTruthy()
   expect((input as HTMLInputElement).value).toBe('brouillon')
   expect(input.isConnected).toBe(true)
   await act(async () => {

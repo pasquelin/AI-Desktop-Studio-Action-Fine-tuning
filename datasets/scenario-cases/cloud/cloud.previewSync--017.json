@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.previewSync/017",
+  "source": "cloud.md",
+  "specification": "Option inconnue de policy : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["cloud.previewSync"]
+}

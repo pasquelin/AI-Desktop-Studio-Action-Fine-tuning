@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "command.runStudioCommand/009",
+  "source": "core.md",
+  "specification": "Paramètre command absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["command.runStudioCommand"]
+}

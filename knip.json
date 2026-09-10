@@ -13,5 +13,13 @@
   ],
   "project": ["src/**/*.{ts,tsx,css}", "tools/**/*.{ts,mjs}"],
   "ignoreBinaries": ["ollama", "tart"],
-  "ignoreUnresolved": ["./bench.mjs", "./runner.ts", "./window-view.ts", "./scenario-consent.ts"]
+  "ignoreUnresolved": [
+    "./bench.mjs",
+    "./runner.ts",
+    "./window-view.ts",
+    "./scenario-consent.ts",
+    "./.ft-reset-session.mjs",
+    "./studio-launch.ts",
+    "./failure.ts"
+  ]
 }

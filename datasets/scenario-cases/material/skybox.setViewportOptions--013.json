@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setViewportOptions/013",
+  "source": "material.md",
+  "specification": "Option de view : \"cross\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["skybox.setViewportOptions"]
+}

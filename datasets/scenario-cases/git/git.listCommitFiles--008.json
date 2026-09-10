@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.listCommitFiles/008",
+  "source": "git.md",
+  "specification": "Paramètre hash absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["git.listCommitFiles"]
+}

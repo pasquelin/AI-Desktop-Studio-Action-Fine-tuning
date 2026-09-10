@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.browseAccountLibrary/033",
+  "source": "cloud.md",
+  "specification": "Option de order : \"relevance\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["cloud.browseAccountLibrary"]
+}

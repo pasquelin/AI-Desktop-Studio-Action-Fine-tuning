@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "project.rename/014",
+  "source": "file.md",
+  "specification": "Paramètre name avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["project.rename"]
+}

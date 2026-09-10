@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.write/017",
+  "source": "settings.md",
+  "specification": "Option de settings : \"generation\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["settings.write"]
+}

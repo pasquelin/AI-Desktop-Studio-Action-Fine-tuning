@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "camera.bindPathToShot/024",
+  "source": "scene.md",
+  "specification": "Option de easing : \"linear\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["camera.bindPathToShot"]
+}

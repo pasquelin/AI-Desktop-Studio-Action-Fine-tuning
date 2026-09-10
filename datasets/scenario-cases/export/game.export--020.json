@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/020",
+  "source": "export.md",
+  "specification": "Booléen generateLods : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["game.export"]
+}

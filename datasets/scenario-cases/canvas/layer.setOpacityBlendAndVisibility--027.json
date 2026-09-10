@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.setOpacityBlendAndVisibility/027",
+  "source": "canvas.md",
+  "specification": "Option de blend : \"overlay\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["layer.setOpacityBlendAndVisibility"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "models.search/008",
+  "source": "core.md",
+  "specification": "Paramètre query absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["models.search"]
+}

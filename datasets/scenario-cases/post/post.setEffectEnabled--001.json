@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.setEffectEnabled/001",
+  "source": "post.md",
+  "specification": "Nominal minimal : demander « Activer ou désactiver un effet » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["post.setEffectEnabled"]
+}

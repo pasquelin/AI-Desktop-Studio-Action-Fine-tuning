@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "generator.prepare/020",
+  "source": "core.md",
+  "specification": "Option de family : \"other\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["generator.prepare"]
+}

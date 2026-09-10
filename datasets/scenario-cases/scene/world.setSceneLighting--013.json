@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setSceneLighting/013",
+  "source": "scene.md",
+  "specification": "Option de kind : \"sky\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["world.setSceneLighting"]
+}

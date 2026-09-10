@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setChannelImage/017",
+  "source": "material.md",
+  "specification": "Option de channel : \"emissive\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["material.setChannelImage"]
+}

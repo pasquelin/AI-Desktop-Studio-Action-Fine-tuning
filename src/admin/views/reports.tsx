@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { isJourneyId } from '../../scenarios/identity.ts'
 import { api, date, object, outcomeLabel } from '../api.ts'
 import { Captures } from '../components/captures.tsx'
-import { Columns, PageHeading, Panel, Stack } from '../components/layout.tsx'
+import { Columns, Panel, Stack } from '../components/layout.tsx'
 import { LoadingSkeleton } from '../components/loading-skeleton.tsx'
 import {
   Badge,
@@ -14,13 +14,22 @@ import {
   Notice,
   Tabs,
 } from '../components/primitives.tsx'
+import { ReportHeading } from '../components/report-heading.tsx'
+import { Section } from '../components/section.tsx'
 import { useResource } from '../hooks/use-resource.ts'
 import { type LogChunk, LogStream } from '../log-stream.ts'
 import type { RunRepository, RunSummary } from '../run-repository.ts'
+import { QaReports } from './qa-reports.tsx'
+import { TrainingReports } from './training-reports.tsx'
 
 type RunDetail = Awaited<ReturnType<RunRepository['detail']>>
 const load = (signal: AbortSignal) => api<RunSummary[]>('/api/runs', 'GET', undefined, signal)
 export function Reports({ params }: { params: URLSearchParams }) {
+  if (params.get('mode') === 'debug') return <QaReports params={params} />
+  if (params.get('mode') === 'training') return <TrainingReports />
+  return <VmReports params={params} />
+}
+function VmReports({ params }: { params: URLSearchParams }) {
   const { data: runs, error } = useResource(load)
   const id = params.get('id')
   const detail = useResource(
@@ -36,12 +45,12 @@ export function Reports({ params }: { params: URLSearchParams }) {
     runs?.filter(run => !params.get('status') || run.outcome === params.get('status')) ?? []
   return (
     <>
-      <PageHeading title="Rapports des traitements">
+      <ReportHeading title="Rapports des essais VM" mode="vm">
         <p className="text-muted">
           {visible.length} / {runs?.length ?? 0} essais
         </p>
         <Link href="#reports">Tous les rapports</Link>
-      </PageHeading>
+      </ReportHeading>
       <Notice error>{error}</Notice>
       <Columns>
         <Panel title="Liste des rapports">
@@ -98,7 +107,7 @@ function Report({ run }: { run: RunDetail }) {
   }
   return (
     <Stack>
-      <Badge error={run.outcome === 'failed'}>{outcomeLabel(run.outcome)}</Badge>
+      <Badge status={run.outcome}>{outcomeLabel(run.outcome)}</Badge>
       <p>
         {date(run.createdAt)} ·{' '}
         {run.modelUsed === false
@@ -164,49 +173,47 @@ function ReportSteps({ run }: { run: RunDetail }) {
         const authored = planned.find(s => s.id === step.id),
           observed = observations.filter(o => o.stepId === step.id)
         return (
-          <article key={String(step.id)} className="card bg-base-100">
-            <div className="card-body p-3">
-              <h3 className="card-title text-sm">{String(step.label ?? step.id)}</h3>
-              <Badge error={step.status === 'failed'}>
-                {step.status === 'passed'
-                  ? 'Réussie'
-                  : step.status === 'blocked'
-                    ? 'Bloquée'
-                    : 'Échec'}
-              </Badge>
-              {authored && (
-                <>
-                  <Inspect
-                    label={`Action prévue · ${String(authored.action)}`}
-                    value={authored.input}
-                  />
-                  <Inspect label="Contrôles attendus" value={authored.assertions} />
-                </>
-              )}
-              {observed.length > 0 && (
-                <Inspect label="Appels et résultats enregistrés" value={observed} />
-              )}
-              {!!step.error && <Code value={String(step.error)} />}
-              {(step.status === 'failed' || step.status === 'blocked') && (
-                <>
-                  {scenario ? (
-                    <Link
-                      href={`#scenarios?id=${encodeURIComponent(scenario)}&step=${encodeURIComponent(String(step.id))}&run=${encodeURIComponent(run.id)}`}
-                    >
-                      Ouvrir cette étape dans le scénario
-                    </Link>
-                  ) : (
-                    <p>Ce rapport ancien n’identifie pas un scénario éditable.</p>
-                  )}
-                  <p className="text-xs text-muted">
-                    {step.status === 'blocked'
-                      ? 'Étape non exécutée à cause d’un échec précédent.'
-                      : 'Cause à diagnostiquer : Studio, scénario, environnement ou proposition du modèle. Modifier un résultat attendu ne corrige pas un bug de l’application.'}
-                  </p>
-                </>
-              )}
-            </div>
-          </article>
+          <Section key={String(step.id)} inset>
+            <h3 className="card-title text-sm">{String(step.label ?? step.id)}</h3>
+            <Badge status={String(step.status)}>
+              {step.status === 'passed'
+                ? 'Réussie'
+                : step.status === 'blocked'
+                  ? 'Bloquée'
+                  : 'Échec'}
+            </Badge>
+            {authored && (
+              <>
+                <Inspect
+                  label={`Action prévue · ${String(authored.action)}`}
+                  value={authored.input}
+                />
+                <Inspect label="Contrôles attendus" value={authored.assertions} />
+              </>
+            )}
+            {observed.length > 0 && (
+              <Inspect label="Appels et résultats enregistrés" value={observed} />
+            )}
+            {!!step.error && <Code value={String(step.error)} />}
+            {(step.status === 'failed' || step.status === 'blocked') && (
+              <>
+                {scenario ? (
+                  <Link
+                    href={`#scenarios?id=${encodeURIComponent(scenario)}&step=${encodeURIComponent(String(step.id))}&run=${encodeURIComponent(run.id)}`}
+                  >
+                    Ouvrir cette étape dans le scénario
+                  </Link>
+                ) : (
+                  <p>Ce rapport ancien n’identifie pas un scénario éditable.</p>
+                )}
+                <p className="text-xs text-muted">
+                  {step.status === 'blocked'
+                    ? 'Étape non exécutée à cause d’un échec précédent.'
+                    : 'Cause à diagnostiquer : Studio, scénario, environnement ou proposition du modèle. Modifier un résultat attendu ne corrige pas un bug de l’application.'}
+                </p>
+              </>
+            )}
+          </Section>
         )
       })}
     </Stack>

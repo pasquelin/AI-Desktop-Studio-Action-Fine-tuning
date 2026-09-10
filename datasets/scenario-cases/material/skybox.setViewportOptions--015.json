@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setViewportOptions/015",
+  "source": "material.md",
+  "specification": "Option inconnue de view : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["skybox.setViewportOptions"]
+}

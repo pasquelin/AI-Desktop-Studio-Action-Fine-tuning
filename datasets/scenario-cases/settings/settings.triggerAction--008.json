@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.triggerAction/008",
+  "source": "settings.md",
+  "specification": "Préparation ou contrainte dynamique manquante : tester chaque branche du callback du handler ; le marqueur runtimeFunction du catalogue ne révèle pas ces branches.",
+  "tags": ["settings.triggerAction"]
+}

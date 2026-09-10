@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setLayers/001",
+  "source": "scene.md",
+  "specification": "Nominal minimal : demander « Remplacer les couches de relief et de semis » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["world.setLayers"]
+}

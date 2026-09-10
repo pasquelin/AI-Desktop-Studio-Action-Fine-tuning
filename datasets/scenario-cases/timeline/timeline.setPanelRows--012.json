@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "timeline.setPanelRows/012",
+  "source": "timeline.md",
+  "specification": "Option de template : \"dialogue\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["timeline.setPanelRows"]
+}

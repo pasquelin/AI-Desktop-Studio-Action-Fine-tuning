@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "bone.setRole/017",
+  "source": "rig.md",
+  "specification": "Option de role : \"UpperChest\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["bone.setRole"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "timeline.setPanelRows/011",
+  "source": "timeline.md",
+  "specification": "Option de template : \"cinematic\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["timeline.setPanelRows"]
+}

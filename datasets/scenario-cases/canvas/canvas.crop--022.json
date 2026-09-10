@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.crop/022",
+  "source": "canvas.md",
+  "specification": "Borne min de height = 1 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["canvas.crop"]
+}

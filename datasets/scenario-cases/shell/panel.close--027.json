@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "panel.close/027",
+  "source": "shell.md",
+  "specification": "Option de panel : \"history\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["panel.close"]
+}

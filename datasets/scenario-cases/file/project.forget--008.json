@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "project.forget/008",
+  "source": "file.md",
+  "specification": "Consentement : accord, refus, absence de réponse et modification de la demande après accord ; vérifier le mécanisme réel de confirmation avant effets sensibles, sans inventer un champ consent.",
+  "tags": ["project.forget"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "context.writeProjectCard/018",
+  "source": "context.md",
+  "specification": "Paramètre active absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["context.writeProjectCard"]
+}

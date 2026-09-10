@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "optimization.setMode/013",
+  "source": "scene.md",
+  "specification": "Paramètre mode absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["optimization.setMode"]
+}

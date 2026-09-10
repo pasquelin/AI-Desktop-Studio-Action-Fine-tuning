@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "files.trash/001",
+  "source": "file.md",
+  "specification": "Nominal minimal : demander « Mettre des fichiers à la corbeille » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["files.trash"]
+}

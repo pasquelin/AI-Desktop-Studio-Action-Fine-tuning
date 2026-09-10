@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "assets.removeFromLibrary/012",
+  "source": "asset.md",
+  "specification": "Texte assetIds : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["assets.removeFromLibrary"]
+}

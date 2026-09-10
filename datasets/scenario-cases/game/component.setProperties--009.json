@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "component.setProperties/009",
+  "source": "game.md",
+  "specification": "Paramètre nodeId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["component.setProperties"]
+}

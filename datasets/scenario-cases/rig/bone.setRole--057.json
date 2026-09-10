@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "bone.setRole/057",
+  "source": "rig.md",
+  "specification": "Option de role : \"RightMiddle1\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["bone.setRole"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "ai.manageLocalRuntime/010",
+  "source": "core.md",
+  "specification": "Paramètre operation avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["ai.manageLocalRuntime"]
+}

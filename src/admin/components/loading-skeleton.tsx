@@ -1,3 +1,5 @@
+import { Section } from './section.tsx'
+
 const rows = ['first', 'second', 'third', 'fourth', 'fifth']
 export function LoadingSkeleton({
   label = 'Chargement…',
@@ -19,13 +21,11 @@ export function LoadingSkeleton({
       {variant === 'overview' && (
         <div aria-hidden="true" className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {['cases', 'journeys', 'ready', 'active'].map(id => (
-            <div key={id} className="card bg-base-100">
-              <div className="card-body gap-3 p-4">
-                <div className="skeleton h-4 w-2/3" />
-                <div className="skeleton h-8 w-1/3" />
-                <div className="skeleton h-3 w-1/2" />
-              </div>
-            </div>
+            <Section key={id} inset>
+              <div className="skeleton h-4 w-2/3" />
+              <div className="skeleton h-8 w-1/3" />
+              <div className="skeleton h-3 w-1/2" />
+            </Section>
           ))}
         </div>
       )}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.applyPreset/009",
+  "source": "scene.md",
+  "specification": "Paramètre preset absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["world.applyPreset"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/033",
+  "source": "export.md",
+  "specification": "Option de textureCompression : \"aggressive\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["game.export"]
+}

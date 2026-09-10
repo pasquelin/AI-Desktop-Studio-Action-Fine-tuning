@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setSurfaceSettings/058",
+  "source": "material.md",
+  "specification": "Paramètre emissiveIntensity avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["material.setSurfaceSettings"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "timeline.addSceneCue/025",
+  "source": "timeline.md",
+  "specification": "Paramètre entity absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["timeline.addSceneCue"]
+}

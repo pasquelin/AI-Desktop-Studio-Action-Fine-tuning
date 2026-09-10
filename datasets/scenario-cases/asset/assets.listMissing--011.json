@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "assets.listMissing/011",
+  "source": "asset.md",
+  "specification": "Liste assetIds : vide, singleton, plusieurs éléments, doublons et un élément invalide ; vérifier ordre, déduplication et atomicité réellement prévus.",
+  "tags": ["assets.listMissing"]
+}

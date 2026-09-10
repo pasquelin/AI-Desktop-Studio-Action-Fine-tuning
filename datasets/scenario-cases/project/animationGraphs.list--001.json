@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animationGraphs.list/001",
+  "source": "project.md",
+  "specification": "Nominal minimal : demander « Lister les graphes d’animation » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["animationGraphs.list"]
+}

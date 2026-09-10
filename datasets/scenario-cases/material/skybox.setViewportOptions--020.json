@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setViewportOptions/020",
+  "source": "material.md",
+  "specification": "Borne max de fieldOfView = 110 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["skybox.setViewportOptions"]
+}

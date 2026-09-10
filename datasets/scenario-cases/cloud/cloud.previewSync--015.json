@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.previewSync/015",
+  "source": "cloud.md",
+  "specification": "Option de policy : \"pull\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["cloud.previewSync"]
+}

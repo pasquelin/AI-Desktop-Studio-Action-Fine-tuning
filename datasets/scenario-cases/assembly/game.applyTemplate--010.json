@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.applyTemplate/010",
+  "source": "assembly.md",
+  "specification": "Option de template : \"firstPerson\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["game.applyTemplate"]
+}

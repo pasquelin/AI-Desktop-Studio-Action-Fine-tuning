@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "bone.setRole/046",
+  "source": "rig.md",
+  "specification": "Option de role : \"LeftRing2\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["bone.setRole"]
+}

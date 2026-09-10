@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "memory.read/002",
+  "source": "memory.md",
+  "specification": "Nominal complet : renseigner tous les paramètres compatibles, comparer chacun au résultat ; ne pas combiner des options mutuellement exclusives sans consulter le handler.",
+  "tags": ["memory.read"]
+}

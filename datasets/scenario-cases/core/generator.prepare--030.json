@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "generator.prepare/030",
+  "source": "core.md",
+  "specification": "Paramètre parameters avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["generator.prepare"]
+}

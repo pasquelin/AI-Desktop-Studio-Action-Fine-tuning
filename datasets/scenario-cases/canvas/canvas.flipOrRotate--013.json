@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.flipOrRotate/013",
+  "source": "canvas.md",
+  "specification": "Option de turn : \"rotateClockwise\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["canvas.flipOrRotate"]
+}

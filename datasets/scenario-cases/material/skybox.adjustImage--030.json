@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.adjustImage/030",
+  "source": "material.md",
+  "specification": "Paramètre rotationY absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["skybox.adjustImage"]
+}

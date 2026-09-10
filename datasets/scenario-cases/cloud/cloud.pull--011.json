@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.pull/011",
+  "source": "cloud.md",
+  "specification": "Liste remoteAssetIds : vide, singleton, plusieurs éléments, doublons et un élément invalide ; vérifier ordre, déduplication et atomicité réellement prévus.",
+  "tags": ["cloud.pull"]
+}

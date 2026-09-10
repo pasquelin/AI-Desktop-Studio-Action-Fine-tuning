@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "file.rename/010",
+  "source": "file.md",
+  "specification": "Paramètre path avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["file.rename"]
+}

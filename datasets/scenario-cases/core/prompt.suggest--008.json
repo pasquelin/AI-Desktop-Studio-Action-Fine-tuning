@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "prompt.suggest/008",
+  "source": "core.md",
+  "specification": "Paramètre draft absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["prompt.suggest"]
+}

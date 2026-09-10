@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { allScenarios, api } from '../api.ts'
+import { api } from '../api.ts'
 import { FilterBar } from '../components/filter-bar.tsx'
 import { languageOptions } from '../components/language.tsx'
 import { Columns, PageHeading, Panel, Stack } from '../components/layout.tsx'
 import { LoadingSkeleton } from '../components/loading-skeleton.tsx'
 import { Button, Empty, Field, Link, Notice, Select } from '../components/primitives.tsx'
+import { qaStatusOptions, ScenarioQaStatus } from '../components/scenario-qa-status.tsx'
 import { useDebouncedEffect } from '../hooks/use-debounced-effect.ts'
 import { useResource } from '../hooks/use-resource.ts'
 import { useSaveAction } from '../hooks/use-save-action.ts'
+import { useScenarioCatalogue } from '../hooks/use-scenario-catalogue.ts'
 import { useWideLayout } from '../hooks/use-wide-layout.ts'
 import type { ScenarioEntry } from '../scenario-repository.ts'
 import { ScenarioEditor } from './scenario-editor.tsx'
@@ -32,13 +34,21 @@ export function Scenarios({
   const [q, setQ] = useState(appliedQuery)
   const [shown, setShown] = useState(100)
   const [updates, setUpdates] = useState<Record<string, ScenarioEntry>>({})
-  const { data, error } = useResource(allScenarios)
+  const { data, error } = useScenarioCatalogue(active)
   const id = params.get('id')
   const all = useMemo(
     () =>
       data
         ? [
-            ...data.map(item => updates[item.id] ?? item),
+            ...data.map(item => {
+              const updated = updates[item.id]
+              return updated
+                ? {
+                    ...updated,
+                    ...(updated.revision === item.revision && item.qa ? { qa: item.qa } : {}),
+                  }
+                : item
+            }),
             ...Object.values(updates).filter(item => !data.some(source => source.id === item.id)),
           ]
         : [],
@@ -51,7 +61,7 @@ export function Scenarios({
   const items = useMemo(() => all.filter(item => matches(item, applied)), [all, applied])
   const suggested = useMemo(() => suggestId(all), [all])
   // The catalogue already carries every entry; only an id outside it needs its own request.
-  const known = id ? (updates[id] ?? all.find(item => item.id === id) ?? null) : null
+  const known = id ? (all.find(item => item.id === id) ?? updates[id] ?? null) : null
   const detail = useResource(
     useCallback(
       async (signal: AbortSignal) =>
@@ -197,6 +207,7 @@ function ScenarioFilterBar({
         value={values.status}
         options={[
           ['', 'Tous les états'],
+          ...qaStatusOptions,
           ['ready', 'Prêt à essayer'],
           ['blocked', 'Prérequis manquants'],
           ['active', 'Activé'],
@@ -233,7 +244,7 @@ function ScenarioList({
               href={`#scenarios?${next}`}
             >
               <span className="font-medium">
-                {item.id} · {item.title}
+                <ScenarioQaStatus entry={item} size="xs" /> {item.id} · {item.title}
               </span>
               <span className="text-xs">
                 {item.kind === 'case'
@@ -315,6 +326,7 @@ function Specification({
     <Stack>
       <Notice error>{error}</Notice>
       <Notice>{notice}</Notice>
+      <ScenarioQaStatus entry={entry} />
       <Field
         label="Instruction de conception"
         multiline

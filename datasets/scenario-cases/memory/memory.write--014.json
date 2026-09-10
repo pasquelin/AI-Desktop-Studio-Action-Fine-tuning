@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "memory.write/014",
+  "source": "memory.md",
+  "specification": "Option de type : \"feature\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["memory.write"]
+}

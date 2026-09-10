@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.previewSync/008",
+  "source": "cloud.md",
+  "specification": "Paramètre assetIds absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["cloud.previewSync"]
+}

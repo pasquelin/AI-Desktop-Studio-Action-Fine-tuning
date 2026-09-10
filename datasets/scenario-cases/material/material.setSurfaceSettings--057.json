@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setSurfaceSettings/057",
+  "source": "material.md",
+  "specification": "Paramètre emissiveIntensity absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["material.setSurfaceSettings"]
+}

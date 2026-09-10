@@ -4,7 +4,9 @@ import { mkdir, readFile, realpath, stat } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
+import { ScenarioFailure } from './failure.ts'
 import { scenarioConsent } from './scenario-consent.ts'
+import { DEBUG_ORIGIN } from './studio-launch.ts'
 import { captureWindow } from './window-view.ts'
 
 // This executable is transferred into the guest, never run against the host Studio.
@@ -15,7 +17,9 @@ const home = homedir(),
   source = join(base, 'source'),
   results = join(base, 'results')
 assert.equal(resolve(process.cwd()), source)
-const sandbox = join(base, 'scenario-projects')
+const caseId = process.env.STUDIO_FT_CASE
+if (caseId) assert.match(caseId, /^[a-f0-9-]{36}$/)
+const sandbox = join(base, 'scenario-projects', ...(caseId ? [caseId] : []))
 await mkdir(sandbox, { recursive: true })
 // Both spellings denote the same directory; a symlinked home must not defeat confinement.
 const sandboxRoots = [sandbox, await realpath(sandbox)]
@@ -55,7 +59,7 @@ async function connect() {
       typeof endpoint.token === 'string',
     'MCP endpoint missing in isolated profile',
   )
-  const targets = await (await fetch('http://127.0.0.1:9333/json')).json()
+  const targets = await (await fetch(`${DEBUG_ORIGIN}/json`)).json()
   const page = targets.find(
     item => item.type === 'page' && item.url.startsWith('file:') && !item.url.includes('splash'),
   )
@@ -75,7 +79,10 @@ async function rpc(method, params) {
   })
   assert.ok(response.ok, `MCP HTTP ${response.status}`)
   const body = await response.json()
-  assert.ok(!body.error, JSON.stringify(body.error))
+  // A JSON-RPC error is Studio declining the call, exactly like an `isError` result: a bare
+  // assertion here reached the report as an AssertionError with no cause, and never satisfied
+  // a step that expected a refusal.
+  if (body.error) throw new ClientRefusal(JSON.stringify(body.error))
   return body.result
 }
 const capture = (action, outcome) =>
@@ -110,5 +117,11 @@ async function call(action, input = {}, options = { allowConsent: true }) {
   }
 }
 
-export class ClientRefusal extends Error {}
+/** Studio declined the call; the cause travels with it rather than being rebuilt downstream. */
+export class ClientRefusal extends ScenarioFailure {
+  constructor(message) {
+    super('refusal', message)
+    this.name = 'ClientRefusal'
+  }
+}
 export { base, call, connect, exists, results, sandbox, source, within }

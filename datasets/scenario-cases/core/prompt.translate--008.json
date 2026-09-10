@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "prompt.translate/008",
+  "source": "core.md",
+  "specification": "Paramètre text absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["prompt.translate"]
+}

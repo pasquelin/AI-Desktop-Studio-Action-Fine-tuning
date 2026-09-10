@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.findSimilarPublished/005",
+  "source": "cloud.md",
+  "specification": "Retour perdu ou requête répétée : observer les effets avant une éventuelle relance ; ne pas confondre répétable avec idempotent, ne pas dupliquer un effet non demandé.",
+  "tags": ["cloud.findSimilarPublished"]
+}

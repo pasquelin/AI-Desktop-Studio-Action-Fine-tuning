@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "help.openStudioWindow/014",
+  "source": "shell.md",
+  "specification": "Option de page : \"welcome\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["help.openStudioWindow"]
+}

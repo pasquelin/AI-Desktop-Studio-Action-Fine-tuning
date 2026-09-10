@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "component.detach/017",
+  "source": "game.md",
+  "specification": "Option de type : \"Movement\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["component.detach"]
+}

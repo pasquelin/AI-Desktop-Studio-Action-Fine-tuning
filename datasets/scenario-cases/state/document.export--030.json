@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.export/030",
+  "source": "state.md",
+  "specification": "Option de target : \"unreal\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["document.export"]
+}

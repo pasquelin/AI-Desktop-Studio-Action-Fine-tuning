@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.add/041",
+  "source": "post.md",
+  "specification": "Option de effect : \"vhs\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["post.add"]
+}

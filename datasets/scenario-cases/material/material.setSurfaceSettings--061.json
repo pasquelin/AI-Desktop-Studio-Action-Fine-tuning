@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setSurfaceSettings/061",
+  "source": "material.md",
+  "specification": "Paramètre tilingX absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["material.setSurfaceSettings"]
+}

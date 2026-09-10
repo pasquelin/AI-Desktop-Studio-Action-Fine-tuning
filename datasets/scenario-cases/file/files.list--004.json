@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "files.list/004",
+  "source": "file.md",
+  "specification": "Échec de l’exécuteur : injecter une erreur déterministe du port concerné ; réponse explicite, aucune annonce de réussite et aucune mutation collatérale.",
+  "tags": ["files.list"]
+}

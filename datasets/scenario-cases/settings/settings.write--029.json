@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.write/029",
+  "source": "settings.md",
+  "specification": "Option inconnue de settings : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["settings.write"]
+}

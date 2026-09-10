@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "generator.submit/010",
+  "source": "core.md",
+  "specification": "Paramètre landing absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["generator.submit"]
+}

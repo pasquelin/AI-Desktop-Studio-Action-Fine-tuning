@@ -63,3 +63,16 @@ describe('scenario catalogue filters', () => {
     expect(suggestId([entry({ id: 'P001' }), entry({ id: 'P002' })])).toBe('P003')
   })
 })
+
+it('keeps QA evidence independent of activation and readiness', () => {
+  for (const status of ['not-tested', 'passed', 'failed', 'blocked', 'stale'] as const) {
+    const item = entry({ active: true, ready: true, qa: { status } })
+    expect(matches(item, filters({ status: `qa-${status}` }))).toBe(true)
+    expect(matches(item, filters({ status: 'active' }))).toBe(true)
+    expect(matches(item, filters({ status: 'ready' }))).toBe(true)
+    expect(matches(item, filters({ status: status === 'passed' ? 'qa-stale' : 'qa-passed' }))).toBe(
+      false,
+    )
+  }
+  expect(matches(entry(), filters({ status: 'qa-not-tested' }))).toBe(true)
+})

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "job.waitForCloudGeneration/011",
+  "source": "job.md",
+  "specification": "Paramètre timeoutMs absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["job.waitForCloudGeneration"]
+}

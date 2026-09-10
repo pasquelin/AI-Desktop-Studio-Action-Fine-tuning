@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "file.rename/012",
+  "source": "file.md",
+  "specification": "Paramètre name absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["file.rename"]
+}

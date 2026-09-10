@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.removeBlock/011",
+  "source": "rig.md",
+  "specification": "Texte nodeId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["animation.removeBlock"]
+}

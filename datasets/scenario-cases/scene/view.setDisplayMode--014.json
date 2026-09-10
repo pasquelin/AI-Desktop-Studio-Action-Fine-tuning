@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "view.setDisplayMode/014",
+  "source": "scene.md",
+  "specification": "Option de mode : \"solid\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["view.setDisplayMode"]
+}

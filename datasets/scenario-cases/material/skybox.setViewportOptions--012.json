@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setViewportOptions/012",
+  "source": "material.md",
+  "specification": "Option de view : \"equirect\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["skybox.setViewportOptions"]
+}

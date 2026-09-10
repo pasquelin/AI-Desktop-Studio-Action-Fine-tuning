@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.setOpacityBlendAndVisibility/029",
+  "source": "canvas.md",
+  "specification": "Option de blend : \"lighten\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["layer.setOpacityBlendAndVisibility"]
+}

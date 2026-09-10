@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "command.runStudioCommand/140",
+  "source": "core.md",
+  "specification": "Option de command : \"canvas.toolText\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["command.runStudioCommand"]
+}

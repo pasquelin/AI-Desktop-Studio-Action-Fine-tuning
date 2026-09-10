@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "panel.close/015",
+  "source": "shell.md",
+  "specification": "Option de panel : \"text\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["panel.close"]
+}

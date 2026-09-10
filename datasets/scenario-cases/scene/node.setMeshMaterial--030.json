@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setMeshMaterial/030",
+  "source": "scene.md",
+  "specification": "Paramètre textures absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["node.setMeshMaterial"]
+}

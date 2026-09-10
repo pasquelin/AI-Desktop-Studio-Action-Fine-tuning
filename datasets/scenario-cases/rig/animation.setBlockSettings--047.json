@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.setBlockSettings/047",
+  "source": "rig.md",
+  "specification": "Option de part : \"lower\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["animation.setBlockSettings"]
+}

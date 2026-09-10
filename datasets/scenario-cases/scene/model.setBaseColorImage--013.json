@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "model.setBaseColorImage/013",
+  "source": "scene.md",
+  "specification": "Paramètre assetId absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["model.setBaseColorImage"]
+}

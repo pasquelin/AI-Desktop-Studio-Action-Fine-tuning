@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "component.attach/005",
+  "source": "game.md",
+  "specification": "Retour perdu ou requête répétée : observer les effets avant une éventuelle relance ; ne pas confondre répétable avec idempotent, ne pas dupliquer un effet non demandé.",
+  "tags": ["component.attach"]
+}

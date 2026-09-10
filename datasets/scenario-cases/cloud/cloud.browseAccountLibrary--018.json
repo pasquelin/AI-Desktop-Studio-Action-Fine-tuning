@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.browseAccountLibrary/018",
+  "source": "cloud.md",
+  "specification": "Option de types : \"video\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["cloud.browseAccountLibrary"]
+}

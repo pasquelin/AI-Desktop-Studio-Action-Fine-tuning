@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/035",
+  "source": "export.md",
+  "specification": "Paramètre textureReduction absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["game.export"]
+}

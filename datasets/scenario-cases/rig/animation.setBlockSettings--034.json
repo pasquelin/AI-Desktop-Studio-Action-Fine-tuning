@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.setBlockSettings/034",
+  "source": "rig.md",
+  "specification": "Valeur de fadeSeconds : zéro, négative, fractionnaire et très grande mais finie ; vérifier unité, précision et contraintes métier, sans présumer qu’elles sont toutes valides.",
+  "tags": ["animation.setBlockSettings"]
+}

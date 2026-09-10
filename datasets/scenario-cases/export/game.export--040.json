@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/040",
+  "source": "export.md",
+  "specification": "Option inconnue de textureReduction : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["game.export"]
+}

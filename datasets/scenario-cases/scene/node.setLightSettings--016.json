@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setLightSettings/016",
+  "source": "scene.md",
+  "specification": "Paramètre skyColor avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["node.setLightSettings"]
+}

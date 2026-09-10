@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.previewSync/016",
+  "source": "cloud.md",
+  "specification": "Option de policy : \"two-way\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["cloud.previewSync"]
+}

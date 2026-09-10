@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.addBlock/019",
+  "source": "rig.md",
+  "specification": "Paramètre assetId absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["animation.addBlock"]
+}

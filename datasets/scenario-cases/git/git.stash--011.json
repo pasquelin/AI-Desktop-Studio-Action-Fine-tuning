@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.stash/011",
+  "source": "git.md",
+  "specification": "Texte message : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["git.stash"]
+}

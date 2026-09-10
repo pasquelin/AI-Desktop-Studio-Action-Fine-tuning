@@ -1,5 +1,6 @@
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { failureCode } from '../src/scenarios/failure.ts'
 import { cycle, type Operations } from '../src/vm/lifecycle.ts'
 import { isPreparedReference, type VmRecord, validateOwnership } from '../src/vm/ownership.ts'
 import { command, quote, sshConfigValue } from '../src/vm/process.ts'
@@ -58,12 +59,15 @@ describe('VM command transport', () => {
   it('rejects a failed external command', async () => {
     await expect(command(process.execPath, ['-e', 'process.exit(3)'])).rejects.toThrow('failed (3)')
   })
-  it('terminates a command that exceeds its deadline', async () => {
-    await expect(
-      command(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
-        timeout: 50,
-      }),
-    ).rejects.toThrow('terminated')
+  it('terminates a command that exceeds its deadline, and says so as a named cause', async () => {
+    // A deliberate cancellation sends the same signal, so only the raised deadline distinguishes
+    // them; the report reads the cause instead of recognising a message.
+    const failure = await command(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
+      timeout: 50,
+    }).catch(error => error)
+    expect(failure).toBeInstanceOf(Error)
+    expect(failureCode(failure)).toBe('timeout')
+    expect(String(failure)).toContain('timed out')
   })
 })
 

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.open/012",
+  "source": "shell.md",
+  "specification": "Option de section : \"appearance\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["settings.open"]
+}

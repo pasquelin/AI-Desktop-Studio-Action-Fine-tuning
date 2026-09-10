@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.open/023",
+  "source": "shell.md",
+  "specification": "Option de section : \"ai.background-removal\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["settings.open"]
+}

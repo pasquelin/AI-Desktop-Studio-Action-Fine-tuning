@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "context.writeProjectCard/010",
+  "source": "context.md",
+  "specification": "Paramètre cardId absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["context.writeProjectCard"]
+}

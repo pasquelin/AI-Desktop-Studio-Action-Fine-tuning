@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "camera.addShot/017",
+  "source": "scene.md",
+  "specification": "Paramètre durationSeconds absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["camera.addShot"]
+}

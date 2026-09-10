@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "media.indexFileInPlace/001",
+  "source": "shell.md",
+  "specification": "Nominal minimal : demander « Donner une ligne de catalogue à un fichier » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["media.indexFileInPlace"]
+}

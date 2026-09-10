@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "help.openStudioWindow/013",
+  "source": "shell.md",
+  "specification": "Option de page : \"journal\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["help.openStudioWindow"]
+}

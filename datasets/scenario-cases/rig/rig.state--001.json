@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "rig.state/001",
+  "source": "rig.md",
+  "specification": "Nominal minimal : demander « Lire le squelette d’un personnage » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["rig.state"]
+}

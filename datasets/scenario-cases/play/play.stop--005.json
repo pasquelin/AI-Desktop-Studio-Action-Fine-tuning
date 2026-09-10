@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "play.stop/005",
+  "source": "play.md",
+  "specification": "Retour perdu ou requête répétée : observer les effets avant une éventuelle relance ; ne pas confondre répétable avec idempotent, ne pas dupliquer un effet non demandé.",
+  "tags": ["play.stop"]
+}

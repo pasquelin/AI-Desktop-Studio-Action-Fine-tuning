@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.add/011",
+  "source": "canvas.md",
+  "specification": "Option de kind : \"pixel\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["layer.add"]
+}

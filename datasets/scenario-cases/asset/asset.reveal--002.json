@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "asset.reveal/002",
+  "source": "asset.md",
+  "specification": "Nominal complet : renseigner tous les paramètres compatibles, comparer chacun au résultat ; ne pas combiner des options mutuellement exclusives sans consulter le handler.",
+  "tags": ["asset.reveal"]
+}

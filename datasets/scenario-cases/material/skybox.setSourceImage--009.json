@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setSourceImage/009",
+  "source": "material.md",
+  "specification": "Paramètre assetId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["skybox.setSourceImage"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.export/033",
+  "source": "state.md",
+  "specification": "Option inconnue de target : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["document.export"]
+}

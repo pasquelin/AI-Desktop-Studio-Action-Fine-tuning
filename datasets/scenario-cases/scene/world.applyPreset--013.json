@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.applyPreset/013",
+  "source": "scene.md",
+  "specification": "Option de preset : \"product\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["world.applyPreset"]
+}

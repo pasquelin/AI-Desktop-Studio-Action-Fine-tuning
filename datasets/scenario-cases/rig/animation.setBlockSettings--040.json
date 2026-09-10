@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "animation.setBlockSettings/040",
+  "source": "rig.md",
+  "specification": "Option de rootMotion : \"travel\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["animation.setBlockSettings"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "ai.manageLocalRuntime/066",
+  "source": "core.md",
+  "specification": "Paramètre profile absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["ai.manageLocalRuntime"]
+}

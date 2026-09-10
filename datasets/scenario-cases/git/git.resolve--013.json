@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.resolve/013",
+  "source": "git.md",
+  "specification": "Paramètre side absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["git.resolve"]
+}

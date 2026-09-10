@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "job.cancelCloudGeneration/008",
+  "source": "job.md",
+  "specification": "Paramètre jobId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["job.cancelCloudGeneration"]
+}

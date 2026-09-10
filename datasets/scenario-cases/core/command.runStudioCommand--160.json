@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "command.runStudioCommand/160",
+  "source": "core.md",
+  "specification": "Option inconnue de command : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["command.runStudioCommand"]
+}

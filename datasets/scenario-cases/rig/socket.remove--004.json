@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "socket.remove/004",
+  "source": "rig.md",
+  "specification": "Échec de l’exécuteur : injecter une erreur déterministe du port concerné ; réponse explicite, aucune annonce de réussite et aucune mutation collatérale.",
+  "tags": ["socket.remove"]
+}

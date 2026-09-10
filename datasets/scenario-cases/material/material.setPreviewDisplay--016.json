@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setPreviewDisplay/016",
+  "source": "material.md",
+  "specification": "Paramètre showBackground absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["material.setPreviewDisplay"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "assets.searchProjectCatalogue/009",
+  "source": "asset.md",
+  "specification": "Paramètre text avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["assets.searchProjectCatalogue"]
+}

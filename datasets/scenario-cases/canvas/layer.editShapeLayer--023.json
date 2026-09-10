@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.editShapeLayer/023",
+  "source": "canvas.md",
+  "specification": "Paramètre strokeWidth avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["layer.editShapeLayer"]
+}

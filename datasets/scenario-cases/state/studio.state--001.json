@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "studio.state/001",
+  "source": "state.md",
+  "specification": "Nominal minimal : demander « Lire l’état du studio » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["studio.state"]
+}

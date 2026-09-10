@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setMeshMaterial/033",
+  "source": "scene.md",
+  "specification": "Option de textures : \"normalMap\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["node.setMeshMaterial"]
+}

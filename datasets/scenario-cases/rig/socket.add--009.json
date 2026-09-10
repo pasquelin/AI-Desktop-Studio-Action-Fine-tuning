@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "socket.add/009",
+  "source": "rig.md",
+  "specification": "Paramètre bone absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["socket.add"]
+}

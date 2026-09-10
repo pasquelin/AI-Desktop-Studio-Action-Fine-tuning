@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "ai.manageLocalRuntime/061",
+  "source": "core.md",
+  "specification": "Paramètre scope absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["ai.manageLocalRuntime"]
+}

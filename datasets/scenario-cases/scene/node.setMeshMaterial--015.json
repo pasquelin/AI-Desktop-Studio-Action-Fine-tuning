@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setMeshMaterial/015",
+  "source": "scene.md",
+  "specification": "Paramètre roughness absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["node.setMeshMaterial"]
+}

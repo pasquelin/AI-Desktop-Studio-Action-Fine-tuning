@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.editTextLayer/010",
+  "source": "canvas.md",
+  "specification": "Paramètre layerId avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["layer.editTextLayer"]
+}

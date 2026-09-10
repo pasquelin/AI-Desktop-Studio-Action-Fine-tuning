@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "camera.addShot/001",
+  "source": "scene.md",
+  "specification": "Nominal minimal : demander « Mettre une caméra à l’antenne » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["camera.addShot"]
+}

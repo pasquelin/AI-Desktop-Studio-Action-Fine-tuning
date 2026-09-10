@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.add/015",
+  "source": "post.md",
+  "specification": "Option de effect : \"ssao\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["post.add"]
+}

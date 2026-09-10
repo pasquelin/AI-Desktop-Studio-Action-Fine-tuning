@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "component.attach/031",
+  "source": "game.md",
+  "specification": "Option de type : \"Script\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["component.attach"]
+}

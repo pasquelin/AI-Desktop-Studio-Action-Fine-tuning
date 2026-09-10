@@ -69,3 +69,16 @@ it('orders action captures chronologically and preserves their original time', a
   expect(items.map(item => item.activity)).toEqual(['Première action', 'Deuxième action'])
   expect(items[0]?.capturedAt).toBe(new Date(1800000001000).toISOString())
 })
+
+it('records the owning journey beside the caption, so rewording keeps the association', async () => {
+  const { run } = await fixture()
+  await beginSnapshots(root, run)
+  await saveSnapshot(root, run, Buffer.from('a'), 'P003 · ouverture', 1800000003000, 'P003')
+  await saveSnapshot(root, run, Buffer.from('b'), 'Ouverture du projet', 1800000004000, 'P003')
+  await saveSnapshot(root, run, Buffer.from('c'), 'P004 · copie', 1800000005000, 'P004')
+  await saveSnapshot(root, run, Buffer.from('d'), 'Capture hors scénario', 1800000006000)
+  const items = await listSnapshots(root)
+  expect(items.filter(item => item.scenario === 'P003')).toHaveLength(2)
+  expect(items.filter(item => item.scenario === 'P004')).toHaveLength(1)
+  expect(items.filter(item => item.scenario === undefined)).toHaveLength(1)
+})

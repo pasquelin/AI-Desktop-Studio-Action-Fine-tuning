@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "key.writePoseKeys/019",
+  "source": "rig.md",
+  "specification": "Borne min de timeSeconds = 0 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["key.writePoseKeys"]
+}

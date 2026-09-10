@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "clip.add/013",
+  "source": "montage.md",
+  "specification": "Paramètre trackId absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["clip.add"]
+}

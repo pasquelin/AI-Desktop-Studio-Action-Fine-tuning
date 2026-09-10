@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.export/017",
+  "source": "state.md",
+  "specification": "Option de format : \"obj\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["document.export"]
+}

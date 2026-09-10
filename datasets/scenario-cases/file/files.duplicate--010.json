@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "files.duplicate/010",
+  "source": "file.md",
+  "specification": "Texte paths : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["files.duplicate"]
+}

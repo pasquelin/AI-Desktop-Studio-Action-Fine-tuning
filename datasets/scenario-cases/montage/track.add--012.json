@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "track.add/012",
+  "source": "montage.md",
+  "specification": "Option de kind : \"audio\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["track.add"]
+}

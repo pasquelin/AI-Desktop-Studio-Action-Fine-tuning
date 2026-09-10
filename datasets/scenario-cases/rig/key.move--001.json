@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "key.move/001",
+  "source": "rig.md",
+  "specification": "Nominal minimal : demander « Déplacer une clé » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["key.move"]
+}

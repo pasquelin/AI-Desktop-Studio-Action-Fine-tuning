@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "prefab.define/008",
+  "source": "assembly.md",
+  "specification": "Paramètre name absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["prefab.define"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.setEffectEnabled/004",
+  "source": "post.md",
+  "specification": "Échec de l’exécuteur : injecter une erreur déterministe du port concerné ; réponse explicite, aucune annonce de réussite et aucune mutation collatérale.",
+  "tags": ["post.setEffectEnabled"]
+}

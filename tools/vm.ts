@@ -8,8 +8,9 @@ import { setTimeout as delay } from 'node:timers/promises'
 import { parseArgs } from 'node:util'
 import { assertScenarioEnabled } from '../src/admin/scenario-activation.ts'
 import { sha256 } from '../src/catalogue/catalogue.ts'
-import { benchReadiness } from '../src/scenarios/capabilities.ts'
-import { journeySource } from '../src/scenarios/identity.ts'
+import { GUEST_WAIT_MS, RELAY_MS, SCENARIO_RUN_MS } from '../src/qa/budgets.ts'
+import { failureCode, ScenarioFailure } from '../src/scenarios/failure.ts'
+import { isJourneyId, RANDOM_ID } from '../src/scenarios/identity.ts'
 import { cycle } from '../src/vm/lifecycle.ts'
 import {
   isManagedName,
@@ -20,9 +21,10 @@ import {
   type VmRecord,
 } from '../src/vm/ownership.ts'
 import { cancelActiveCommands, command, quote, sshConfigValue } from '../src/vm/process.ts'
-import { exportRunFolder } from '../src/vm/report-folder.ts'
+import { exportQaAttempt, exportRunFolder } from '../src/vm/report-folder.ts'
 import { beginSnapshots, SNAPSHOT, saveSnapshot } from '../src/vm/snapshots.ts'
 import { listLocalVmNames } from '../src/vm/tart.ts'
+import { freezeJourneyPayload } from './guest-payload.ts'
 
 const root = resolve(import.meta.dirname, '..')
 const state = stateDir(root)
@@ -34,6 +36,7 @@ const { positionals, values } = parseArgs({
     name: { type: 'string' },
     scenario: { type: 'boolean', default: false },
     journey: { type: 'string' },
+    session: { type: 'boolean', default: false },
   },
 })
 const mode = positionals[0]
@@ -44,6 +47,11 @@ const guestScripts = [
     source: 'tools/vm/window-view.ts',
     local: 'window-view.ts',
     guest: 'source/window-view.ts',
+  },
+  {
+    source: 'tools/vm/studio-launch.ts',
+    local: 'studio-launch.ts',
+    guest: 'source/studio-launch.ts',
   },
   {
     source: 'tools/vm/startup.mjs',
@@ -61,6 +69,12 @@ const guestScripts = [
     source: 'src/scenarios/runner.ts',
     local: 'runner.ts',
     guest: 'source/runner.ts',
+    scenarioOnly: true,
+  },
+  {
+    source: 'src/scenarios/failure.ts',
+    local: 'failure.ts',
+    guest: 'source/failure.ts',
     scenarioOnly: true,
   },
   {
@@ -82,51 +96,17 @@ async function main() {
   // Freeze guest executables before the asynchronous VM preparation starts.
   const frozen = new Map<string, string>()
   if (values.journey) {
-    if (!values.scenario || !/^P[0-9]{3}$/.test(values.journey))
+    if (!values.scenario || !isJourneyId(values.journey))
       throw new Error('Journey requires --scenario and a valid journey id')
     await assertScenarioEnabled(root, values.journey)
-    const { parseScenario } = await import('../src/scenarios/declarative.ts')
-    const spec = await readFile(join(root, journeySource(values.journey)), 'utf8')
-    const { ready, missing, unbound, blockers } = benchReadiness(parseScenario(JSON.parse(spec)))
-    if (!ready)
-      throw new Error(`Journey not ready: ${[...missing, ...unbound, ...blockers].join('; ')}`)
-    frozen.set('scenario-spec.json', spec)
-    const { buildMediaFixtures } = await import('./prepare-media-fixtures.ts')
-    frozen.set(
-      'seed-media.json',
-      JSON.stringify(
-        Object.fromEntries(
-          Object.entries(buildMediaFixtures()).map(([name, bytes]) => [
-            name,
-            bytes.toString('base64'),
-          ]),
-        ),
-      ),
-    )
-    const { build } = await import('vite')
-    const bundled = await build({
-      configFile: false,
-      logLevel: 'error',
-      build: {
-        write: false,
-        minify: false,
-        lib: {
-          entry: join(root, 'src/scenarios/declarative.ts'),
-          formats: ['es'],
-        },
-        rollupOptions: { external: id => id.startsWith('node:') },
-      },
-    })
-    const outputs = Array.isArray(bundled) ? bundled : [bundled]
-    const chunks = outputs
-      .flatMap(output => ('output' in output ? output.output : []))
-      .filter(output => output.type === 'chunk')
-    if (chunks.length !== 1 || !chunks[0]) throw new Error('Expected one guest engine bundle')
-    frozen.set('bench.mjs', chunks[0].code)
+    const payload = await freezeJourneyPayload(root, values.journey)
+    frozen.set('scenario-spec.json', payload.spec)
+    frozen.set('seed-media.json', payload.media)
+    frozen.set('bench.mjs', payload.engine)
   }
   if (mode === 'build')
     for (const script of guestScripts)
-      if (values.scenario || !script.scenarioOnly)
+      if (values.scenario || values.session || !script.scenarioOnly)
         frozen.set(script.local, await readFile(join(root, script.source), 'utf8'))
   const buildScript = frozen.get('build.sh') ?? ''
   if (!['prepare', 'build', 'cleanup', 'check'].includes(mode ?? ''))
@@ -218,12 +198,70 @@ async function main() {
     }
     let imageQueue = Promise.resolve()
     let outputLine = ''
+    let captureScenario = ''
+    let activeRequestId = ''
+    /** Writes one line to the guest run in progress; absent while no scenario is running. */
+    let toGuest: ((line: string) => void) | undefined
+    /** At most one question is in flight, so the request in flight is the whole state. */
+    let asking: { id: string; settle: (response: unknown) => void } | undefined
+    // The guest keeps one source folder across a campaign: only bytes it does not hold travel.
+    const delivered = new Map<string, string>()
+    const relayModel = async (line: string) => {
+      const request = JSON.parse(line.slice(15))
+      if (!activeRequestId || asking || !RANDOM_ID.test(request.modelRequestId ?? '')) return
+      const requestId = request.modelRequestId
+      try {
+        const response = await new Promise<unknown>((resolve, reject) => {
+          const timer = setTimeout(
+            () => reject(new ScenarioFailure('timeout', 'Model relay timed out')),
+            RELAY_MS,
+          )
+          asking = {
+            id: requestId,
+            settle: value => {
+              clearTimeout(timer)
+              resolve(value)
+            },
+          }
+          process.send?.({
+            type: 'model-request',
+            id: activeRequestId,
+            modelRequestId: requestId,
+            context: request.context,
+          })
+        })
+        // The answer goes back down the connection that asked for it. A second session, whose
+        // only job was to write a file the guest then polled, could fail on its own.
+        if (!toGuest) throw new Error('Aucun parcours invité en cours pour recevoir la réponse')
+        toGuest(JSON.stringify(response))
+      } catch (error) {
+        // One question, exactly one answer. Staying silent here leaves the guest to wait out its
+        // own budget and report its deadline instead of the reason this side already knows —
+        // which is the whole guarantee the budget chain is ordered to provide.
+        const code = failureCode(error)
+        journal(String(error))
+        toGuest?.(
+          JSON.stringify({
+            modelRequestId: requestId,
+            error: String(error),
+            ...(code ? { code } : {}),
+          }),
+        )
+      } finally {
+        asking = undefined
+      }
+    }
+
     const output = (chunk: Buffer) => {
       activity.write(chunk)
       outputLine += chunk.toString('utf8')
       const lines = outputLine.split('\n')
-      outputLine = (lines.pop() ?? '').slice(-65536)
+      outputLine = (lines.pop() ?? '').slice(-262144)
       for (const line of lines) {
+        if (line.startsWith('[ModelRequest] ')) {
+          void relayModel(line).catch(error => journal(String(error)))
+          continue
+        }
         if (!line.startsWith('[Capture] ')) continue
         try {
           const event = JSON.parse(line.slice(10))
@@ -234,6 +272,9 @@ async function main() {
             event.activity.length > 300
           )
             continue
+          // Bind the attempt now: the queue drains later, when another attempt may own the run.
+          const scenario = captureScenario
+          const label = scenario ? `${scenario} · ${event.activity}` : event.activity
           imageQueue = imageQueue
             .then(async () => {
               const local = join(dir, 'action-image.jpg')
@@ -243,8 +284,9 @@ async function main() {
                   root,
                   name,
                   await readFile(local),
-                  event.activity,
+                  label,
                   Number(event.file.slice(0, 13)),
+                  scenario,
                 )
               } finally {
                 await rm(local, { force: true })
@@ -272,7 +314,16 @@ async function main() {
       '-o',
       `UserKnownHostsFile=${sshConfigValue(join(dir, 'known_hosts'))}`,
     ]
-    const ssh = (script: string, password = false, timeout = 3_600_000, live = false) =>
+    /** `live` streams the guest output into the journal; `channel` keeps a line back open. */
+    const ssh = (
+      script: string,
+      options: {
+        password?: boolean
+        timeout?: number
+        live?: boolean
+        channel?: (send: (line: string) => void) => void
+      } = {},
+    ) =>
       command(
         'ssh',
         [
@@ -281,14 +332,17 @@ async function main() {
           'StrictHostKeyChecking=accept-new',
           '-o',
           'ConnectTimeout=10',
-          ...(password ? ['-o', 'PubkeyAuthentication=no'] : ['-o', 'BatchMode=yes', '-i', key]),
+          ...(options.password
+            ? ['-o', 'PubkeyAuthentication=no']
+            : ['-o', 'BatchMode=yes', '-i', key]),
           `admin@${ip}`,
           `/bin/bash -lc ${quote(script)}`,
         ],
         {
-          interactive: password,
-          timeout,
-          ...(live ? { onOutput: output } : {}),
+          interactive: options.password ?? false,
+          timeout: options.timeout ?? 3_600_000,
+          ...(options.live ? { onOutput: output } : {}),
+          ...(options.channel ? { channel: options.channel } : {}),
         },
       )
     // Transfer over the isolated connection; no host folder mounts or credentials in the guest.
@@ -315,11 +369,20 @@ async function main() {
       console.log('One-time VM SSH password required. No personal SSH keys will be transferred.')
       await ssh(
         `mkdir -p ~/.ssh && chmod 700 ~/.ssh && printf '%s\n' ${quote(pub)} >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys`,
-        true,
+        { password: true },
       )
       console.log(await ssh(await readFile(join(root, 'tools/vm/provision.sh'), 'utf8')))
     }
     const buildRelease = async () => {
+      await ssh('true', { timeout: 30_000 })
+      journal('VM démarrée — première capture du bureau.')
+      const captureScript = join(dir, 'window-view.ts')
+      await writeFile(captureScript, frozen.get('window-view.ts') ?? '')
+      await transfer(captureScript, `admin@${ip}:studio-vm/window-view.ts`)
+      await ssh(
+        `export PATH="/opt/homebrew/opt/node@24/bin:/opt/homebrew/bin:$PATH"; cd ~/studio-vm; node --input-type=module -e 'import {captureScreen} from "./window-view.ts"; await captureScreen(process.env.HOME+"/studio-vm", "VM démarrée · bureau avant préparation Studio")'`,
+        { timeout: 90_000, live: true },
+      )
       journal('Récupération de Studio et préparation du catalogue.')
       // Read the remote into an isolated clone; do not touch the user's checkout.
       const checkout = join(dir, 'source')
@@ -411,16 +474,164 @@ async function main() {
       try {
         console.log(
           await ssh(
-            `${values.scenario ? 'export STUDIO_FT_SCENARIO=1\n' : ''}${buildScript}`,
-            false,
-            3_600_000,
-            true,
+            `${values.session ? 'export STUDIO_FT_SESSION=1\n' : ''}${values.scenario ? 'export STUDIO_FT_SCENARIO=1\n' : ''}${buildScript}`,
+            { live: true },
           ),
         )
       } finally {
         await imageQueue
         // Reports and logs are what a failed build leaves behind; fetch them either way.
         await transfer(`admin@${ip}:studio-vm/results`, dir, true).catch(() => {})
+      }
+    }
+    const serveSession = async () => {
+      if (!process.send) throw new Error('Session requires its local controller')
+      record.status = 'ready'
+      await save()
+      journal('VM prête. Aucun scénario ni entraînement lancé automatiquement.')
+      process.send({ type: 'ready', name })
+      let active: Promise<void> | undefined
+      let closing = false
+      await new Promise<void>((finish, reject) => {
+        const shutdown = (failure?: Error) => {
+          if (closing) return
+          closing = true
+          process.off('message', receive)
+          cancelActiveCommands()
+          asking?.settle({ error: 'Session arrêtée' })
+          void (active ?? Promise.resolve()).finally(() => (failure ? reject(failure) : finish()))
+        }
+        const receive = (value: unknown) => {
+          if (!value || typeof value !== 'object') return
+          const request = value as {
+            type?: string
+            id?: string
+            journey?: string
+            model?: string
+            modelRequestId?: string
+          }
+          if (
+            request.type === 'model-response' &&
+            request.id === activeRequestId &&
+            request.modelRequestId
+          ) {
+            if (asking?.id === request.modelRequestId) asking.settle(value)
+            return
+          }
+          if (request.type !== 'qa' || active || closing) return
+          activeRequestId = request.id ?? ''
+          active = executeRequest(request)
+            .then(
+              result => {
+                if (process.connected) process.send?.({ type: 'result', id: request.id, ...result })
+              },
+              error => {
+                if (process.connected)
+                  process.send?.({
+                    type: 'result',
+                    id: request.id,
+                    code: 1,
+                    error: String(error),
+                    ...(failureCode(error) ? { errorCode: failureCode(error) } : {}),
+                  })
+              },
+            )
+            .finally(() => {
+              active = undefined
+              activeRequestId = ''
+            })
+        }
+        process.on('message', receive)
+        process.once('disconnect', () => shutdown())
+        process.once('SIGINT', () => shutdown())
+        process.once('SIGTERM', () => shutdown())
+        vm?.once('exit', () => shutdown(new Error('La VM s’est arrêtée pendant la session')))
+      })
+    }
+    const executeRequest = async (request: { id?: string; journey?: string; model?: string }) => {
+      if (
+        !request.id ||
+        !/^[a-f0-9-]{36}$/.test(request.id) ||
+        !isJourneyId(request.journey ?? '') ||
+        !request.model
+      )
+        throw new Error('Invalid QA request')
+      const startedAt = Date.now()
+      const { plan, spec, media, engine } = await freezeJourneyPayload(root, request.journey ?? '')
+      captureScenario = request.journey ?? ''
+      const attempt = join(dir, 'qa', request.id)
+      await mkdir(attempt, { recursive: true })
+      const catalogue = await readFile(join(dir, 'catalogue.json'), 'utf8')
+      const provenance = {
+        runId: name,
+        studioRevision: record.revision,
+        catalogueHash: sha256(catalogue),
+        scenarioHash: sha256(spec),
+        engineHash: sha256(engine),
+        mediaHash: sha256(media),
+        kind: 'real-vm',
+        qa: { model: request.model, provider: 'ollama', mode: 'guided-scenario' },
+      }
+      const files = new Map([
+        ['.ft-reset-session.mjs', await readFile(join(root, 'tools/vm/reset-session.mjs'), 'utf8')],
+        ['scenario-spec.json', spec],
+        ['bench.mjs', engine],
+        ['scenario-catalogue.json', catalogue],
+        ['seed-media.json', media],
+        ['provenance.json', JSON.stringify(provenance)],
+        [
+          '.ft-project.mjs',
+          await readFile(join(root, 'tools/vm/scenarios/declarative.mjs'), 'utf8'),
+        ],
+      ])
+      for (const [file, content] of files) {
+        await writeFile(join(attempt, file), content)
+        const digest = sha256(content)
+        if (delivered.get(file) === digest) continue
+        await transfer(join(attempt, file), `admin@${ip}:studio-vm/source/${file}`)
+        delivered.set(file, digest)
+      }
+      // Each scenario receives a distinct confined project root, leaving failed evidence intact.
+      const env = `export STUDIO_FT_CASE=${quote(request.id)}; export STUDIO_FT_MODEL_WAIT_MS=${GUEST_WAIT_MS}; export PATH="/opt/homebrew/opt/node@24/bin:/opt/homebrew/bin:$PATH"; cd ~/studio-vm/source; `
+      let code = 0
+      let error = ''
+      let errorCode: string | undefined
+      await ssh('rm -f ~/studio-vm/results/scenario.json')
+      try {
+        await ssh(`${env}node .ft-project.mjs`, {
+          timeout: SCENARIO_RUN_MS,
+          live: true,
+          channel: send => {
+            toGuest = send
+          },
+        })
+      } catch (failure) {
+        code = 1
+        error = String(failure)
+        errorCode = failureCode(failure)
+      } finally {
+        // A capture taken after the attempt belongs to no scenario; it must not inherit this one.
+        captureScenario = ''
+        toGuest = undefined
+      }
+      await imageQueue
+      await transfer(`admin@${ip}:studio-vm/results/scenario.json`, join(attempt, 'scenario.json'))
+      const report = JSON.parse(await readFile(join(attempt, 'scenario.json'), 'utf8'))
+      if (
+        report.scenario !== plan.id ||
+        report.provenance?.scenarioHash !== provenance.scenarioHash ||
+        report.provenance?.qa?.model !== request.model
+      )
+        throw new Error('Rapport invité incohérent avec cette tentative')
+      if (report.status !== 'passed') code = 1
+      await exportQaAttempt(root, name, request.id, report, startedAt)
+      return {
+        code,
+        runId: name,
+        reportPath: `rapports/debug/${request.id}/scenario.json`,
+        report,
+        ...(error ? { error } : {}),
+        ...(errorCode ? { errorCode } : {}),
       }
     }
     try {
@@ -468,13 +679,14 @@ async function main() {
           execute: async () => {
             if (interrupted) throw new Error('Interrupted')
             await (mode === 'prepare' ? provision() : buildRelease())
+            if (values.session) await serveSession()
             if (interrupted) throw new Error('Interrupted')
           },
           stop: async () => {
             journal('Arrêt de la VM.')
             if (ip) {
               // SSH disconnects when macOS shuts down; allow the guest to flush its disk first.
-              await ssh('sync; sudo shutdown -h now', false, 30_000).catch(() => {})
+              await ssh('sync; sudo shutdown -h now', { timeout: 30_000 }).catch(() => {})
               if (vm?.exitCode === null) await Promise.race([once(vm, 'exit'), delay(30_000)])
             }
             if (vm?.exitCode === null) await command('tart', ['stop', name])

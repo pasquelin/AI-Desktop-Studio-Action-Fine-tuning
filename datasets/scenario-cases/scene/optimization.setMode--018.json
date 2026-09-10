@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "optimization.setMode/018",
+  "source": "scene.md",
+  "specification": "Option de mode : \"batch\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["optimization.setMode"]
+}

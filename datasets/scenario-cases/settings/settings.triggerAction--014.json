@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.triggerAction/014",
+  "source": "settings.md",
+  "specification": "Option de action : \"mcp.copyCommand\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["settings.triggerAction"]
+}

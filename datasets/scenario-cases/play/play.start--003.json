@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "play.start/003",
+  "source": "play.md",
+  "specification": "Champ inconnu sur le fil MCP : vérifier le refus prévu par additionalProperties=false ; distinguer ce rejet de la normalisation du moteur interne.",
+  "tags": ["play.start"]
+}

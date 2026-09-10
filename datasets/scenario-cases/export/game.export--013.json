@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/013",
+  "source": "export.md",
+  "specification": "Paramètre title avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["game.export"]
+}

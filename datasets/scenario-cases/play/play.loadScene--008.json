@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "play.loadScene/008",
+  "source": "play.md",
+  "specification": "Paramètre scene absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["play.loadScene"]
+}

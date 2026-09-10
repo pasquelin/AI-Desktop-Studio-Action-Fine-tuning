@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "generator.prepare/008",
+  "source": "core.md",
+  "specification": "Paramètre family absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["generator.prepare"]
+}

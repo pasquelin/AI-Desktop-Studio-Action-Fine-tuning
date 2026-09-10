@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setSurfaceSettings/015",
+  "source": "material.md",
+  "specification": "Borne max de roughness = 1 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["material.setSurfaceSettings"]
+}

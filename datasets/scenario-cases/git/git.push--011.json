@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.push/011",
+  "source": "git.md",
+  "specification": "Booléen setUpstream : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["git.push"]
+}

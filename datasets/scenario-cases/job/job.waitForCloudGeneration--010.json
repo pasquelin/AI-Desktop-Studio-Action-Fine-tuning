@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "job.waitForCloudGeneration/010",
+  "source": "job.md",
+  "specification": "Texte jobId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["job.waitForCloudGeneration"]
+}

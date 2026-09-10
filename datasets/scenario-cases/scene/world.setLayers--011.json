@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setLayers/011",
+  "source": "scene.md",
+  "specification": "Liste layers : vide, singleton, plusieurs éléments, doublons et un élément invalide ; vérifier ordre, déduplication et atomicité réellement prévus.",
+  "tags": ["world.setLayers"]
+}

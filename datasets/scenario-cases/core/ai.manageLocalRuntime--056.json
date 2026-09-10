@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "ai.manageLocalRuntime/056",
+  "source": "core.md",
+  "specification": "Option de role : \"code/code2code\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["ai.manageLocalRuntime"]
+}

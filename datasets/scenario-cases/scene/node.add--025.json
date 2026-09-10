@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.add/025",
+  "source": "scene.md",
+  "specification": "Option de kind : \"torusKnot\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["node.add"]
+}

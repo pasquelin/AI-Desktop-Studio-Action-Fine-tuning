@@ -5,6 +5,7 @@ import { RunScenario } from '../components/execution-controls.tsx'
 import { JsonEditor } from '../components/json-editor.tsx'
 import { Stack } from '../components/layout.tsx'
 import { Badge, Button, Choice, Notice, Tabs } from '../components/primitives.tsx'
+import { ScenarioQaStatus } from '../components/scenario-qa-status.tsx'
 import { useSaveAction } from '../hooks/use-save-action.ts'
 import { parseStructuredJson } from '../json-validation.ts'
 import type { ScenarioEntry } from '../scenario-repository.ts'
@@ -109,7 +110,10 @@ export function ScenarioEditor({
       <Notice>{notice}</Notice>
       {current && (
         <div className="flex flex-wrap items-center gap-3">
-          <Badge>{current.ready ? 'Prêt à essayer' : 'Bloqué'}</Badge>
+          <ScenarioQaStatus entry={entry?.revision === current.revision ? entry : current} />
+          <Badge status={current.ready ? 'ready' : 'blocked'}>
+            {current.ready ? 'Prêt à essayer' : 'Bloqué'}
+          </Badge>
           <Choice
             variant="toggle"
             label="Activer ce parcours dans les prochains essais"

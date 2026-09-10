@@ -1,10 +1,11 @@
-import { randomUUID } from 'node:crypto'
-import { lstat, mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile } from 'node:fs/promises'
 import { join, relative, resolve } from 'node:path'
 import { sha256 } from '../catalogue/catalogue.ts'
+import { assertNoSymlink, atomicWrite } from '../files.ts'
 import { absent, record } from '../json.ts'
 import { validateScenarioBindings } from '../scenarios/bindings.ts'
 import { benchReadiness } from '../scenarios/capabilities.ts'
+import { type CaseSource, caseSourcePath, writeCaseSource } from '../scenarios/case-source.ts'
 import { type DeclarativeScenario, parseScenario } from '../scenarios/declarative.ts'
 import {
   isJourneyFile,
@@ -12,11 +13,13 @@ import {
   JOURNEYS_DIRECTORY,
   journeySource,
 } from '../scenarios/identity.ts'
-import { parseInventory, readScenarioSources } from '../scenarios/inventory.ts'
+import { type InventoryCase, readInventory } from '../scenarios/inventory.ts'
 import { validateTemplates } from '../scenarios/locales.ts'
 import { checkScenarioInputs } from '../scenarios/preflight.ts'
 import { cataloguePath } from '../studio/checkout.ts'
 import { readScenarioActivation } from './scenario-activation.ts'
+import { loadQaStatusIndex, type ScenarioQaStatus } from './scenario-qa-state.ts'
+import { scenarioSourceSnapshot } from './scenario-source-cache.ts'
 
 export class ScenarioRepositoryError extends Error {
   readonly status: number
@@ -41,19 +44,30 @@ export interface ScenarioEntry {
   missing: string[]
   blockers: string[]
   languages: { language: string; text: string; status: string }[]
+  qa?: ScenarioQaStatus
+  family?: string
+  tags?: string[]
   plan?: DeclarativeScenario
 }
 const queues = new Map<string, Promise<unknown>>()
 
-/** A design case is a Markdown row, not an executable plan; it reads the same from every route. */
-function caseEntry(id: string, specification: string, source: string): ScenarioEntry {
+/**
+ * A design case is a Markdown row, not an executable plan; it reads the same from every route.
+ * The inventory has already decided which specification applies; the canonical file is passed
+ * only for what it alone knows — where it lives, its tags, and the revision it is edited against.
+ */
+function caseEntry(item: InventoryCase, canonical?: CaseSource): ScenarioEntry {
+  const { id, source, specification } = item
   const hash = sha256(specification)
   return {
     id,
     kind: 'case',
     title: specification,
-    source: `docs/scenarios/${source}`,
-    revision: hash,
+    // Where the file actually is, which after a moved row is not yet where its family points.
+    source: canonical ? caseSourcePath(id, canonical.source) : `docs/scenarios/${source}`,
+    family: source.replace(/\.md$/, ''),
+    tags: canonical?.tags ?? [],
+    revision: canonical ? sha256(JSON.stringify(canonical)) : hash,
     scenarioHash: hash,
     active: false,
     ready: false,
@@ -129,11 +143,17 @@ export class ScenarioRepository {
   }
 
   async detail(id: string, table?: LocaleTable): Promise<ScenarioEntry> {
+    const entry = await this.sourceDetail(id, table)
+    if (table) return entry
+    const qa = await loadQaStatusIndex(this.root)
+    return { ...entry, qa: qa.statusFor(entry.id, entry.scenarioHash, entry.ready) }
+  }
+  private async sourceDetail(id: string, table?: LocaleTable): Promise<ScenarioEntry> {
     if (!isJourneyId(id)) {
-      const inventory = parseInventory(await readScenarioSources(this.root))
-      const item = inventory.cases.find(entry => entry.id === id)
+      const entries = await scenarioSourceSnapshot(this.root, 'case', () => this.readCases())
+      const item = entries.find(entry => entry.id === id)
       if (!item) throw new ScenarioRepositoryError(404, 'Scenario not found')
-      return caseEntry(id, item.specification, item.source)
+      return structuredClone(item)
     }
     const source = journeySource(id)
     let raw: string
@@ -163,7 +183,11 @@ export class ScenarioRepository {
       plan,
     }
   }
-  async list(options: { query?: string; offset?: number; limit?: number } = {}) {
+  async list(
+    options: { query?: string; offset?: number; limit?: number; kind?: 'case' | 'journey' } = {},
+  ): Promise<{ total: number; items: ScenarioEntry[] }> {
+    if (options.kind !== undefined && options.kind !== 'case' && options.kind !== 'journey')
+      throw new ScenarioRepositoryError(400, 'Invalid scenario kind')
     const offset = options.offset ?? 0,
       limit = options.limit ?? 100
     if (
@@ -174,16 +198,35 @@ export class ScenarioRepository {
       limit > 500
     )
       throw new ScenarioRepositoryError(400, 'Invalid pagination')
-    const inventory = parseInventory(await readScenarioSources(this.root))
-    const cases = inventory.cases.map(item => caseEntry(item.id, item.specification, item.source))
+    const entries = await scenarioSourceSnapshot(this.root, options.kind, async () => {
+      const [cases, journeys] = await Promise.all([
+        options.kind === 'journey' ? [] : this.readCases(),
+        options.kind === 'case' ? [] : this.readJourneys(),
+      ])
+      return [...journeys, ...cases]
+    })
+    const qa = await loadQaStatusIndex(this.root)
+    const query = (options.query ?? '').toLocaleLowerCase()
+    // QA is a verdict on an executed journey; a design case has no plan to run, so it has none.
+    const all = entries
+      .map(item =>
+        item.kind === 'journey'
+          ? { ...item, qa: qa.statusFor(item.id, item.scenarioHash, item.ready) }
+          : item,
+      )
+      .filter(item => `${item.id} ${item.title}`.toLocaleLowerCase().includes(query))
+    return { total: all.length, items: structuredClone(all.slice(offset, offset + limit)) }
+  }
+  private async readCases(): Promise<ScenarioEntry[]> {
+    // The inventory reads the canonical store once and says which files it accepted; asking the
+    // raw map again would let this reader keep an overlay the inventory has already dropped.
+    const { cases, overlays } = await readInventory(this.root)
+    return cases.map(item => caseEntry(item, overlays.get(item.id)))
+  }
+  private async readJourneys(): Promise<ScenarioEntry[]> {
     const files = (await readdir(join(this.root, JOURNEYS_DIRECTORY))).filter(isJourneyFile).sort()
     const locales = await this.readLocales()
-    const journeys = await Promise.all(files.map(file => this.detail(file.slice(0, -5), locales)))
-    const query = (options.query ?? '').toLocaleLowerCase()
-    const all = [...journeys, ...cases].filter(item =>
-      `${item.id} ${item.title}`.toLocaleLowerCase().includes(query),
-    )
-    return { total: all.length, items: all.slice(offset, offset + limit) }
+    return Promise.all(files.map(file => this.detail(file.slice(0, -5), locales)))
   }
   private async serialize<T>(work: () => Promise<T>): Promise<T> {
     const previous = queues.get(this.root) ?? Promise.resolve()
@@ -198,25 +241,13 @@ export class ScenarioRepository {
   private async write(path: string, text: string) {
     // Reject symlinked parents/targets rather than allow source writes to escape the repository.
     const target = join(this.root, path)
-    let current = this.root
-    for (const part of relative(this.root, target).split('/')) {
-      current = join(current, part)
-      try {
-        if ((await lstat(current)).isSymbolicLink())
-          throw new ScenarioRepositoryError(400, 'Symlinked source is not writable')
-      } catch (error) {
-        if (!absent(error)) throw error
-      }
-    }
-    const parent = resolve(target, '..')
-    await mkdir(parent, { recursive: true })
-    const temp = join(parent, `.${randomUUID()}.tmp`)
-    try {
-      await writeFile(temp, text, { flag: 'wx', mode: 0o600 })
-      await rename(temp, target)
-    } finally {
-      await rm(temp, { force: true })
-    }
+    await assertNoSymlink(
+      this.root,
+      relative(this.root, target),
+      () => new ScenarioRepositoryError(400, 'Symlinked source is not writable'),
+    )
+    await mkdir(resolve(target, '..'), { recursive: true })
+    await atomicWrite(target, text, 0o600)
   }
   private async validate(value: unknown) {
     const plan = parseScenario(value)
@@ -298,23 +329,24 @@ export class ScenarioRepository {
       if (
         typeof specification !== 'string' ||
         !specification.trim() ||
-        /[\r\n|]/.test(specification)
+        /[\r\n]/.test(specification)
       )
         throw new ScenarioRepositoryError(
           400,
-          'A case specification must be one nonempty Markdown table cell',
+          'A case specification must be a single nonempty line',
         )
       const current = await this.currentAt(id, expectedRevision)
       if (current.kind !== 'case') throw new ScenarioRepositoryError(400, 'Not a design case')
-      const raw = await this.read(current.source)
-      const prefix = `| \`${id}\` | `
-      const lines = raw.split('\n')
-      const matches = lines.flatMap((line, index) => (line.startsWith(prefix) ? [index] : []))
-      const index = matches[0]
-      if (matches.length !== 1 || index === undefined)
-        throw new ScenarioRepositoryError(409, 'Source row no longer matches')
-      lines[index] = `${prefix}${specification.trim()} |`
-      await this.write(current.source, lines.join('\n'))
+      // `detail` already resolved the entry from the inventory, and a case entry carries the
+      // family its source file is named after; re-reading every canonical file buys nothing.
+      if (!current.family) throw new ScenarioRepositoryError(409, 'Case disappeared from inventory')
+      await writeCaseSource(this.root, {
+        version: 1,
+        id,
+        source: `${current.family}.md`,
+        specification: specification.trim(),
+        tags: current.tags ?? [],
+      })
       return this.detail(id)
     })
   }
@@ -332,4 +364,35 @@ export class ScenarioRepository {
       return this.detail(id)
     })
   }
+}
+
+const PAGE = 500
+/**
+ * One pagination walk for every reader that needs the whole catalogue, with the guards a
+ * partial or shifting page requires. Callers inject `list` so a double stays a double.
+ * The remaining pages are asked for together: the source snapshot rechecks every file per
+ * request and collapses concurrent pages into one sweep, so a walk in series pays it once
+ * per page for nothing.
+ */
+export async function listAllScenarios(
+  list: (options: { offset: number; limit: number }) => Promise<{
+    total: number
+    items: ScenarioEntry[]
+  }>,
+  maximum = 10000,
+): Promise<ScenarioEntry[]> {
+  const invalid = () => new Error('Pagination des scénarios invalide')
+  const first = await list({ offset: 0, limit: PAGE })
+  if (first.total > maximum) throw new Error('Catalogue de scénarios trop volumineux')
+  if (!first.items.length && first.total) throw invalid()
+  const offsets: number[] = []
+  for (let offset = first.items.length; offset < first.total; offset += PAGE) offsets.push(offset)
+  const rest = await Promise.all(offsets.map(offset => list({ offset, limit: PAGE })))
+  // A page from a shifted catalogue reports a different total; the walk is then not one read.
+  if (rest.some(page => page.total !== first.total || !page.items.length)) throw invalid()
+  const entries = [...first.items, ...rest.flatMap(page => page.items)]
+  if (entries.length !== first.total) throw invalid()
+  if (new Set(entries.map(entry => entry.id)).size !== entries.length)
+    throw new Error('Scénarios dupliqués dans le catalogue')
+  return entries
 }

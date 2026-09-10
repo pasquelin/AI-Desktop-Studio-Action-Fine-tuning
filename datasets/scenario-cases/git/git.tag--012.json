@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.tag/012",
+  "source": "git.md",
+  "specification": "Paramètre commit avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["git.tag"]
+}

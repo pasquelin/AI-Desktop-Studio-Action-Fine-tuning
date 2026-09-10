@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "view.direction/015",
+  "source": "scene.md",
+  "specification": "Option de direction : \"top\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["view.direction"]
+}

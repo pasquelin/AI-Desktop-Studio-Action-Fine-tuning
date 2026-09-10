@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.export/020",
+  "source": "state.md",
+  "specification": "Option inconnue de format : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["document.export"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setViewportOptions/014",
+  "source": "material.md",
+  "specification": "Option de view : \"faces\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["skybox.setViewportOptions"]
+}

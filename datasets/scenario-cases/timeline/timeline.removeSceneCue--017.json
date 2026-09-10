@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "timeline.removeSceneCue/017",
+  "source": "timeline.md",
+  "specification": "Paramètre id avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["timeline.removeSceneCue"]
+}

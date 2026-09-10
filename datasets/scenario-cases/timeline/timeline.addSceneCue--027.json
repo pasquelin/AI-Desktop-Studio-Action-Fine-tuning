@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "timeline.addSceneCue/027",
+  "source": "timeline.md",
+  "specification": "Texte entity : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["timeline.addSceneCue"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "models.search/013",
+  "source": "core.md",
+  "specification": "Option de family : \"image\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["models.search"]
+}

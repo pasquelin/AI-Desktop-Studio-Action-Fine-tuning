@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "inputMap.write/012",
+  "source": "project.md",
+  "specification": "Texte path : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["inputMap.write"]
+}

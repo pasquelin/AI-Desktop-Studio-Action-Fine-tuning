@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.setCameraStackMode/015",
+  "source": "post.md",
+  "specification": "Option de mode : \"inherit\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["post.setCameraStackMode"]
+}

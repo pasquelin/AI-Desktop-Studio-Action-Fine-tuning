@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "task.cancelLocalTask/009",
+  "source": "job.md",
+  "specification": "Paramètre taskId avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["task.cancelLocalTask"]
+}

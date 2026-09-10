@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "key.writePoseKeys/023",
+  "source": "rig.md",
+  "specification": "Option de property : \"rotation\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["key.writePoseKeys"]
+}

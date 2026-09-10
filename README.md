@@ -259,3 +259,15 @@ Le dernier essai réel a créé et sauvegardé le projet, la scène et le cube, 
 `npm run prepare:bench` (ou `pnpm prepare:bench`) prépare les fichiers et vérifie les 63 parcours déclaratifs. Le rapport `artifacts/bench/preparation.json` distingue ceux qui peuvent être tentés de ceux qui attendent des fixtures ou des vérifications complémentaires. Ce nombre ne représente pas des tests réussis.
 
 Pour un parcours : `npm run bench:run -- --journey P003`. La VM et son observateur démarrent ensemble. Les exemples restent exclus de LoRA tant que la preuve réelle et la relecture sémantique ne sont pas acceptées. Voir [le banc avant entraînement](docs/test-bench.md).
+
+## Application locale : Entraînement et Debug / QA
+
+`pnpm start` (ou `npm start`) ouvre le serveur unique sur http://127.0.0.1:4328/ et démarre une copie VM persistante. Aucun scénario, modèle ou entraînement ne démarre automatiquement. La première préparation de la référence reste interactive si elle manque.
+
+Dans **Debug / QA**, sélectionner un modèle Ollama installé puis les parcours. La QA actuelle est **guidée par les étapes** : le modèle reçoit l’opération et ses valeurs demandées ; ses propositions sont contrôlées, puis les assertions originales vérifient Studio. Ce mode teste l’exécution guidée, pas la planification autonome depuis une demande libre. Les cas de conception sans plan restent bloqués et visibles. La liste smoke contient P001 et P003. L’arrêt demandé termine le scénario courant avant de bloquer la suite.
+
+Les rapports JSON et Markdown sont dans `rapports/debug/campagnes/`, les détails par tentative dans `rapports/debug/`. Les configurations et résultats LoRA sont dans `rapports/entrainement/` ; les poids restent dans `artifacts/training/`. Les captures sont celles de la dernière session VM dans `artifacts/vm/captures/`, elles ne sont pas archivées indéfiniment.
+
+Le modèle QA choisi dans Ollama ne modifie jamais le modèle cible de l’entraînement. Aucun téléchargement ni approbation de données automatique. La page Entraînement expose les prérequis, la commande LoRA reste manuelle tant qu’un corpus approuvé n’est pas disponible.
+
+Recherche locale des scénarios : voir [l’index et les petits fichiers canoniques](docs/scenarios/search.md).

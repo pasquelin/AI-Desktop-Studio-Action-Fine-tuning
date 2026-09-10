@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "studio.describe/005",
+  "source": "studio.md",
+  "specification": "Retour perdu ou requête répétée : observer les effets avant une éventuelle relance ; ne pas confondre répétable avec idempotent, ne pas dupliquer un effet non demandé.",
+  "tags": ["studio.describe"]
+}

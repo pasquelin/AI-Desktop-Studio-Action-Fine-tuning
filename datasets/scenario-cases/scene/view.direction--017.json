@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "view.direction/017",
+  "source": "scene.md",
+  "specification": "Option inconnue de direction : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["view.direction"]
+}

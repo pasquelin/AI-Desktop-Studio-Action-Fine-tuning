@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.browseAccountLibrary/027",
+  "source": "cloud.md",
+  "specification": "Texte cursor : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["cloud.browseAccountLibrary"]
+}

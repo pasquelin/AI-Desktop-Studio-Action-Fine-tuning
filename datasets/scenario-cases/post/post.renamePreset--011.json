@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.renamePreset/011",
+  "source": "post.md",
+  "specification": "Texte preset : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["post.renamePreset"]
+}

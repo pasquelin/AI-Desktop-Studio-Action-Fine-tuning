@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/018",
+  "source": "export.md",
+  "specification": "Paramètre generateLods absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["game.export"]
+}

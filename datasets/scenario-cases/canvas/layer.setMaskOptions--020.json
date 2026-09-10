@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.setMaskOptions/020",
+  "source": "canvas.md",
+  "specification": "Booléen remove : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["layer.setMaskOptions"]
+}

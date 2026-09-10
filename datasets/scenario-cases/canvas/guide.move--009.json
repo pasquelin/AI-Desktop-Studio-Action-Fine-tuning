@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "guide.move/009",
+  "source": "canvas.md",
+  "specification": "Paramètre guideId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["guide.move"]
+}

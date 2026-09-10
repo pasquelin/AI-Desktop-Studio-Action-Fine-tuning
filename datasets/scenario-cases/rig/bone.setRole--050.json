@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "bone.setRole/050",
+  "source": "rig.md",
+  "specification": "Option de role : \"LeftLittle3\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["bone.setRole"]
+}

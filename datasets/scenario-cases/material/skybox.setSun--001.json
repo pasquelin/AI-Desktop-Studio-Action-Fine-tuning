@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setSun/001",
+  "source": "material.md",
+  "specification": "Nominal minimal : demander « Placer et régler le soleil » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["skybox.setSun"]
+}

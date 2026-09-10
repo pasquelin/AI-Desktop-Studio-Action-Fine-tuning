@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.browseAccountLibrary/034",
+  "source": "cloud.md",
+  "specification": "Option inconnue de order : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["cloud.browseAccountLibrary"]
+}

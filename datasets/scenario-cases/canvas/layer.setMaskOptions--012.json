@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.setMaskOptions/012",
+  "source": "canvas.md",
+  "specification": "Paramètre enabled absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["layer.setMaskOptions"]
+}

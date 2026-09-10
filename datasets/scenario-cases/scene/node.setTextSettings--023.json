@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setTextSettings/023",
+  "source": "scene.md",
+  "specification": "Option inconnue de fontSource : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["node.setTextSettings"]
+}

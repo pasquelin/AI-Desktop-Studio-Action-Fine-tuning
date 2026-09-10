@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "panel.close/028",
+  "source": "shell.md",
+  "specification": "Option inconnue de panel : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["panel.close"]
+}

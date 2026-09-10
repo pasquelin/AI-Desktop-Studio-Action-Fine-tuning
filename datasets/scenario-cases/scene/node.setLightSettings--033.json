@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setLightSettings/033",
+  "source": "scene.md",
+  "specification": "Borne min de decay = 0 : valeur exacte et valeurs de part et d’autre ; vérifier rejet ou clamp selon le contrat réel, et le résultat effectivement stocké.",
+  "tags": ["node.setLightSettings"]
+}

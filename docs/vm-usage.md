@@ -27,7 +27,7 @@ Le dépôt privé est cloné temporairement sur l’hôte dans `artifacts/vm`, s
 
 La série utilise les scripts et la politique de dépendances de cette version de Studio ; elle nécessite le réseau pour les dépendances. Les sous-modules et Git LFS ne sont pas pris en charge dans ce premier transfert : leur détection bloque la série.
 
-Après succès, la copie de build est arrêtée et supprimée. La référence préparée est conservée arrêtée. Après erreur, une copie est conservée et bloque une nouvelle série tant qu’elle n’a pas été nettoyée :
+En mode ponctuel, après succès, la copie de build est arrêtée et supprimée. Avec `pnpm start`, la session reste active : aucune campagne ne démarre avant un clic et les scénarios partagent la VM, avec un nouveau profil Studio pour chacun. La référence préparée est conservée arrêtée. Après erreur, une copie est conservée et bloque une nouvelle série tant qu’elle n’a pas été nettoyée :
 
 ```sh
 npm run vm -- cleanup --name NOM_COPIE_EN_ECHEC

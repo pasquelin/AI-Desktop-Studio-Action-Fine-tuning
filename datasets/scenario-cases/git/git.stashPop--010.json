@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.stashPop/010",
+  "source": "git.md",
+  "specification": "Paramètre index avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["git.stashPop"]
+}

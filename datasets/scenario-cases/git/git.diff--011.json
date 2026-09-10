@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.diff/011",
+  "source": "git.md",
+  "specification": "Paramètre commit absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["git.diff"]
+}

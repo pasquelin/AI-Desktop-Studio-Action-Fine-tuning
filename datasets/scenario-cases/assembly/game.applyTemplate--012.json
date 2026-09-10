@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.applyTemplate/012",
+  "source": "assembly.md",
+  "specification": "Option de template : \"topDown\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["game.applyTemplate"]
+}

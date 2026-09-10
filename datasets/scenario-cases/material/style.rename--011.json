@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "style.rename/011",
+  "source": "material.md",
+  "specification": "Texte styleId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["style.rename"]
+}

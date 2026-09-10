@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "files.copy/008",
+  "source": "file.md",
+  "specification": "Paramètre paths absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["files.copy"]
+}

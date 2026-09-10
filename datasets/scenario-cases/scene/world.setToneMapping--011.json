@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setToneMapping/011",
+  "source": "scene.md",
+  "specification": "Option de toneMapping : \"none\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["world.setToneMapping"]
+}

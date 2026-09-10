@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.setOpacityBlendAndVisibility/030",
+  "source": "canvas.md",
+  "specification": "Option de blend : \"color-dodge\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["layer.setOpacityBlendAndVisibility"]
+}

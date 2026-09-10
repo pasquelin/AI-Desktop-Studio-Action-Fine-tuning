@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setSourceImage/012",
+  "source": "material.md",
+  "specification": "Cible assetId : identifiant valide, absent, obsolète, autre document/projet et deux noms identiques ; résoudre l’identifiant réel, clarifier l’ambiguïté, protéger la cible voisine.",
+  "tags": ["skybox.setSourceImage"]
+}

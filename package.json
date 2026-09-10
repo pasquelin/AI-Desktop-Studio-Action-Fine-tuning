@@ -5,7 +5,7 @@
   "type": "module",
   "license": "PolyForm-Noncommercial-1.0.0",
   "engines": {
-    "node": ">=24.8.0 <25",
+    "node": ">=24.8.0",
     "npm": ">=11 <12"
   },
   "packageManager": "pnpm@12.3.4",
@@ -25,7 +25,7 @@
     "vm:run": "node tools/run-vm.ts",
     "vm:scenario": "node tools/run-vm.ts --scenario",
     "vm:observe": "node tools/observe-vm.ts",
-    "start": "node tools/run-vm.ts --scenario",
+    "start": "node tools/start.ts",
     "model:pull": "node tools/model.ts pull",
     "model:check": "node tools/model.ts check",
     "model:eval": "node tools/model.ts evaluate",
@@ -39,7 +39,8 @@
     "fixtures:prepare": "node tools/prepare-media-fixtures.ts",
     "prepare:bench": "npm run fixtures:prepare && npm run scenarios:prepare && npm run scenarios:examples && npm run scenarios:split && npm run bench:check",
     "admin:build": "node tools/build-admin.ts",
-    "unused:check": "knip"
+    "unused:check": "knip",
+    "scenarios:index": "node tools/index-scenarios.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",

@@ -19,6 +19,10 @@ export function filterQuery(filters: ScenarioFilters): string {
 
 /** An unknown status matches nothing; the address may hold anything a link put there. */
 function matchesStatus(item: ScenarioEntry, status: string, language: string): boolean {
+  // A design case has no plan to run, so it belongs to no QA bucket; a journey without a
+  // recorded verdict simply has not been tested yet.
+  if (status.startsWith('qa-'))
+    return item.kind === 'case' ? false : (item.qa?.status ?? 'not-tested') === status.slice(3)
   const locale = item.languages.find(entry => entry.language === language)
   switch (status) {
     case '':

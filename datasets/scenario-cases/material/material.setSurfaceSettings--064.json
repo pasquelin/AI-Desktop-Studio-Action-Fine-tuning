@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setSurfaceSettings/064",
+  "source": "material.md",
+  "specification": "Paramètre tilingY absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["material.setSurfaceSettings"]
+}

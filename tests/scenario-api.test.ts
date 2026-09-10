@@ -22,6 +22,9 @@ describe('scenario API mutation boundary', () => {
         body: '{}',
       })
       expect(response.status).toBe(403)
+      const invalidKind = await fetch(`http://127.0.0.1:${address.port}/api/scenarios?kind=invalid`)
+      expect(invalidKind.status).toBe(400)
+      expect(await invalidKind.json()).toEqual({ error: 'Invalid scenario kind' })
     } finally {
       server.close()
       await once(server, 'close')

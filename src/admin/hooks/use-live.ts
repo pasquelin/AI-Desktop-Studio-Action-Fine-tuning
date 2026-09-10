@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Snapshot } from '../../vm/snapshots.ts'
-import { api, message } from '../api.ts'
+import { api, type Failure, failureOf, NO_FAILURE } from '../api.ts'
 import { type LiveLog, LogStream } from '../log-stream.ts'
 
 export type { LiveLog } from '../log-stream.ts'
@@ -13,15 +13,6 @@ const EMPTY = {
   loaded: true,
   status: '',
   file: '',
-  run: '',
-}
-
-export const lifecycleLabels: Record<string, string> = {
-  created: 'Exécution créée · en cours ou interrompue',
-  ready: 'Référence préparée',
-  'build-passed': 'Construction et démarrage validés',
-  'failed-retained': 'Échec · VM conservée pour diagnostic',
-  removed: 'VM supprimée · journaux conservés',
 }
 
 export function logSummary(text: string, status: string) {
@@ -34,11 +25,11 @@ export function logSummary(text: string, status: string) {
 
 /** Follows the current run's log and its captures; a text selection pauses the log refresh. */
 export function useLive(hasSelection: () => boolean) {
-  const [state, setState] = useState({ text: '', loaded: false, status: '', file: '', run: '' })
+  const [state, setState] = useState({ text: '', loaded: false, status: '', file: '' })
   const [snapshots, setSnapshots] = useState<Snapshot[]>([])
-  const [logError, setLogError] = useState('')
+  const [logFailure, setLogFailure] = useState<Failure>(NO_FAILURE)
   const [capturesLoaded, setCapturesLoaded] = useState(false)
-  const [captureError, setCaptureError] = useState('')
+  const [captureFailure, setCaptureFailure] = useState<Failure>(NO_FAILURE)
   useEffect(() => {
     const controller = new AbortController()
     const stream = new LogStream()
@@ -55,13 +46,13 @@ export function useLive(hasSelection: () => boolean) {
         controller.signal,
       )
       if (controller.signal.aborted || hasSelection()) return IDLE_DELAY
-      setLogError('')
+      setLogFailure(NO_FAILURE)
       if (!part.run) {
         setState(EMPTY)
         return IDLE_DELAY
       }
       const text = stream.append(part)
-      setState({ text, status: part.status, file: part.file, run: stream.run, loaded: true })
+      setState({ text, status: part.status, file: part.file, loaded: true })
       return stream.behind(part) ? CATCH_UP_DELAY : IDLE_DELAY
     }
 
@@ -69,8 +60,8 @@ export function useLive(hasSelection: () => boolean) {
       let delay = IDLE_DELAY
       try {
         delay = await readLog()
-      } catch (failure) {
-        if (!controller.signal.aborted) setLogError(message(failure))
+      } catch (cause) {
+        if (!controller.signal.aborted) setLogFailure(failureOf(cause))
       } finally {
         if (!controller.signal.aborted) logTimer = setTimeout(() => void logs(), delay)
       }
@@ -85,15 +76,15 @@ export function useLive(hasSelection: () => boolean) {
         lastCaptures = key
         setSnapshots(items)
       }
-      setCaptureError('')
+      setCaptureFailure(NO_FAILURE)
       setCapturesLoaded(true)
     }
 
     async function captures() {
       try {
         await readCaptures()
-      } catch (failure) {
-        if (!controller.signal.aborted) setCaptureError(message(failure))
+      } catch (cause) {
+        if (!controller.signal.aborted) setCaptureFailure(failureOf(cause))
       } finally {
         if (!controller.signal.aborted)
           captureTimer = setTimeout(() => void captures(), CAPTURE_DELAY)
@@ -108,5 +99,15 @@ export function useLive(hasSelection: () => boolean) {
       clearTimeout(captureTimer)
     }
   }, [hasSelection])
-  return { ...state, snapshots, logError, captureError, capturesLoaded }
+  // An unreachable observer is one condition, not two failing readers: the view shows a single
+  // notice, so the offline case is reported once here instead of being re-derived per message.
+  const offline = logFailure.code === 'offline' || captureFailure.code === 'offline'
+  return {
+    ...state,
+    snapshots,
+    offline,
+    logError: logFailure.code === 'offline' ? '' : logFailure.message,
+    captureError: captureFailure.code === 'offline' ? '' : captureFailure.message,
+    capturesLoaded,
+  }
 }

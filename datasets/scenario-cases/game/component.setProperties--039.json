@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "component.setProperties/039",
+  "source": "game.md",
+  "specification": "Texte value : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["component.setProperties"]
+}

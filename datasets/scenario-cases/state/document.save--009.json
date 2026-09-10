@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "document.save/009",
+  "source": "state.md",
+  "specification": "Paramètre documentId absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["document.save"]
+}

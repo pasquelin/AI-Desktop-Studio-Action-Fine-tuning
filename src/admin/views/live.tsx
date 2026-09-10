@@ -1,20 +1,31 @@
 import { useEffect, useState } from 'react'
-import { date } from '../api.ts'
+import { date, SERVER_UNAVAILABLE } from '../api.ts'
 import { Captures, snapshotUrl } from '../components/captures.tsx'
-import { ExecutionStatus } from '../components/execution-controls.tsx'
 import { Columns, ControlBar, Panel } from '../components/layout.tsx'
 import { LoadingSkeleton } from '../components/loading-skeleton.tsx'
-import { Badge, Choice, Code, Empty, Notice, Tabs } from '../components/primitives.tsx'
+import { Choice, Code, Empty, Notice, Tabs } from '../components/primitives.tsx'
+import { TrainingControls } from '../components/training-controls.tsx'
 import { useDecodedImage } from '../hooks/use-decoded-image.ts'
 import { useFollow } from '../hooks/use-follow.ts'
-import { lifecycleLabels, logSummary, useLive } from '../hooks/use-live.ts'
+import { logSummary, useLive } from '../hooks/use-live.ts'
 export function Live() {
+  return (
+    <>
+      <TrainingControls />
+      <Monitoring />
+    </>
+  )
+}
+
+export function Monitoring({ connectionUnavailable = false }: { connectionUnavailable?: boolean }) {
   const follow = useFollow()
   const live = useLive(follow.hasSelection)
   const [tab, setTab] = useState('Étapes')
   const latest = live.snapshots.at(-1)
   const image = latest ? snapshotUrl(latest) : ''
   const { loaded, error: imageError } = useDecodedImage(image)
+  const disconnected = live.offline
+  const { captureError, logError } = live
   // biome-ignore lint/correctness/useExhaustiveDependencies: new output and tab changes alter the scroll height; they trigger the realign without being read.
   useEffect(() => {
     follow.align()
@@ -28,7 +39,7 @@ export function Live() {
   }, [follow.align, follow.scroller])
   return (
     <>
-      <ExecutionStatus fallback={<LifecycleBadge run={live.run} status={live.status} />} />
+      {disconnected && !connectionUnavailable && <Notice warning>{SERVER_UNAVAILABLE}</Notice>}
       <Columns preview>
         <Panel
           title="Studio dans la VM"
@@ -39,7 +50,7 @@ export function Live() {
           }
         >
           <LatestCapture
-            error={live.captureError || imageError}
+            error={captureError || (disconnected || connectionUnavailable ? '' : imageError)}
             pending={!live.capturesLoaded && !live.captureError}
             loaded={loaded}
             caption={
@@ -58,7 +69,7 @@ export function Live() {
           }
         >
           <div className="flex h-full min-h-0 flex-col gap-3">
-            <Notice error>{live.logError}</Notice>
+            <Notice error>{logError}</Notice>
             <ControlBar>
               <Tabs compact labels={['Étapes', 'Logs', 'Captures']} value={tab} onChange={setTab} />
               <div className="shrink-0">
@@ -123,19 +134,6 @@ function LatestCapture({
       )}
       {caption && <p className="flex-none text-xs text-muted">{caption}</p>}
     </div>
-  )
-}
-
-function LifecycleBadge({ run, status }: { run: string; status: string }) {
-  const failed = status === 'failed-retained'
-  return (
-    <Badge role="status" error={failed} soft title={lifecycleLabels[status]}>
-      {!run
-        ? 'Aucune exécution enregistrée'
-        : failed
-          ? 'Échec VM'
-          : (lifecycleLabels[status] ?? 'État inconnu')}
-    </Badge>
   )
 }
 

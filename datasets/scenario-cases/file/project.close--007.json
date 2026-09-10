@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "project.close/007",
+  "source": "file.md",
+  "specification": "Demande annulée avant exécution : ne pas lancer l’action ; tester séparément une annulation tardive, qui ne garantit pas l’annulation d’un effet déjà réalisé.",
+  "tags": ["project.close"]
+}

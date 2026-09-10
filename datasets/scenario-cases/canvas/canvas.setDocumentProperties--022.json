@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.setDocumentProperties/022",
+  "source": "canvas.md",
+  "specification": "Option de bitDepth : 32 ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["canvas.setDocumentProperties"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "workspace.open/009",
+  "source": "core.md",
+  "specification": "Paramètre workspace absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["workspace.open"]
+}

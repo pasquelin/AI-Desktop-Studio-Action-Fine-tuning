@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.applyPreset/015",
+  "source": "scene.md",
+  "specification": "Option de preset : \"night\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["world.applyPreset"]
+}

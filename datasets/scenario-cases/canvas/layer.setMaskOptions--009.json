@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.setMaskOptions/009",
+  "source": "canvas.md",
+  "specification": "Paramètre layerId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["layer.setMaskOptions"]
+}

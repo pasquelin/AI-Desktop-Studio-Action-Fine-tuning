@@ -4,6 +4,7 @@ import { api, localeNames } from '../api.ts'
 import { LanguageName } from '../components/language.tsx'
 import { Stack } from '../components/layout.tsx'
 import { Badge, Button, Field, Notice } from '../components/primitives.tsx'
+import { Section } from '../components/section.tsx'
 import { useSaveAction } from '../hooks/use-save-action.ts'
 import type { ScenarioEntry } from '../scenario-repository.ts'
 import { draftSteps, type StepDraft, StepFields } from './step-fields.tsx'
@@ -175,28 +176,28 @@ function Translation({
       setNotice('Traduction enregistrée comme brouillon à relire.')
     })
   return (
-    <div className="card bg-base-100">
-      <div className="card-body p-3">
-        <h3 className="card-title text-sm">
-          <LanguageName language={language} />
-        </h3>
-        <Badge>{item ? 'Brouillon · relecture requise' : 'Manquant'}</Badge>
-        <Field
-          label={`Demande en ${name.toLowerCase()}`}
-          multiline
-          value={text}
-          onChange={e => setText(e.target.value)}
-        />
-        <Notice error>{error}</Notice>
-        <Notice>{notice}</Notice>
-        {entry && (
-          <div className="card-actions">
-            <Button disabled={busy} onClick={() => void save()}>
-              Enregistrer cette traduction
-            </Button>
-          </div>
-        )}
-      </div>
-    </div>
+    <Section inset>
+      <h3 className="card-title text-sm">
+        <LanguageName language={language} />
+      </h3>
+      <Badge status={item ? 'draft' : 'missing'}>
+        {item ? 'Brouillon · relecture requise' : 'Manquant'}
+      </Badge>
+      <Field
+        label={`Demande en ${name.toLowerCase()}`}
+        multiline
+        value={text}
+        onChange={e => setText(e.target.value)}
+      />
+      <Notice error>{error}</Notice>
+      <Notice>{notice}</Notice>
+      {entry && (
+        <div className="card-actions">
+          <Button disabled={busy} onClick={() => void save()}>
+            Enregistrer cette traduction
+          </Button>
+        </div>
+      )}
+    </Section>
   )
 }

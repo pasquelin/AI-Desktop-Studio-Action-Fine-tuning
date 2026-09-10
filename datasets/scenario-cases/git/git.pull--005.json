@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.pull/005",
+  "source": "git.md",
+  "specification": "Retour perdu ou requête répétée : observer les effets avant une éventuelle relance ; ne pas confondre répétable avec idempotent, ne pas dupliquer un effet non demandé.",
+  "tags": ["git.pull"]
+}

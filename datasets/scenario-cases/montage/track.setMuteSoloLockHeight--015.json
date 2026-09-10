@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "track.setMuteSoloLockHeight/015",
+  "source": "montage.md",
+  "specification": "Paramètre solo absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["track.setMuteSoloLockHeight"]
+}

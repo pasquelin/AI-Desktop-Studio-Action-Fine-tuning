@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "canvas.flipOrRotate/015",
+  "source": "canvas.md",
+  "specification": "Option inconnue de turn : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["canvas.flipOrRotate"]
+}

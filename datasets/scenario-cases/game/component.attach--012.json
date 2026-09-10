@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "component.attach/012",
+  "source": "game.md",
+  "specification": "Cible nodeId : identifiant valide, absent, obsolète, autre document/projet et deux noms identiques ; résoudre l’identifiant réel, clarifier l’ambiguïté, protéger la cible voisine.",
+  "tags": ["component.attach"]
+}

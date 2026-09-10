@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setToneMapping/016",
+  "source": "scene.md",
+  "specification": "Option inconnue de toneMapping : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["world.setToneMapping"]
+}

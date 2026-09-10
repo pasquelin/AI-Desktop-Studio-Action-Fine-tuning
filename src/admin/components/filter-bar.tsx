@@ -1,12 +1,21 @@
 import type { ReactNode } from 'react'
-export function FilterBar({ children }: { children: ReactNode }) {
+import { Section } from './layout.tsx'
+export function FilterBar({
+  children,
+  label = 'Filtres des scénarios',
+  medium = false,
+}: {
+  children: ReactNode
+  label?: string
+  medium?: boolean
+}) {
   return (
-    <section aria-label="Filtres des scénarios" className="card shrink-0 bg-base-200">
-      <div className="card-body flex-none p-0 lg:p-3">
-        <div className="grid content-start grid-cols-1 gap-2 lg:grid-cols-4 lg:gap-3">
-          {children}
-        </div>
+    <Section label={label}>
+      <div
+        className={`grid content-start items-end grid-cols-1 gap-3 ${medium ? 'md:grid-flow-col md:auto-cols-fr md:grid-cols-none' : 'lg:grid-flow-col lg:auto-cols-fr lg:grid-cols-none'}`}
+      >
+        {children}
       </div>
-    </section>
+    </Section>
   )
 }

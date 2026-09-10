@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/038",
+  "source": "export.md",
+  "specification": "Option de textureReduction : \"half\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["game.export"]
+}

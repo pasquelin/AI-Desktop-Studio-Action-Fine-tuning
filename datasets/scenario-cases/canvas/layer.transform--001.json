@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "layer.transform/001",
+  "source": "canvas.md",
+  "specification": "Nominal minimal : demander « Déplacer, redimensionner ou tourner un calque » dans un décor valide, fournir seulement les paramètres obligatoires ; vérifier le résultat décrit ci-dessus avec un lecteur métier indépendant.",
+  "tags": ["layer.transform"]
+}

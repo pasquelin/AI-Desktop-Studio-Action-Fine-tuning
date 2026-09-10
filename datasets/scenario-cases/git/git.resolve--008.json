@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.resolve/008",
+  "source": "git.md",
+  "specification": "Consentement : accord, refus, absence de réponse et modification de la demande après accord ; vérifier le mécanisme réel de confirmation avant effets sensibles, sans inventer un champ consent.",
+  "tags": ["git.resolve"]
+}

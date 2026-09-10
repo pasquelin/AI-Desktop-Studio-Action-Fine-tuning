@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.combineIntoSolid/015",
+  "source": "scene.md",
+  "specification": "Option de operation : \"subtract\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["node.combineIntoSolid"]
+}

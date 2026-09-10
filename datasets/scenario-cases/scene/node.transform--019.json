@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.transform/019",
+  "source": "scene.md",
+  "specification": "Paramètre positionZ absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["node.transform"]
+}

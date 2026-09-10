@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setTextSettings/022",
+  "source": "scene.md",
+  "specification": "Option de fontSource : \"system\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["node.setTextSettings"]
+}

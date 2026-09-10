@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.stage/009",
+  "source": "git.md",
+  "specification": "Paramètre paths avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["git.stage"]
+}

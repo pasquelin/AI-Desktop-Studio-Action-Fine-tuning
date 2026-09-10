@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "path.movePoint/023",
+  "source": "scene.md",
+  "specification": "Valeur de pointZ : zéro, négative, fractionnaire et très grande mais finie ; vérifier unité, précision et contraintes métier, sans présumer qu’elles sont toutes valides.",
+  "tags": ["path.movePoint"]
+}

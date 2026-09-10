@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "folder.new/010",
+  "source": "file.md",
+  "specification": "Texte folder : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["folder.new"]
+}

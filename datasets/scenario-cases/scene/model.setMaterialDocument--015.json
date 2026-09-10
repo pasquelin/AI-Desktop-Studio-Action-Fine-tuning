@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "model.setMaterialDocument/015",
+  "source": "scene.md",
+  "specification": "Texte material : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["model.setMaterialDocument"]
+}

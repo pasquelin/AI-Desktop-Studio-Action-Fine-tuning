@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "studio.describe/009",
+  "source": "studio.md",
+  "specification": "Paramètre ref avec null et type incompatible : vérifier la validation du fil MCP puis, séparément, celle du handler ; résultat sans effet partiel non prévu.",
+  "tags": ["studio.describe"]
+}

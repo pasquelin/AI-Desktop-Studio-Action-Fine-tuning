@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.add/011",
+  "source": "scene.md",
+  "specification": "Option de kind : \"box\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["node.add"]
+}

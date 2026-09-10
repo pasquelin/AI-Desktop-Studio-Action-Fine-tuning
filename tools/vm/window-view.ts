@@ -4,6 +4,7 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
 import { promisify } from 'node:util'
+import { DEBUG_ORIGIN } from './studio-launch.ts'
 
 export interface WindowPage {
   url: string
@@ -48,7 +49,7 @@ export async function evaluate(page: WindowPage, expression: string): Promise<un
   return result.value
 }
 export async function visibleWindows(): Promise<WindowPage[]> {
-  const response = await fetch('http://127.0.0.1:9333/json', {
+  const response = await fetch(`${DEBUG_ORIGIN}/json`, {
     signal: AbortSignal.timeout(3000),
   })
   const targets: unknown = await response.json()
@@ -105,6 +106,10 @@ export async function captureWindow(
     returnByValue: true,
   })
   if (settled.exceptionDetails) throw new Error('Visual stabilization failed')
+  await captureScreen(base, activity)
+}
+
+export async function captureScreen(base: string, activity: string): Promise<void> {
   const directory = join(base, 'action-images')
   await mkdir(directory, { recursive: true })
   const file = `${Date.now()}-${randomUUID()}.jpg`
@@ -132,9 +137,23 @@ async function captureDesktop(destination: string): Promise<void> {
     { mode: 0o600 },
   )
   try {
-    await execute('/bin/launchctl', ['bootstrap', domain, plist], {
-      timeout: 10000,
-    })
+    const sessionDeadline = Date.now() + 60000
+    while (true) {
+      try {
+        await execute('/bin/launchctl', ['bootstrap', domain, plist], { timeout: 10000 })
+        break
+      } catch (error) {
+        const failure = error as Error & { code?: number; stderr?: string }
+        if (
+          failure.code !== 125 ||
+          !failure.stderr?.includes('Domain does not support specified action') ||
+          Date.now() >= sessionDeadline
+        )
+          throw error
+        // SSH can be ready before the Aqua login domain accepts jobs.
+        await delay(250)
+      }
+    }
     const deadline = Date.now() + 10000
     while (Date.now() < deadline) {
       const data = await readFile(destination).catch((error: NodeJS.ErrnoException) => {

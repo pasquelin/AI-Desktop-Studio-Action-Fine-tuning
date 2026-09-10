@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "bone.rename/014",
+  "source": "rig.md",
+  "specification": "Texte name : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["bone.rename"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "material.setPreviewEnvironment/011",
+  "source": "material.md",
+  "specification": "Option de kind : \"studio\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["material.setPreviewEnvironment"]
+}

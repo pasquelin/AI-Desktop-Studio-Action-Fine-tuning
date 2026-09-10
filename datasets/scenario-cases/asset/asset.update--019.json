@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "asset.update/019",
+  "source": "asset.md",
+  "specification": "Paramètre type absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["asset.update"]
+}

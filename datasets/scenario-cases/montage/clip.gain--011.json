@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "clip.gain/011",
+  "source": "montage.md",
+  "specification": "Texte clipId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["clip.gain"]
+}

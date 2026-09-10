@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "post.setWholeStackEnabled/014",
+  "source": "post.md",
+  "specification": "Booléen enabled : vrai puis faux avec état initial opposé ; vérifier les deux effets et ne pas traiter faux comme un paramètre absent.",
+  "tags": ["post.setWholeStackEnabled"]
+}

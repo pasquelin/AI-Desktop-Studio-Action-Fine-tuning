@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "game.export/023",
+  "source": "export.md",
+  "specification": "Option de geometrySimplification : \"off\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["game.export"]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "assets.searchProjectCatalogue/027",
+  "source": "asset.md",
+  "specification": "Paramètre limit absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["assets.searchProjectCatalogue"]
+}

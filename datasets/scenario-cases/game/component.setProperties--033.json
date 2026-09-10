@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "component.setProperties/033",
+  "source": "game.md",
+  "specification": "Option inconnue de type : vérifier rejet, pas de sélection silencieuse d’une option voisine.",
+  "tags": ["component.setProperties"]
+}

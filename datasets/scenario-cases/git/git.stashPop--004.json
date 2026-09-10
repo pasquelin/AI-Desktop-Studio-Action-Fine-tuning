@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "git.stashPop/004",
+  "source": "git.md",
+  "specification": "Échec de l’exécuteur : injecter une erreur déterministe du port concerné ; réponse explicite, aucune annonce de réussite et aucune mutation collatérale.",
+  "tags": ["git.stashPop"]
+}

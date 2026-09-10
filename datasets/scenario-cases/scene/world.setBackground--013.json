@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "world.setBackground/013",
+  "source": "scene.md",
+  "specification": "Option de kind : \"transparent\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["world.setBackground"]
+}

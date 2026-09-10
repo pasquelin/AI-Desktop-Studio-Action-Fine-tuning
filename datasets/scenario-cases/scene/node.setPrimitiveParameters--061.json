@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "node.setPrimitiveParameters/061",
+  "source": "scene.md",
+  "specification": "Paramètre p absent : vérifier la valeur par défaut réelle ou la conservation de la valeur courante ; ne pas en inventer une.",
+  "tags": ["node.setPrimitiveParameters"]
+}

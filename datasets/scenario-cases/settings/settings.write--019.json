@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "settings.write/019",
+  "source": "settings.md",
+  "specification": "Option de settings : \"three\" ; fixture compatible, vérifier précisément la branche métier correspondante.",
+  "tags": ["settings.write"]
+}

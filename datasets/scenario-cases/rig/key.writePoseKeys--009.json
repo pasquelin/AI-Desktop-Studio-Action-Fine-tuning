@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "key.writePoseKeys/009",
+  "source": "rig.md",
+  "specification": "Paramètre nodeId absent : vérifier refus ou clarification avant l’appel utile, selon le contrat.",
+  "tags": ["key.writePoseKeys"]
+}

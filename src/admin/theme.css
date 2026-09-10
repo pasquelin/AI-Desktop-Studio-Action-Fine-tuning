@@ -67,8 +67,3 @@
 .btn-sm {
   --font-size-min: var(--text-tiny);
 }
-
-/* Badges keep the native daisyUI gauge; the 16px selector token belongs to checkboxes. */
-.badge {
-  --size-selector: 0.25rem;
-}

@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "assets.listMissing/004",
+  "source": "asset.md",
+  "specification": "Échec de l’exécuteur : injecter une erreur déterministe du port concerné ; réponse explicite, aucune annonce de réussite et aucune mutation collatérale.",
+  "tags": ["assets.listMissing"]
+}

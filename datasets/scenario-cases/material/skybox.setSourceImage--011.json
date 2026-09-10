@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "skybox.setSourceImage/011",
+  "source": "material.md",
+  "specification": "Texte assetId : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["skybox.setSourceImage"]
+}

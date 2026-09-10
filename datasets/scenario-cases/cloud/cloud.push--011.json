@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "id": "cloud.push/011",
+  "source": "cloud.md",
+  "specification": "Texte assetIds : vide, espaces, accents, Unicode, nom long et caractères de ponctuation ; vérifier validation et conservation selon la sémantique du champ.",
+  "tags": ["cloud.push"]
+}
