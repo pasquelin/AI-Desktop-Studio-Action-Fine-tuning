@@ -4,7 +4,7 @@
 
 # AI Desktop Studio — Action Fine-tuning
 
-**Compagnon de préparation, d’essai et d’évaluation d’un assistant local multilingue pour AI Desktop Studio.**
+**Companion for preparing, trying out and evaluating a local multilingual assistant for AI Desktop Studio.**
 
 [![Validate](https://github.com/pasquelin/AI-Desktop-Studio-Action-Fine-tuning/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/pasquelin/AI-Desktop-Studio-Action-Fine-tuning/actions/workflows/validate.yml)
 [![Node](https://img.shields.io/badge/Node-%E2%89%A524.8%20%3C25-2b2d30?logo=node.js&logoColor=5fa04e)](.node-version)
@@ -14,283 +14,284 @@
 [![Vitest](https://img.shields.io/badge/Vitest-3.2-2b2d30?logo=vitest&logoColor=6da95f)](package.json)
 [![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-2b2d30)](LICENSE)
 
-**[→ AI Desktop Studio](https://www.aidesktopstudio.com/)**
+**[Documentation 🇫🇷](README.fr.md)** · **[→ AI Desktop Studio](https://www.aidesktopstudio.com/)**
 
 </div>
 
 ---
 
-## Ce que fait ce dépôt
+## What this repository does
 
-Il prépare le terrain d’un assistant local pour AI Desktop Studio : téléchargement explicite du modèle local, essais réels dans une VM jetable, preuves conservées — **sans entraînement exécuté à ce jour**.
+It lays the ground for a local assistant for AI Desktop Studio: explicit download of the local model, real trials in a disposable VM, evidence kept — **with no training run to date**.
 
-- **Extraire** le catalogue des actions de Studio depuis une révision précise, dans un bac à sable isolé du reste de l’application.
-- **Inventorier** les scénarios d’usage — 310 actions réparties en 26 familles, en 15 langues — et signaler leur dérive quand Studio évolue.
-- **Construire** Studio dans une machine virtuelle macOS jetable et vérifier que son interface monte, sans toucher au poste de travail.
-- **Rejouer** un parcours métier dans cette VM, guidé par un modèle Ollama local, et conserver étapes, captures et journaux.
-- **Piloter** tout cela depuis une interface locale unique, sur `http://127.0.0.1:4328/`.
+- **Export** Studio's action catalogue from a precise revision, in a sandbox isolated from the rest of the application.
+- **Inventory** the usage scenarios — 310 actions across 26 families, in 15 languages — and report their drift as Studio evolves.
+- **Build** Studio inside a disposable macOS virtual machine and check that its interface comes up, without touching the workstation.
+- **Replay** a real user journey in that VM, guided by a local Ollama model, keeping steps, screenshots and logs.
+- **Drive** all of it from a single local interface, at `http://127.0.0.1:4328/`.
 
-Ce qui n’existe pas encore : la capture de données approuvée, l’entraînement LoRA réellement lancé et la mesure du gain.
+What does not exist yet: approved data capture, LoRA training actually launched, and measurement of the gain.
 
-## État réel
+## Actual state
 
-Chaque ligne dit ce qui est **exécuté et vérifié**, pas ce qui est prévu.
+Every line states what is **executed and verified**, not what is planned.
 
-| Capacité | État | Preuve |
+| Capability | State | Evidence |
 | --- | --- | --- |
-| Linter, typage, tests, hygiène Git | 258 tests, sans modèle | `npm run validate` |
-| Export du catalogue d’actions | Fonctionne, avec contrôle de fraîcheur | [docs/export.md](docs/export.md) |
-| Inventaire des scénarios | 5 165 cas et 63 parcours, sans exécution | [docs/scenarios/](docs/scenarios/README.md) |
-| Préparation et build en VM jetable | Recette réelle, rejouée | [docs/vm-usage.md](docs/vm-usage.md) |
-| Chargement de l’interface Studio | Vérifié par son renderer, dans la VM | `startup.json` du rapport |
-| Interface locale | Cinq vues : entraînement, QA, scénarios, rapports, compteurs | [docs/admin-ui.md](docs/admin-ui.md) |
-| Parcours P003 de bout en bout | **Réussi, 13 étapes sur 13**, avec Qwen 3.8 local | `rapports/debug/77644922-…/` et ses 17 captures |
-| Parcours projet, scène, cube | Réussi, 9 étapes | Onglet « Rapports » de l’interface |
-| Campagnes Debug / QA guidées | Livrées : sélection du modèle, file, arrêt maîtrisé | [docs/qa-training-status.md](docs/qa-training-status.md) |
-| Lancement LoRA | Raccordé à l’interface, **jamais exécuté pour de vrai** | [docs/qa-training-status.md](docs/qa-training-status.md) |
-| Corpus approuvé, mesure du gain | **Non implémentés** | [docs/roadmap.md](docs/roadmap.md) |
+| Linter, typing, tests, Git hygiene | 258 tests, no model | `npm run validate` |
+| Action catalogue export | Works, with a freshness check | [docs/export.md](docs/export.md) |
+| Scenario inventory | 5,165 cases and 63 journeys, not executed | [docs/scenarios/](docs/scenarios/README.md) |
+| Preparation and build in a disposable VM | Real procedure, replayed | [docs/vm-usage.md](docs/vm-usage.md) |
+| Studio interface loading | Verified through its renderer, inside the VM | the report's `startup.json` |
+| Local interface | Five views: training, QA, scenarios, reports, counters | [docs/admin-ui.md](docs/admin-ui.md) |
+| P003 journey end to end | **Passed, 13 steps out of 13**, with a local Qwen 3.8 | `rapports/debug/77644922-…/` and its 17 screenshots |
+| Project, scene, cube journey | Passed, 9 steps | The interface's "Reports" tab |
+| Guided Debug / QA campaigns | Delivered: model selection, queue, controlled stop | [docs/qa-training-status.md](docs/qa-training-status.md) |
+| LoRA launch | Wired into the interface, **never actually run** | [docs/qa-training-status.md](docs/qa-training-status.md) |
+| Approved corpus, measurement of the gain | **Not implemented** | [docs/roadmap.md](docs/roadmap.md) |
 
 > [!IMPORTANT]
-> La QA actuelle est **guidée par les étapes** : le modèle reçoit l’opération et ses valeurs de référence, sa proposition est contrôlée, puis les assertions vérifient Studio. Cela teste la conformité des propositions et le comportement de Studio — **pas** la planification autonome d’un parcours depuis une demande libre.
+> The current QA is **step-guided**: the model receives the operation and its reference values, its proposal is checked, then assertions verify Studio. That tests how well proposals conform and how Studio behaves — **not** autonomous planning of a journey from a free-form request.
 
 > [!NOTE]
-> La CI passe sur Linux et macOS. **Le job Windows échoue** sur une comparaison de chemins dans `src/catalogue/load-snapshot.ts` (noms courts 8.3 contre noms longs). Le badge ci-dessus reflète cet état réel plutôt que de le masquer.
+> CI passes on Linux and macOS. **The Windows job fails** on a path comparison in `src/catalogue/load-snapshot.ts` (8.3 short names against long names). The badge above reflects that real state rather than hiding it.
 
-## Démarrage
+## Getting started
 
-Prérequis : Git, Node **24.8 ou supérieur dans la branche 24**, pnpm **12.3.4** (npm **11** reste utilisable pour lancer les scripts). Aucun Python, GPU ou compte cloud nécessaire ici.
+Requirements: Git, Node **24.8 or above within the 24 branch**, pnpm **12.3.4** (npm **11** still works to run the scripts). No Python, GPU or cloud account needed here.
 
 ```sh
 pnpm install --frozen-lockfile --ignore-scripts
 pnpm run validate
 ```
 
-L’installation initiale nécessite Internet ; la validation utilise ensuite les fichiers locaux. Aucun poids à installer pour les tests.
+The initial install needs the Internet; validation then uses local files only. No weights to install for the tests.
 
-Si le lanceur pnpm local est indisponible :
+If the local pnpm launcher is unavailable:
 
 ```sh
 npx --yes pnpm@12.3.4 install --frozen-lockfile --ignore-scripts
 ```
 
-## Lancer l’application
+## Running the application
 
 ```sh
 pnpm start
 ```
 
-Une seule commande : elle ouvre le serveur local sur **`http://127.0.0.1:4328/`** et prépare une copie VM persistante. Le terminal affiche l’adresse ; il n’y a ni clé à saisir, ni deuxième commande.
+One command: it opens the local server on **`http://127.0.0.1:4328/`** and prepares a persistent VM copy. The terminal prints the address; there is no key to enter and no second command.
 
-Aucun scénario, modèle ou entraînement ne démarre automatiquement. Un observateur déjà actif est réutilisé ; il reste disponible après un essai pour consulter les résultats, et fermer l’onglet ne stoppe rien. L’adresse ne change jamais, même après redémarrage — le port fixe n’accepte qu’un seul observateur, et le lancement échoue clairement s’il est occupé par autre chose. Elle est aussi écrite dans `artifacts/vm/observer.json`.
+No scenario, model or training starts automatically. An observer already running is reused; it stays available after a trial so results can be inspected, and closing the tab stops nothing. The address never changes, even after a restart — the fixed port accepts a single observer, and startup fails clearly if something else holds it. It is also written to `artifacts/vm/observer.json`.
 
 > [!TIP]
-> Après une mise à jour du dépôt, arrêter l’observateur en cours avant de relancer : un process démarré avant vos derniers commits sert l’ancien code et ses anciennes routes.
+> After updating the repository, stop the running observer before relaunching: a process started before your latest commits serves the old code and its old routes.
 
-`npm run vm:observe` consulte les rapports sans lancer de nouvel essai.
+`npm run vm:observe` inspects the reports without starting a new trial.
 
-## L’interface
+## The interface
 
-Cinq vues, servies par le même observateur local. Elles lisent les fichiers du dépôt et les rapports déjà écrits ; elles n’exécutent rien d’elles-mêmes et ne déduisent aucune réussite. La racine `/` est l’accueil ; les autres vues sont des fragments (`/#qa`, `/#scenarios`, `/#reports`, `/#overview`).
+Five views, served by the same local observer. They read the repository's files and the reports already written; they execute nothing themselves and infer no success. The root `/` is the home page; the other views are fragments (`/#qa`, `/#scenarios`, `/#reports`, `/#overview`).
 
-### Entraînement — l’accueil
+### Training — the home page
 
-![Vue Entraînement : les prérequis en haut, le bureau invité à gauche, le déroulé horodaté à droite](docs/assets/admin-live.png)
+![Training view: prerequisites at the top, the guest desktop on the left, the timestamped run on the right](docs/assets/admin-live.png)
 
-Les trois chemins locaux exigés — exemples approuvés, manifeste, poids du modèle cible — puis le suivi partagé : le bureau de la VM à gauche, les étapes, journaux et captures à droite. Rien ne se lance implicitement, et le bandeau rappelle la règle : seuls les exemples approuvés avec preuves QA à jour sont admissibles, un jeu de test séparé reste obligatoire.
+The three required local paths — approved examples, manifest, target model weights — then the shared monitoring: the VM desktop on the left, the steps, logs and screenshots on the right. Nothing starts implicitly, and the banner restates the rule: only approved examples with up-to-date QA evidence are eligible, and a separate test set remains mandatory.
 
-Aucun clic ni touche n’est envoyé à la VM depuis cette page.
+No click or keystroke is sent to the VM from this page.
 
-### Debug / QA — les campagnes guidées
+### Debug / QA — the guided campaigns
 
-![Vue Debug / QA : choix du modèle et des scénarios au-dessus du suivi VM](docs/assets/admin-qa.png)
+![Debug / QA view: model and scenario selection above the VM monitoring](docs/assets/admin-qa.png)
 
-Choisir un modèle **installé** dans Ollama local, puis la portée : tous les scénarios, les parcours activés, une recette courte ou un parcours précis. Aucun modèle n’est codé en dur, aucun téléchargement n’est déclenché. L’absence de fournisseur ou de modèle, et une VM non prête, bloquent le lancement.
+Pick a model **installed** in the local Ollama, then the scope: all scenarios, the enabled journeys, a short run or one precise journey. No model is hard-coded and no download is triggered. A missing provider or model, or a VM that is not ready, blocks the launch.
 
-« Arrêter après ce scénario » laisse finir le scénario courant avant de stopper la file ; « Arrêter au premier échec » interrompt la campagne. Le modèle choisi pour la QA ne touche jamais au modèle cible de l’entraînement.
+"Stop after this scenario" lets the current scenario finish before stopping the queue; "Stop on first failure" interrupts the campaign. The model chosen for QA never touches the training target model.
 
-### Scénarios — le catalogue et l’éditeur
+### Scenarios — the catalogue and the editor
 
-![Vue Scénarios : le catalogue filtrable à gauche, le panneau de détail à droite](docs/assets/admin-scenarios.png)
+![Scenarios view: the filterable catalogue on the left, the detail panel on the right](docs/assets/admin-scenarios.png)
 
-Les 5 228 éléments — 5 165 fiches de conception et 63 parcours — filtrables par recherche, type, langue et état. L’éditeur ouvre un parcours étape par étape : action Studio, paramètres et vérifications attendues en JSON validé contre le schéma partagé, traductions, activation.
+The 5,228 items — 5,165 design sheets and 63 journeys — filterable by search, type, language and state. The editor opens a journey step by step: Studio action, parameters and expected checks as JSON validated against the shared schema, translations, activation.
 
-Le serveur valide actions, paramètres et références à l’enregistrement ; aucune exécution n’est déclenchée. Une fiche n’est pas un test exécuté — la vue le dit elle-même sous le compteur.
+The server validates actions, parameters and references on save; no execution is triggered. A sheet is not an executed test — the view says so itself, under the counter.
 
-### Rapports — les preuves conservées
+### Reports — the evidence kept
 
-![Vue Rapports : les essais archivés à gauche, le rapport détaillé à droite](docs/assets/admin-reports.png)
+![Reports view: archived trials on the left, the detailed report on the right](docs/assets/admin-reports.png)
 
-Trois rubriques : **Entraînement**, **Campagnes Debug / QA** et **Archives VM**. Chaque essai conserve ses étapes, ses captures, ses preuves et ses journaux. Une étape échouée montre l’erreur brute renvoyée par Studio, et les étapes suivantes sont marquées bloquées plutôt que rejouées.
+Three sections: **Training**, **Debug / QA campaigns** and **VM archives**. Every trial keeps its steps, screenshots, evidence and logs. A failed step shows the raw error returned by Studio, and the following steps are marked blocked rather than replayed.
 
-L’état de la VM reste distinct du résultat métier : une VM nettoyée ne vaut pas un parcours réussi, et « aucun résultat métier » n’est ni une réussite ni un échec.
+The VM's state stays distinct from the business result: a cleaned-up VM is not a successful journey, and "no business result" is neither a pass nor a failure.
 
-### Vue d’ensemble — l’état calculé
+### Overview — the computed state
 
-![Vue d’ensemble : compteurs, derniers résultats et couverture par langue](docs/assets/admin-overview.png)
+![Overview: counters, latest results and coverage per language](docs/assets/admin-overview.png)
 
-Les compteurs sont calculés depuis les fichiers actuels, pas depuis un historique. Ils disent ce qui est prêt à être tenté, pas ce qui est validé : « prêt à essayer » ne signifie pas validé dans Studio, « activé » ne signifie pas approuvé pour l’entraînement, et la présence d’un texte dans une langue ne valide pas sa traduction — la colonne « Vérification » affiche « qualité non certifiée » partout, et c’est exact.
+The counters are computed from the current files, not from a history. They say what is ready to be attempted, not what is validated: "ready to try" does not mean validated in Studio, "enabled" does not mean approved for training, and the presence of a text in a language does not validate its translation — the "Verification" column reads "quality not certified" everywhere, and that is accurate.
 
-Détail des vues et de leurs routes : [interface](docs/admin-ui.md) et [administration locale](docs/administration.md).
+Details of the views and their routes: [interface](docs/admin-ui.md) and [local administration](docs/administration.md).
 
-### Visuel et journaux dans la même fenêtre
+### Visuals and logs in the same window
 
-Le bureau invité occupe le panneau gauche ; le panneau droit montre les étapes et les sorties de la dernière exécution. La page tient dans la hauteur disponible : le défilement reste dans le journal. Sur un écran étroit, les panneaux passent l’un au-dessus de l’autre.
+The guest desktop takes the left panel; the right panel shows the steps and outputs of the last run. The page fits the available height: scrolling stays inside the log. On a narrow screen, the panels stack.
 
-Les journaux se chargent automatiquement, puis se mettent à jour toutes les deux secondes lorsque l’onglet est visible. Décocher **Suivre la fin** pour remonter dans l’historique sans être ramené en bas. Ils restent consultables après le nettoyage de la VM.
+Logs load automatically, then refresh every two seconds while the tab is visible. Untick **Follow the end** to scroll back through history without being pulled back down. They remain readable after the VM is cleaned up.
 
-Le défilement manuel suspend le suivi de fin pendant trente secondes après le dernier mouvement, pour les étapes, les journaux et les captures. Un nouveau mouvement relance ce délai ; ensuite le suivi reprend automatiquement.
+Manual scrolling suspends end-following for thirty seconds after the last movement, for steps, logs and screenshots alike. Another movement restarts that delay; following then resumes on its own.
 
-Les captures sont produites après les actions, avec leur résultat, indépendamment de l’ouverture de la page. Seule la dernière session est conservée dans `artifacts/vm/captures/`, dans l’ordre chronologique.
+Screenshots are produced after actions, with their result, whether or not the page is open. Only the last session is kept, in `artifacts/vm/captures/`, in chronological order.
 
-Pour les limites, le nettoyage et les rapports : [mode d’emploi VM](docs/vm-usage.md).
+For limits, cleanup and reports: [VM guide](docs/vm-usage.md).
 
-## Commandes
+## Commands
 
-### Qualité
+### Quality
 
-| Commande | Fonction |
+| Command | Purpose |
 | --- | --- |
-| `npm run validate` | Toute la chaîne : linter, typage, tests, configuration, hygiène et fraîcheur |
-| `npm run format` | Formatage et corrections sûres de Biome |
-| `npm test` | Tests exécutés une fois |
-| `npm run test:watch` | Tests pendant le développement |
-| `npm run config:check` | Validation de la configuration |
-| `npm run repo:check` | Noms, types et tailles des fichiers candidats Git |
+| `npm run validate` | The whole chain: linter, typing, tests, configuration, hygiene and freshness |
+| `npm run format` | Biome formatting and safe fixes |
+| `npm test` | Tests, run once |
+| `npm run test:watch` | Tests during development |
+| `npm run config:check` | Configuration validation |
+| `npm run repo:check` | Names, types and sizes of Git candidate files |
 
-### Catalogue et scénarios
+### Catalogue and scenarios
 
-| Commande | Fonction |
+| Command | Purpose |
 | --- | --- |
-| `npm run catalogue:export -- --source CHEMIN` | Export complet depuis un checkout Studio |
-| `npm run catalogue:check` | Contrôle de fraîcheur du catalogue configuré |
-| `npm run freshness:check` | Écart entre scénarios, modèle et checkout Studio (avertissements) |
-| `npm run scenarios:index` | Index de recherche des fiches |
+| `npm run catalogue:export -- --source PATH` | Full export from a Studio checkout |
+| `npm run catalogue:check` | Freshness check of the configured catalogue |
+| `npm run freshness:check` | Drift between scenarios, model and the Studio checkout (warnings) |
+| `npm run scenarios:index` | Search index of the sheets |
 
-### Machine virtuelle
+### Virtual machine
 
-| Commande | Fonction |
+| Command | Purpose |
 | --- | --- |
-| `npm run vm:observe` | Affiche l’adresse de la page locale d’observation |
-| `npm run vm:run` | Enchaîne préparation et build dans une VM jetable |
-| `npm run vm -- check` | Version de Tart et VM locales |
-| `npm run vm -- prepare --source IMAGE` | Prépare une référence depuis une image locale |
-| `npm run vm -- build --base REFERENCE` | Construit Studio dans une copie jetable |
-| `npm run vm -- cleanup --name VM` | Supprime une VM appartenant à ce dépôt |
+| `npm run vm:observe` | Prints the address of the local observation page |
+| `npm run vm:run` | Chains preparation and build in a disposable VM |
+| `npm run vm -- check` | Tart version and local VMs |
+| `npm run vm -- prepare --source IMAGE` | Prepares a reference from a local image |
+| `npm run vm -- build --base REFERENCE` | Builds Studio in a disposable copy |
+| `npm run vm -- cleanup --name VM` | Removes a VM owned by this repository |
 
-Mac Apple Silicon et [Tart](https://tart.run) requis pour les commandes VM. Détail dans [le mode d’emploi](docs/vm-usage.md).
+An Apple Silicon Mac and [Tart](https://tart.run) are required for the VM commands. Details in [the guide](docs/vm-usage.md).
 
-## Comment le banc VM fonctionne
+## How the VM bench works
 
 ```mermaid
 flowchart LR
-  I["Image Sequoia<br/>locale, jamais modifiée"] -->|tart clone| P["Référence préparée<br/>Node 24, pnpm, node-gyp"]
-  P -->|tart clone| C["Copie jetable"]
-  S["Dépôt Studio privé"] -->|git archive<br/>révision figée| A["Archive tar"]
-  A -->|scp, connexion isolée| C
+  I["Sequoia image<br/>local, never modified"] -->|tart clone| P["Prepared reference<br/>Node 24, pnpm, node-gyp"]
+  P -->|tart clone| C["Disposable copy"]
+  S["Private Studio repository"] -->|git archive<br/>pinned revision| A["tar archive"]
+  A -->|scp, isolated connection| C
   C --> B["pnpm build"]
-  B --> V["Vérification du renderer"]
-  V --> R["Rapports rapatriés<br/>build.json, startup.json, journaux"]
-  C -.->|supprimée après succès| X["∅"]
+  B --> V["Renderer verification"]
+  V --> R["Reports brought back<br/>build.json, startup.json, logs"]
+  C -.->|deleted on success| X["∅"]
 ```
 
-Aucun partage de dossier, de presse-papiers ou de son. La copie de build est détruite au succès et conservée à l’échec, pour diagnostic. Les identifiants de l’hôte n’entrent jamais dans l’invité : seule une clé SSH dédiée au banc est générée, et seule sa partie publique est transférée.
+No shared folder, clipboard or audio. The build copy is destroyed on success and kept on failure, for diagnosis. Host credentials never enter the guest: only an SSH key dedicated to the bench is generated, and only its public half is transferred.
 
-## Organisation
+## Layout
 
-| Dossier | Responsabilité |
+| Folder | Responsibility |
 | --- | --- |
-| `src/config/` | Validation des configurations |
-| `src/repository/` | Contrôles d’hygiène |
-| `src/catalogue/` | Export du catalogue d’actions depuis Studio |
-| `src/scenarios/` | Inventaire des scénarios et contrôle de fraîcheur |
-| `src/studio/` | Lecture du checkout Studio configuré |
-| `src/vm/` | Cycle de vie, propriété et transport des VM |
-| `src/qa/` | Campagnes Debug / QA guidées et leur service local |
-| `src/training/` | Préparation, lancement et rapports LoRA |
-| `src/admin/` | Interface locale et lecture des scénarios et rapports |
-| `tools/` | Commandes locales |
-| `configs/` | Choix du pilote, sans chemins personnels |
-| `schemas/` | Formats versionnés implémentés |
-| `tests/` | Comportements et rejets |
-| `docs/` | Décisions, étapes et cadrage initial contextualisé |
+| `src/config/` | Configuration validation |
+| `src/repository/` | Hygiene checks |
+| `src/catalogue/` | Action catalogue export from Studio |
+| `src/scenarios/` | Scenario inventory and freshness check |
+| `src/studio/` | Reading the configured Studio checkout |
+| `src/vm/` | VM lifecycle, ownership and transport |
+| `src/qa/` | Guided Debug / QA campaigns and their local service |
+| `src/training/` | LoRA preparation, launch and reports |
+| `src/admin/` | Local interface, reading scenarios and reports |
+| `tools/` | Local commands |
+| `configs/` | Driver choice, with no personal paths |
+| `schemas/` | Implemented versioned formats |
+| `tests/` | Behaviours and rejections |
+| `docs/` | Decisions, milestones and the initial framing in context |
 
-## Modèles candidats
+## Candidate models
 
-Modèle principal candidat : **Qwen3.5-2B** ; comparaison : **Qwen3-1.7B**. La configuration ne télécharge rien. Le premier essai Ollama conserve le format et l’empreinte du modèle. Les quinze langues configurées sont couvertes par des brouillons relus par IA, pas par une validation mondiale démontrée.
+Main candidate model: **Qwen3.5-2B**; comparison: **Qwen3-1.7B**. The configuration downloads nothing. The first Ollama trial records the model's format and fingerprint. The fifteen configured languages are covered by AI-reviewed drafts, not by demonstrated worldwide validation.
 
-## Premier essai du modèle local
+## First trial of the local model
 
-Ollama doit être installé et démarré. `npm run model:pull` télécharge explicitement Qwen3.5-2B. `npm run model:check` vérifie sa présence et affiche son empreinte. `npm run model:eval` réalise 34 demandes synthétiques sur 15 langues, sans exécuter une action Studio. Les commandes fonctionnent aussi avec `pnpm`.
+Ollama must be installed and running. `npm run model:pull` explicitly downloads Qwen3.5-2B. `npm run model:check` verifies its presence and prints its fingerprint. `npm run model:eval` runs 34 synthetic requests across 15 languages, without executing a single Studio action. The commands also work with `pnpm`.
 
-Les rapports sont dans `artifacts/model/baseline.md` et `baseline.json`, hors Git. Ce sont des propositions avant entraînement, pas des scénarios métier validés. [Protocole et limites](docs/model-usage.md).
+Reports land in `artifacts/model/baseline.md` and `baseline.json`, outside Git. They are pre-training proposals, not validated business scenarios. [Protocol and limits](docs/model-usage.md).
 
-## Scénarios, exemples et couverture
+## Scenarios, examples and coverage
 
-`npm run scenarios:prepare` prépare les 5 165 cas et 63 parcours depuis les documents sources. Le résultat est consultable dans `artifacts/scenarios/README.md`. Les sources versionnables vivent dans `datasets/scenarios/` : variantes de paramètres, instructions et demandes des parcours en quinze langues, et références aux fixtures et contrôles du banc Studio. La génération refuse les doublons, actions sans cas, traductions absentes et paramètres de traduction perdus.
+`npm run scenarios:prepare` prepares the 5,165 cases and 63 journeys from the source documents. The result can be read in `artifacts/scenarios/README.md`. The versionable sources live in `datasets/scenarios/`: parameter variants, instructions and journey requests in fifteen languages, and references to the Studio bench's fixtures and checks. Generation refuses duplicates, actions without a case, missing translations and lost translation parameters.
 
-**Ce sont des brouillons, pas des scénarios opérationnels ni des données approuvées pour l’entraînement.** Les traductions automatiques peuvent changer le sens malgré une structure valide. Il reste à relire chaque formulation, construire les dialogues des cas individuels, lier les ressources réelles, préciser les contrôles métier et vérifier l’exécution. Les verdicts de schéma concernent les paramètres internes des actions ; ils ne prouvent ni le contrat MCP ni le résultat métier.
+**These are drafts, not operational scenarios, and not data approved for training.** Machine translations can change the meaning while keeping a valid structure. Each wording still has to be reviewed, the dialogues of individual cases built, real resources linked, business checks made precise and execution verified. Schema verdicts cover the actions' internal parameters; they prove neither the MCP contract nor the business result.
 
-- `npm run scenarios:examples` : variantes de requêtes et exemples précis, avec blocages explicites. Voir [les limites métier](docs/scenario-examples.md).
-- `npm run scenarios:split` : plan de séparation par familles, sans approbation automatique.
-- La [stratégie multilingue](docs/multilingual-strategy.md) fixe les quinze langues, la relecture, les variantes et la séparation entraînement/test. Le [registre de couverture](docs/multilingual-coverage.csv) rattache les cas aux 310 actions et réserve leurs quinze couvertures linguistiques ; les cellules `planned` signalent un travail restant.
-- Recherche locale des scénarios : [index et petits fichiers canoniques](docs/scenarios/search.md).
+- `npm run scenarios:examples`: request variants and precise examples, with explicit blockers. See [the business limits](docs/scenario-examples.md).
+- `npm run scenarios:split`: split plan by family, with no automatic approval.
+- The [multilingual strategy](docs/multilingual-strategy.md) fixes the fifteen languages, the review, the variants and the train/test split. The [coverage registry](docs/multilingual-coverage.csv) ties the cases to the 310 actions and reserves their fifteen language coverages; `planned` cells flag work still to do.
+- Local scenario search: [index and small canonical files](docs/scenarios/search.md).
 
-## Banc de validation avant entraînement
+## Validation bench before training
 
-`npm run bench:run` exécute un parcours dans la VM avec le moteur commun et ses preuves ; `npm run bench:run -- --journey P003` cible un parcours précis, VM et observateur démarrant ensemble. `npm run prepare:bench` prépare les fichiers et vérifie les 63 parcours déclaratifs : le rapport `artifacts/bench/preparation.json` distingue ceux qui peuvent être tentés de ceux qui attendent des fixtures ou des vérifications complémentaires. **Ce nombre ne représente pas des tests réussis.**
+`npm run bench:run` runs a journey in the VM with the shared engine and its evidence; `npm run bench:run -- --journey P003` targets one precise journey, VM and observer starting together. `npm run prepare:bench` prepares the files and checks the 63 declarative journeys: the `artifacts/bench/preparation.json` report separates those that can be attempted from those waiting on fixtures or extra checks. **That number does not represent passing tests.**
 
-Les exemples restent exclus de LoRA tant que la preuve réelle et la relecture sémantique ne sont pas acceptées. [Fonctionnement et couverture réellement exécutable](docs/test-bench.md).
+Examples stay out of LoRA until real evidence and semantic review are accepted. [How it works, and what is genuinely executable](docs/test-bench.md).
 
-## Entraînement LoRA : raccordé, pas exécuté
+## LoRA training: wired, not run
 
-MLX-LM et MLX sont installés, et la page Entraînement raccorde la chaîne : préparation des exemples admissibles, contrôle des trois chemins locaux, lancement explicite, rapports séparés dans `rapports/entrainement/`. Les poids restent dans `artifacts/training/`.
+MLX-LM and MLX are installed, and the Training page wires the chain: preparation of eligible examples, checking of the three local paths, explicit launch, separate reports in `rapports/entrainement/`. The weights stay in `artifacts/training/`.
 
-Le raccordement est testé avec des processus simulés. **Aucun entraînement réel n’a été lancé**, pour trois raisons constatées :
+The wiring is tested with simulated processes. **No real training has been launched**, for three observed reasons:
 
-1. Aucun corpus approuvé `train.jsonl`, `valid.jsonl`, `test.jsonl` dans les dossiers vérifiés ; les manifestes indiquent zéro exemple approuvé.
-2. Aucun chemin de poids MLX compatible configuré — un modèle Ollama ne remplace pas ces fichiers.
-3. Le calcul de comparaison avant/après et la promotion d’un adaptateur restent à raccorder. Un calcul terminé n’est pas une amélioration démontrée.
+1. No approved `train.jsonl`, `valid.jsonl`, `test.jsonl` corpus in the checked folders; the manifests report zero approved examples.
+2. No compatible MLX weights path configured — an Ollama model does not replace those files.
+3. The before/after comparison and the promotion of an adapter are still to be wired. A finished computation is not a demonstrated improvement.
 
-[Installation et configuration LoRA](training/README.md) · [état détaillé](docs/qa-training-status.md).
+[LoRA installation and configuration](training/README.md) · [detailed state](docs/qa-training-status.md).
 
-## Où vont les fichiers
+## Where the files go
 
-| Emplacement | Contenu |
+| Location | Content |
 | --- | --- |
-| `rapports/debug/` | Tentatives Debug / QA, une par dossier, avec captures et journaux |
-| `rapports/debug/campagnes/` | Synthèses JSON et Markdown des campagnes |
-| `rapports/entrainement/` | Configurations et résultats LoRA |
-| `artifacts/vm/` | Sessions VM, preuves des essais et dernière série de captures |
-| `artifacts/training/` | Poids produits localement |
+| `rapports/debug/` | Debug / QA attempts, one per folder, with screenshots and logs |
+| `rapports/debug/campagnes/` | JSON and Markdown campaign summaries |
+| `rapports/entrainement/` | LoRA configurations and results |
+| `artifacts/vm/` | VM sessions, trial evidence and the latest set of screenshots |
+| `artifacts/training/` | Locally produced weights |
 
-Ces dossiers restent hors Git.
+Those folders stay outside Git.
 
 ## Documentation
 
-| Document | Contenu |
+The documents below are written in French.
+
+| Document | Content |
 | --- | --- |
-| [Contribution](CONTRIBUTING.md) | Règles de travail sur ce dépôt |
-| [Décisions](docs/decisions.md) | Choix arrêtés et leurs raisons |
-| [Étapes](docs/roadmap.md) | Ce qui reste à faire, dans l’ordre |
-| [État Debug / QA et entraînement](docs/qa-training-status.md) | Ce qui est livré, ce qui bloque |
-| [Export](docs/export.md) | Contrat et résultats de l’export du catalogue |
-| [Scénarios](docs/scenarios/README.md) | Actions MCP, demandes existantes et cas candidats |
-| [Environnement VM](docs/vm-environment.md) | Cadrage et choix d’isolation |
-| [Mode d’emploi VM](docs/vm-usage.md) | Commandes, limites et recette réelle |
-| [Interface](docs/admin-ui.md) | Vues, routes et navigation de l’interface |
-| [Administration locale](docs/administration.md) | Service local, scénarios et rapports |
-| [Validation](docs/validation.md) | Ce qui est contrôlé, et ce qui ne l’est pas |
+| [Contributing](CONTRIBUTING.md) | Working rules for this repository |
+| [Decisions](docs/decisions.md) | Settled choices and their reasons |
+| [Milestones](docs/roadmap.md) | What is left to do, in order |
+| [Debug / QA and training state](docs/qa-training-status.md) | What is delivered, what is blocking |
+| [Export](docs/export.md) | Contract and results of the catalogue export |
+| [Scenarios](docs/scenarios/README.md) | MCP actions, existing requests and candidate cases |
+| [VM environment](docs/vm-environment.md) | Framing and isolation choices |
+| [VM guide](docs/vm-usage.md) | Commands, limits and the real procedure |
+| [Interface](docs/admin-ui.md) | Views, routes and navigation |
+| [Local administration](docs/administration.md) | Local service, scenarios and reports |
+| [Validation](docs/validation.md) | What is checked, and what is not |
 
-## Organisation Git
+## Git layout
 
-`develop` accueille le travail courant. `main` est réservée aux versions à déployer. Aucun worktree supplémentaire.
+`develop` carries current work. `main` is reserved for versions to deploy. No extra worktree.
 
 ## Licence
 
-**[PolyForm Noncommercial 1.0.0](LICENSE)** — la même licence qu’AI Desktop Studio, dont ce
-dépôt fait partie. Tout usage non commercial est permis : étude, recherche, expérimentation,
-projets personnels, enseignement et organismes à but non lucratif. L’usage commercial ne
-l’est pas.
+**[PolyForm Noncommercial 1.0.0](LICENSE)** — the same licence as AI Desktop Studio, of which this
+repository is part. Any non-commercial use is permitted: study, research, experimentation,
+personal projects, teaching and non-profit organisations. Commercial use is not.
 
-Cette licence couvre le code de ce dépôt. Elle ne couvre ni les dépendances tierces, ni les
-modèles candidats qu’il nomme : Apache 2.0 sur un modèle ne s’étend pas à ce code.
+This licence covers the code in this repository. It covers neither the third-party dependencies
+nor the candidate models it names: Apache 2.0 on a model does not extend to this code.
