@@ -6,7 +6,7 @@
 
 **Companion for preparing, trying out and evaluating a local multilingual assistant for AI Desktop Studio.**
 
-[![Validate](https://github.com/pasquelin/AI-Desktop-Studio-Action-Fine-tuning/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/pasquelin/AI-Desktop-Studio-Action-Fine-tuning/actions/workflows/validate.yml)
+[![Validate](https://github.com/pasquelin/ai-desktop-studio-finetuning/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/pasquelin/ai-desktop-studio-finetuning/actions/workflows/validate.yml)
 [![Node](https://img.shields.io/badge/Node-%E2%89%A524.8%20%3C25-2b2d30?logo=node.js&logoColor=5fa04e)](.node-version)
 [![pnpm](https://img.shields.io/badge/pnpm-12.3.4-2b2d30?logo=pnpm&logoColor=f69220)](package.json)
 [![TypeScript](https://img.shields.io/badge/TypeScript-7%20strict-2b2d30?logo=typescript&logoColor=3178c6)](tsconfig.json)
